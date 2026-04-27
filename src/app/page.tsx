@@ -5,6 +5,11 @@ import AppShell from '@/components/layout/AppShell'
 import GlobeWrapper from '@/components/globe/GlobeWrapper'
 import { EventModal } from '@/components/ui/EventModal'
 import { TooltipOverlay } from '@/components/ui/TooltipOverlay'
+import { ForexPanel } from '@/components/ui/ForexPanel'
+import { EnvDataPanel } from '@/components/ui/EnvDataPanel'
+import { NewsTicker } from '@/components/ui/NewsTicker'
+import { EnvLayerPanel } from '@/components/ui/EnvLayerPanel'
+import { PlaybackControls } from '@/components/ui/PlaybackControls'
 import { MOCK_EVENTS } from '@/lib/mock/events'
 import { useGlobeStore } from '@/store/useGlobeStore'
 import type { GlobeRef } from '@/components/globe/GlobeRenderer'
@@ -15,6 +20,7 @@ export default function Home() {
   const setEvents = useGlobeStore((s) => s.setEvents)
   const setSelectedEvent = useGlobeStore((s) => s.setSelectedEvent)
   const setHoveredEvent = useGlobeStore((s) => s.setHoveredEvent)
+  const activeEnvLayer = useGlobeStore((s) => s.activeEnvLayer)
 
   // Load mock events into store on mount
   useEffect(() => {
@@ -57,6 +63,18 @@ export default function Home() {
             'radial-gradient(ellipse at center, transparent 40%, rgba(5,10,20,0.7) 100%)',
         }}
       />
+
+      {/* Right sidebar - show EnvDataPanel if env layer active, otherwise ForexPanel */}
+      {activeEnvLayer !== 'none' ? <EnvDataPanel /> : <ForexPanel />}
+
+      {/* Environmental layer controls */}
+      <EnvLayerPanel />
+
+      {/* Playback controls */}
+      <PlaybackControls />
+
+      {/* News ticker */}
+      <NewsTicker />
 
       {/* Tooltip overlay */}
       <TooltipOverlay />

@@ -1,34 +1,47 @@
 'use client'
 
-// Mini sparkline chart for forex pair price history (Phase 2)
-export default function SparklineChart({ data }: { data: number[] }) {
-  if (!data.length) return null
+interface SparklineChartProps {
+  data: number[]
+  width?: number
+  height?: number
+  color?: string
+  strokeWidth?: number
+}
+
+export function SparklineChart({
+  data,
+  width = 80,
+  height = 24,
+  color = '#1d9e75',
+  strokeWidth = 1.5,
+}: SparklineChartProps) {
+  if (data.length < 2) {
+    return <div style={{ width, height }} />
+  }
 
   const min = Math.min(...data)
   const max = Math.max(...data)
   const range = max - min || 1
-  const width = 80
-  const height = 24
 
-  const points = data
-    .map((v, i) => {
-      const x = (i / (data.length - 1)) * width
-      const y = height - ((v - min) / range) * height
-      return `${x},${y}`
-    })
-    .join(' ')
+  // Generate SVG path
+  const points = data.map((value, index) => {
+    const x = (index / (data.length - 1)) * width
+    const y = height - ((value - min) / range) * height
+    return `${x},${y}`
+  })
 
-  const isUp = data[data.length - 1] >= data[0]
+  const pathD = `M ${points.join(' L ')}`
 
   return (
-    <svg width={width} height={height} className="inline-block">
-      <polyline
-        points={points}
+    <svg width={width} height={height} className="overflow-visible">
+      <path
+        d={pathD}
         fill="none"
-        stroke={isUp ? '#1d9e75' : '#e24b4a'}
-        strokeWidth={1.5}
+        stroke={color}
+        strokeWidth={strokeWidth}
         strokeLinecap="round"
         strokeLinejoin="round"
+        vectorEffect="non-scaling-stroke"
       />
     </svg>
   )

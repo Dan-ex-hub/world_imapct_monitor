@@ -1,29 +1,32 @@
 # ImpactGlobe Build State
 
-## Current Phase: 2 — UI Shell & All Interface Components (In Progress)
+## Current Phase: 3 — Database, Supabase & Realtime
 
 ## Completed
 - [x] Phase 0: Foundation, folder structure, types, utils, env setup
 - [x] Phase 1: Three.js Globe Renderer + Environmental Layer System
-- [x] Phase 2 (Partial):
-  - Task 2.1: AppShell layout component ✅
-  - Task 2.2: TopBar with logo, connection status, filters, auth ✅
-  - Task 2.3: ConnectionStatus component ✅
-  - Task 2.4: FilterBar component ✅
-  - Task 2.5: ImpactBadge component ✅
-  - Task 2.6: CategoryBadge component ✅
-  - Task 2.7: TooltipOverlay component ✅
-  - Task 2.8: EventModal component ✅
-  - Task 2.9: WatchlistButton component ✅
+- [x] Phase 2: UI Shell & All Interface Components ✅
+
+## Phase 2 Details (COMPLETE)
+- Task 2.1: AppShell layout component ✅
+- Task 2.2: TopBar with logo, connection status, filters, auth ✅
+- Task 2.3: ConnectionStatus component ✅
+- Task 2.4: FilterBar component ✅
+- Task 2.5: ImpactBadge component ✅
+- Task 2.6: CategoryBadge component ✅
+- Task 2.7: TooltipOverlay component ✅
+- Task 2.8: EventModal component ✅
+- Task 2.9: WatchlistButton component ✅
+- Task 2.10: ForexPanel component ✅
+- Task 2.11: SparklineChart component ✅
+- Task 2.12: NewsTicker component ✅
+- Task 2.13: EnvLayerPanel component ✅
+- Task 2.14: EnvDataPanel component ✅
+- Task 2.15: EnvTooltip component ✅
+- Task 2.16: PlaybackControls component ✅
 
 ## Next Tasks
-- Task 2.10: ForexPanel (right sidebar with top 5 forex pairs)
-- Task 2.11: SparklineChart component
-- Task 2.12: NewsTicker (bottom scrolling ticker)
-- Task 2.13: EnvLayerPanel (environmental layer toggles)
-- Task 2.14: EnvDataPanel (env layer stats panel)
-- Task 2.15: EnvTooltip (tooltip for env markers)
-- Task 2.16: PlaybackControls component
+- Phase 3: Database schema, Supabase setup, Realtime subscriptions
 
 ## Technical Notes
 - **Next.js version:** 16.2.4 (spec said 14, but latest was installed)
