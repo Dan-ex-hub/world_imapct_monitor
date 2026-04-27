@@ -1,6 +1,12 @@
 import type { Metadata } from 'next'
-import { Space_Grotesk, DM_Sans, JetBrains_Mono } from 'next/font/google'
+import { Inter, Space_Grotesk, DM_Sans, JetBrains_Mono } from 'next/font/google'
 import './globals.css'
+
+const inter = Inter({
+  variable: '--font-inter',
+  subsets: ['latin'],
+  display: 'swap',
+})
 
 const spaceGrotesk = Space_Grotesk({
   variable: '--font-display',
@@ -21,15 +27,16 @@ const jetbrainsMono = JetBrains_Mono({
 })
 
 export const metadata: Metadata = {
-  title: 'ImpactGlobe — Real-Time Global Events & Environmental Monitor',
+  title: 'ImpactGlobe — Real-time Geopolitical Risk Monitor',
   description:
-    'Interactive 3D globe tracking impactful global news, forex market movements, and live environmental data including weather, AQI, earthquakes, wildfires, and storms.',
+    'Interactive 3D globe tracking impactful global news, forex market movements, and live environmental data. Real-time geopolitical risk monitoring with AI-powered analysis.',
   keywords: [
-    'global events',
+    'geopolitical risk',
     'forex impact',
-    'environmental data',
+    'global events',
     '3D globe',
     'real-time news',
+    'environmental data',
     'air quality',
     'earthquakes',
     'wildfires',
@@ -44,9 +51,12 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${spaceGrotesk.variable} ${dmSans.variable} ${jetbrainsMono.variable} h-full antialiased`}
+      className={`${inter.variable} ${spaceGrotesk.variable} ${dmSans.variable} ${jetbrainsMono.variable} h-full antialiased`}
     >
-      <body className="min-h-full flex flex-col bg-bg-primary text-text-primary">
+      <body
+        className="min-h-full flex flex-col"
+        style={{ background: '#050a14', color: '#f1f0e8', margin: 0 }}
+      >
         {children}
       </body>
     </html>

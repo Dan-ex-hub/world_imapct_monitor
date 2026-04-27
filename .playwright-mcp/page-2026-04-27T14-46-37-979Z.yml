@@ -1,0 +1,8 @@
+- generic [active] [ref=e1]:
+  - main [ref=e2]:
+    - generic [ref=e9]: INITIALIZING GLOBE...
+    - generic [ref=e10]:
+      - heading "ImpactGlobe" [level=1] [ref=e11]
+      - generic [ref=e12]: LIVE
+    - generic [ref=e15]: 8 EVENTS TRACKED
+  - alert [ref=e17]

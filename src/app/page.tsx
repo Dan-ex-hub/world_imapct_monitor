@@ -1,10 +1,53 @@
+'use client'
+
+import { useRef, useCallback, useEffect } from 'react'
+import AppShell from '@/components/layout/AppShell'
 import GlobeWrapper from '@/components/globe/GlobeWrapper'
+import { EventModal } from '@/components/ui/EventModal'
+import { TooltipOverlay } from '@/components/ui/TooltipOverlay'
+import { MOCK_EVENTS } from '@/lib/mock/events'
+import { useGlobeStore } from '@/store/useGlobeStore'
+import type { GlobeRef } from '@/components/globe/GlobeRenderer'
+import type { GlobeEvent } from '@/store/types'
 
 export default function Home() {
+  const globeRef = useRef<GlobeRef>(null)
+  const setEvents = useGlobeStore((s) => s.setEvents)
+  const setSelectedEvent = useGlobeStore((s) => s.setSelectedEvent)
+  const setHoveredEvent = useGlobeStore((s) => s.setHoveredEvent)
+
+  // Load mock events into store on mount
+  useEffect(() => {
+    setEvents(MOCK_EVENTS)
+  }, [setEvents])
+
+  const handleEventClick = useCallback((event: GlobeEvent) => {
+    console.log('[ImpactGlobe] Event clicked:', event.headline)
+    // Open modal
+    setSelectedEvent(event)
+    // Fly to the event location
+    globeRef.current?.flyTo(event.lat, event.lon)
+  }, [setSelectedEvent])
+
+  const handleEventHover = useCallback((event: GlobeEvent | null) => {
+    if (event) {
+      console.log('[ImpactGlobe] Hovering:', event.headline)
+      // Update store with hovered event
+      setHoveredEvent(event.id, { x: 0, y: 0 }) // Position will be updated by raycaster
+    } else {
+      setHoveredEvent(null)
+    }
+  }, [setHoveredEvent])
+
   return (
-    <main className="relative w-full h-screen overflow-hidden bg-bg-primary">
-      {/* 3D Globe */}
-      <GlobeWrapper />
+    <AppShell>
+      {/* 3D Globe — full viewport */}
+      <GlobeWrapper
+        ref={globeRef}
+        events={MOCK_EVENTS}
+        onEventClick={handleEventClick}
+        onEventHover={handleEventHover}
+      />
 
       {/* Gradient vignette overlay for depth */}
       <div
@@ -15,24 +58,11 @@ export default function Home() {
         }}
       />
 
-      {/* Title overlay — will be replaced by TopBar in Phase 2 */}
-      <div className="absolute top-4 left-4 z-20 flex items-center gap-3">
-        <h1 className="font-display text-xl font-bold tracking-tight">
-          Impact<span className="text-impact-critical">Globe</span>
-        </h1>
-        <div className="flex items-center gap-1.5 text-text-muted text-[10px] font-mono">
-          <div className="w-1.5 h-1.5 rounded-full bg-env-wind animate-pulse" />
-          LIVE
-        </div>
-      </div>
+      {/* Tooltip overlay */}
+      <TooltipOverlay />
 
-      {/* Phase indicator — bottom center */}
-      <div className="absolute bottom-6 left-1/2 -translate-x-1/2 z-20">
-        <div className="glass rounded-xl px-4 py-2 flex items-center gap-2 text-text-muted text-xs font-mono">
-          <div className="w-2 h-2 rounded-full bg-impact-medium animate-pulse-slow" />
-          PHASE 1 — GLOBE RENDERER ACTIVE
-        </div>
-      </div>
-    </main>
+      {/* Event modal */}
+      <EventModal />
+    </AppShell>
   )
 }

@@ -47,7 +47,22 @@
   --animate-spin-slow: spin 8s linear infinite;
 }
 
-/* Keyframes */
+/* ===== CSS Custom Properties ===== */
+:root {
+  --bg-primary: #050a14;
+  --bg-surface: #0a0e1a;
+  --bg-card: #0f1628;
+  --bg-elevated: #141c2e;
+  --impact-critical: #e24b4a;
+  --impact-high: #ef9f27;
+  --impact-medium: #1d9e75;
+  --impact-low: #378add;
+  --text-primary: #f1f0e8;
+  --text-secondary: #b4b2a9;
+  --text-muted: #6b6a63;
+}
+
+/* ===== Keyframes ===== */
 @keyframes ticker {
   0% { transform: translateX(0); }
   100% { transform: translateX(-50%); }
@@ -64,15 +79,14 @@
 }
 
 /* ===== Base Styles ===== */
-
-:root {
-  --background: #050a14;
-  --foreground: #f1f0e8;
+*, *::before, *::after {
+  box-sizing: border-box;
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
+  margin: 0;
+  background: #050a14;
+  color: #f1f0e8;
   font-family: var(--font-sans);
   overflow: hidden;
 }
@@ -82,7 +96,7 @@ body {
   width: 6px;
 }
 ::-webkit-scrollbar-track {
-  background: var(--color-bg-primary);
+  background: var(--bg-primary);
 }
 ::-webkit-scrollbar-thumb {
   background: rgba(255, 255, 255, 0.15);

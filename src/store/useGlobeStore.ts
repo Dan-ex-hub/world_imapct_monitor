@@ -8,6 +8,7 @@ import type {
   EnvLayerType,
   EnvLayerData,
   ScreenPosition,
+  User,
 } from './types'
 
 interface GlobeState {
@@ -34,6 +35,9 @@ interface GlobeState {
   // Connection
   isConnected: boolean
 
+  // User
+  user: User | null
+
   // Actions — Events
   setEvents: (events: GlobeEvent[]) => void
   addEvent: (event: GlobeEvent) => void
@@ -59,6 +63,9 @@ interface GlobeState {
 
   // Actions — Connection
   setConnected: (connected: boolean) => void
+
+  // Actions — User
+  setUser: (user: User | null) => void
 }
 
 const defaultFilters: Filters = {
@@ -81,6 +88,7 @@ export const useGlobeStore = create<GlobeState>((set) => ({
   isPlaybackMode: false,
   playbackTimestamp: null,
   isConnected: false,
+  user: null,
 
   // Events
   setEvents: (events) => set({ events }),
@@ -136,4 +144,7 @@ export const useGlobeStore = create<GlobeState>((set) => ({
 
   // Connection
   setConnected: (connected) => set({ isConnected: connected }),
+
+  // User
+  setUser: (user) => set({ user }),
 }))

@@ -1,43 +1,35 @@
-import * as THREE from 'three'
 import type { ImpactLevel } from '@/store/types'
 
-/** Impact level → ripple color hex */
-export function getRippleColor(level: ImpactLevel): string {
-  switch (level) {
-    case 'Critical': return '#e24b4a'
-    case 'High': return '#ef9f27'
-    case 'Medium': return '#1d9e75'
-    case 'Low': return '#378add'
-  }
+/** Impact level → hex color mapping */
+export const IMPACT_COLORS: Record<ImpactLevel, string> = {
+  Critical: '#e24b4a',
+  High: '#ef9f27',
+  Medium: '#1d9e75',
+  Low: '#378add',
 }
 
-/** Create ripple ring geometry for an event */
-export function createRippleRing(
-  radius: number,
-  color: string,
-  opacity: number
-): THREE.Mesh {
-  const geometry = new THREE.RingGeometry(radius * 0.8, radius, 64)
-  const material = new THREE.MeshBasicMaterial({
-    color: new THREE.Color(color),
-    transparent: true,
-    opacity,
-    side: THREE.DoubleSide,
-  })
-  return new THREE.Mesh(geometry, material)
+/** Ripple animation configuration per impact level */
+export const RIPPLE_CONFIG: Record<ImpactLevel, {
+  maxScale: number
+  duration: number   // ms for one full ring expansion
+  ringCount: number
+  coreRadius: number
+}> = {
+  Critical: { maxScale: 1.6, duration: 1000, ringCount: 3, coreRadius: 0.014 },
+  High:     { maxScale: 1.3, duration: 1400, ringCount: 3, coreRadius: 0.012 },
+  Medium:   { maxScale: 1.0, duration: 2000, ringCount: 3, coreRadius: 0.010 },
+  Low:      { maxScale: 0.8, duration: 2800, ringCount: 3, coreRadius: 0.009 },
 }
 
-/** Convert lat/lon to position on sphere */
-export function latLonToSpherePosition(
-  lat: number,
-  lon: number,
-  radius: number
-): THREE.Vector3 {
-  const phi = (90 - lat) * (Math.PI / 180)
-  const theta = (lon + 180) * (Math.PI / 180)
-  return new THREE.Vector3(
-    -(radius * Math.sin(phi) * Math.cos(theta)),
-    radius * Math.cos(phi),
-    radius * Math.sin(phi) * Math.sin(theta)
-  )
+/** Convert hex color to normalized RGB tuple [0-1, 0-1, 0-1] */
+export function hexToRgb(hex: string): [number, number, number] {
+  const r = parseInt(hex.slice(1, 3), 16) / 255
+  const g = parseInt(hex.slice(3, 5), 16) / 255
+  const b = parseInt(hex.slice(5, 7), 16) / 255
+  return [r, g, b]
+}
+
+/** Smooth ease-in-out interpolation (quadratic) */
+export function easeInOut(t: number): number {
+  return t < 0.5 ? 2 * t * t : -1 + (4 - 2 * t) * t
 }

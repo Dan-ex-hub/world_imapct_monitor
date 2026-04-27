@@ -1,0 +1,13 @@
+{
+  "name": "Anti-Gravity Dev Loop",
+  "version": "1.0.0",
+  "description": "Automatically runs the app, opens it in browser, tests interactions, checks console errors, and fixes issues whenever source files are saved.",
+  "when": {
+    "type": "fileEdited",
+    "patterns": ["src/**/*.ts", "src/**/*.tsx", "src/**/*.js", "src/**/*.jsx", "src/**/*.css"]
+  },
+  "then": {
+    "type": "askAgent",
+    "prompt": "A source file was just saved. Run the Anti-Gravity loop:\n\n1. Check if dev server is running on localhost:3000. If not running, execute: npm run dev and wait 3 seconds.\n\n2. Use Playwright MCP to navigate to http://localhost:3000\n\n3. Take a browser_snapshot to read the accessibility tree\n\n4. Take a browser_take_screenshot to visually verify the page\n\n5. Run browser_console_messages and check for errors or warnings\n\n6. Interact with the live app:\n   - Click the main interactive elements (buttons, links, nav)\n   - Fill any visible forms with test data and submit\n   - Verify responses/feedback appear correctly\n\n7. Check browser_network_requests for any failed API calls\n\n8. If errors found anywhere:\n   - Identify the file causing the issue\n   - Fix the code\n   - Save changes\n   - Re-run from step 2\n\n9. Report final status with a screenshot showing clean state."
+  }
+}
