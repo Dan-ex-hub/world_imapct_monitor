@@ -1,6 +1,6 @@
 # ImpactGlobe Build State
 
-## Current Phase: 6 — Environmental Data Integration (COMPLETE)
+## Current Phase: 7 — Auth, Watchlist & Push Notifications (COMPLETE)
 
 ## Completed
 - [x] Phase 0: Foundation, folder structure, types, utils, env setup
@@ -10,110 +10,88 @@
 - [x] Phase 4: AI Pipeline & News Analysis ✅
 - [x] Phase 5: Forex Data Integration ✅
 - [x] Phase 6: Environmental Data Integration ✅
+- [x] Phase 7: Auth, Watchlist & Push Notifications (FREE) ✅
 
-## Phase 5 Details (COMPLETE)
-- Task 5.1: Twelve Data API client (src/lib/forex/twelvedata.ts) ✅
-  - Real-time forex quotes
-  - Time series data for sparklines (24h hourly)
-  - Batch quote requests
-  - Major forex pairs configuration (10 pairs)
-  - Rate limiting support (8 requests/minute)
-  - 24h change calculation
-  - Sparkline data extraction
-- Task 5.2: Forex cache management (src/lib/forex/cache.ts) ✅
-  - Get cached forex pairs from database
-  - Update single pair cache
-  - Batch update multiple pairs
-  - Get top N movers by absolute change
-  - Link forex pairs to driving events
-  - Cache staleness detection
-- Task 5.3: Forex API routes ✅
-  - GET /api/forex/pairs - Fetch cached forex data
-  - GET /api/forex/pairs?top=5 - Get top N movers
-  - GET /api/forex/refresh - Refresh from Twelve Data (cron/admin)
-  - GET /api/forex/sparkline/[pair] - Get sparkline for specific pair
-- Task 5.4: useForex hook integration ✅
-  - Already implemented, now fetches real data
-  - 1-minute refresh interval
-  - Syncs to Zustand store
-  - Manual refresh support
-- Task 5.5: ForexPanel UI updates ✅
-  - Integrated useForex hook
+## Phase 7 Details (COMPLETE)
+### Task 7.1: Supabase Auth ✅
+- **SignupForm.tsx**: Full email/password signup with validation, confirmation email flow
+- **LoginForm.tsx**: Email/password login with error handling
+- **TopBar.tsx**: User session management, dropdown menu, sign out
+- **Auth pages**: `/login` and `/signup` with branded layouts
+- **Session persistence**: Auto-load user on mount, listen for auth state changes
+- **No Stripe, no billing, no paywalls** — 100% free product
+
+### Task 7.2: Watchlist Feature (FREE) ✅
+- **API Routes**:
+  - `GET /api/watchlist` — Fetch user's watchlist items
+  - `POST /api/watchlist` — Add item (country, forex_pair, or event)
+  - `DELETE /api/watchlist` — Remove item by ID
+  - All routes require authentication
+  - Duplicate prevention
+- **useWatchlist.ts hook**:
+  - `addToWatchlist(type, value)` — Add item
+  - `removeFromWatchlist(id)` — Remove item
+  - `isInWatchlist(type, value)` — Check if item exists
+  - `getWatchlistItem(type, value)` — Get specific item
+  - Auto-fetch on mount
+  - Error handling
+- **WatchlistButton.tsx**: Updated to use real API
+  - Shows "Watching" when item is in watchlist
   - Loading states
-  - Refresh button with animation
-  - Real-time data display
-  - Sparkline charts
-  - Driving event display
-  - Last updated timestamps
+  - Redirects to login if not authenticated
+  - Real-time sync with watchlist state
 
-## Phase 6 Details (COMPLETE)
-- Task 6.1: Environmental API wrappers (already existed from Phase 0) ✅
-  - src/lib/env/openmeteo.ts - Wind grid + temperature anomalies
-  - src/lib/env/openaq.ts - Global AQI data with EPA conversion
-  - src/lib/env/usgs.ts - Recent earthquakes (M2.5+, last 24h)
-  - src/lib/env/eonet.ts - Wildfires and severe storms
-  - src/lib/env/cache.ts - In-memory cache with TTL
-- Task 6.2: Environmental API routes ✅
-  - GET /api/env/weather - Wind + temperature anomaly (1h cache)
-  - GET /api/env/aqi - Air quality index (30min cache)
-  - GET /api/env/earthquakes - Recent earthquakes (5min cache)
-  - GET /api/env/wildfires - Active wildfires (15min cache)
-  - GET /api/env/storms - Severe storms (15min cache)
-  - GET /api/env/sea-temp - Sea surface temperature (24h cache, placeholder)
-- Task 6.3: useEnvLayer hook updates ✅
-  - Handles weather endpoint returning both wind and temp data
-  - Auto-refresh intervals per layer type
-  - Syncs to Zustand store
-- Task 6.4: Database caching ✅
-  - All env data cached in env_data_cache table
-  - AQI history stored in aqi_history table for sparklines
-  - Automatic cache expiration
-  - Stale-while-revalidate strategy
+### Task 7.3: Push Notifications (FREE) ✅
+- **API Routes**:
+  - `POST /api/push/subscribe` — Subscribe to push notifications
+  - `DELETE /api/push/subscribe` — Unsubscribe
+  - `POST /api/push/notify` — Send notifications (admin/cron only)
+  - VAPID key configuration
+  - Invalid subscription cleanup (410 Gone)
+- **Service Worker** (`public/sw.js`):
+  - Push event handler
+  - Notification click handler
+  - Auto-install and activate
+- **Push utilities** (`src/lib/push/notifications.ts`):
+  - `isPushSupported()` — Check browser support
+  - `requestNotificationPermission()` — Request permission
+  - `registerServiceWorker()` — Register SW
+  - `subscribeToPush()` — Subscribe with VAPID key
+  - `unsubscribeFromPush()` — Unsubscribe
+  - `saveSubscriptionToServer()` — Save to database
+  - `removeSubscriptionFromServer()` — Remove from database
+- **VAPID key generator** (`scripts/generate-vapid-keys.js`):
+  - Run: `node scripts/generate-vapid-keys.js`
+  - Generates public/private VAPID keys for .env.local
 
-## Data Sources (All Free, No API Keys Required)
-- **Open-Meteo:** Wind speed/direction, temperature anomalies
-- **OpenAQ:** Global air quality index (PM2.5)
-- **USGS:** Earthquake feed (GeoJSON)
-- **NASA EONET:** Wildfires and severe storms
-- **NOAA:** Weather alerts (future integration)
+## What Was REMOVED (per CLAUDE.md)
+- ❌ ALL Stripe integration
+- ❌ ALL ProGate components
+- ❌ ALL plan tier checks
+- ❌ `planTier`, `stripeCustomerId` from User type
+- ✅ Everything is FREE — no paywalls, no billing
+
+## Database Schema (Phase 3 + 7)
+- `events` — News events with forex impacts
+- `forex_cache` — Cached forex pair data
+- `env_data_cache` — Environmental layer data cache
+- `aqi_history` — AQI historical data for sparklines
+- `users` — User accounts (email, created_at)
+- `watchlist` — User watchlist items (country, forex_pair, event)
+- `push_subscriptions` — Push notification subscriptions (endpoint, keys)
 
 ## Next Tasks
-- Phase 7: Auth, Watchlist & Push Notifications (FREE - no Stripe)
 - Phase 8: Historical Playback & Advanced Features
 - Phase 9: Pre-Launch & Deployment
 
 ## Technical Notes
-- **Next.js version:** 16.2.4 (spec said 14, but latest was installed)
-- **Tailwind version:** v4 (CSS-based config via `@theme inline`, no `tailwind.config.ts`)
+- **Next.js version:** 16.2.4
+- **Tailwind version:** v4 (CSS-based config)
 - **React version:** 19.2.4
-- **Three.js version:** 0.184.0 — uses THREE.Timer (Clock deprecated)
-- All environmental API wrappers implemented (openmeteo, openaq, usgs, eonet, noaa)
-- Zustand store with full state shape (events, forex, env layers, filters, playback)
-- All hooks implemented (useEvents, useForex, useEnvLayer, useWatchlist, usePlayback)
-- `middleware` convention deprecated in Next.js 16 — migrate to `proxy` in Phase 9
-
-## Phase 0 Details
-- Task 0.1 — Initialize Next.js project ✅
-- Task 0.2 — Install all dependencies ✅
-- Task 0.3 — Configure Tailwind v4 theme ✅
-- Task 0.4 — Create full folder structure ✅
-- Task 0.5 — Environment variables ✅
-- Task 0.6 — Create shared types ✅
-- Task 0.7 — Utilities (cn, format, dedup, coordinates) ✅
-- Task 0.8 — Build verification ✅ (0 errors, 23 routes)
-
-## Phase 1 Details
-- Task 1.1–1.6 — GlobeRenderer (earth sphere, atmosphere, starfield, ripples, raycasting, auto-rotate) ✅
-- Task 1.7 — Environmental layer system ✅
-  - WindLayer: 500 animated particle lines (LineSegments), wind-direction flow, speed-based opacity, lifecycle fade
-  - AQILayer: Glowing pulsing spheres at monitoring stations, EPA color scale, severity-scaled pulse
-  - EarthquakeLayer: Concentric ring ripple animations, magnitude-scaled radius, depth-based opacity
-  - WildfireLayer: Flickering orange/red dots, dual sine-wave animation, point lights (max 10)
-  - StormLayer: Rotating double-armed spiral icons, hurricane vs tropical storm coloring
-  - TempAnomalyLayer: Dynamic canvas texture, d3 diverging color scale, IDW interpolation
-  - GlobeRenderer integration: store subscriptions, layer lifecycle management, animation loop updates
-  - Migrated THREE.Clock → THREE.Timer (deprecated in Three.js r183+)
-- Build verification ✅ (0 errors)
+- **Three.js version:** 0.184.0
+- **Supabase Auth:** Email/password only (no OAuth yet)
+- **Push Notifications:** Web Push API with VAPID keys
+- **Build status:** Code complete, Google Fonts network issue (temporary)
 
 ## Last Updated
-2026-04-27
+2026-04-28 (Phase 7 complete)

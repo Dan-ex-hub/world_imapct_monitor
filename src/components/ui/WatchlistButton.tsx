@@ -1,8 +1,9 @@
 'use client'
 
-import { useState } from 'react'
-import { Star } from 'lucide-react'
+import { useEffect, useState } from 'react'
+import { Star, Loader2 } from 'lucide-react'
 import { useGlobeStore } from '@/store/useGlobeStore'
+import { useWatchlist } from '@/hooks/useWatchlist'
 
 interface WatchlistButtonProps {
   eventId: string
@@ -10,8 +11,11 @@ interface WatchlistButtonProps {
 
 export function WatchlistButton({ eventId }: WatchlistButtonProps) {
   const user = useGlobeStore((s) => s.user)
-  const [isWatched, setIsWatched] = useState(false)
+  const { isInWatchlist, getWatchlistItem, addToWatchlist, removeFromWatchlist } = useWatchlist()
   const [isLoading, setIsLoading] = useState(false)
+
+  const isWatched = isInWatchlist('event', eventId)
+  const watchlistItem = getWatchlistItem('event', eventId)
 
   const handleToggle = async () => {
     if (!user) {
@@ -22,9 +26,11 @@ export function WatchlistButton({ eventId }: WatchlistButtonProps) {
 
     setIsLoading(true)
     try {
-      // API call will be implemented in Phase 7
-      await new Promise((resolve) => setTimeout(resolve, 500))
-      setIsWatched(!isWatched)
+      if (isWatched && watchlistItem) {
+        await removeFromWatchlist(watchlistItem.id)
+      } else {
+        await addToWatchlist('event', eventId)
+      }
     } catch (error) {
       console.error('Failed to toggle watchlist:', error)
     } finally {
@@ -41,8 +47,13 @@ export function WatchlistButton({ eventId }: WatchlistButtonProps) {
           ? 'bg-impact-high/10 text-impact-high hover:bg-impact-high/20'
           : 'bg-bg-elevated text-text-secondary hover:bg-bg-card hover:text-text-primary'
       } disabled:opacity-50`}
+      title={user ? (isWatched ? 'Remove from watchlist' : 'Add to watchlist') : 'Sign in to add to watchlist'}
     >
-      <Star className={`h-4 w-4 ${isWatched ? 'fill-current' : ''}`} />
+      {isLoading ? (
+        <Loader2 className="h-4 w-4 animate-spin" />
+      ) : (
+        <Star className={`h-4 w-4 ${isWatched ? 'fill-current' : ''}`} />
+      )}
       {isWatched ? 'Watching' : 'Watch'}
     </button>
   )

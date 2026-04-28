@@ -1,47 +1,109 @@
 'use client'
 
-import useSWR from 'swr'
+import { useState, useEffect } from 'react'
 import { createClient } from '@/lib/supabase/client'
 import type { WatchlistItem } from '@/store/types'
 
-const fetcher = (url: string) => fetch(url).then((r) => r.json())
-
-/** Manage user watchlist items */
+/**
+ * Hook for managing user watchlist
+ * Requires authentication
+ */
 export function useWatchlist() {
-  const { data, error, isLoading, mutate } = useSWR<WatchlistItem[]>(
-    '/api/watchlist',
-    fetcher,
-    { revalidateOnFocus: false }
-  )
+  const [items, setItems] = useState<WatchlistItem[]>([])
+  const [isLoading, setIsLoading] = useState(true)
+  const [error, setError] = useState<string | null>(null)
 
-  async function addToWatchlist(type: WatchlistItem['type'], value: string) {
-    await fetch('/api/watchlist', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ type, value }),
-    })
-    mutate()
+  // Fetch watchlist on mount
+  useEffect(() => {
+    fetchWatchlist()
+  }, [])
+
+  const fetchWatchlist = async () => {
+    try {
+      setIsLoading(true)
+      setError(null)
+
+      const response = await fetch('/api/watchlist')
+      if (!response.ok) {
+        if (response.status === 401) {
+          // Not authenticated - clear items
+          setItems([])
+          setIsLoading(false)
+          return
+        }
+        throw new Error('Failed to fetch watchlist')
+      }
+
+      const data = await response.json()
+      setItems(data)
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Unknown error')
+    } finally {
+      setIsLoading(false)
+    }
   }
 
-  async function removeFromWatchlist(id: string) {
-    await fetch('/api/watchlist', {
-      method: 'DELETE',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ id }),
-    })
-    mutate()
+  const addToWatchlist = async (
+    type: 'country' | 'forex_pair' | 'event',
+    value: string
+  ): Promise<boolean> => {
+    try {
+      const response = await fetch('/api/watchlist', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ type, value }),
+      })
+
+      if (!response.ok) {
+        const error = await response.json()
+        throw new Error(error.error || 'Failed to add to watchlist')
+      }
+
+      const newItem = await response.json()
+      setItems((prev) => [newItem, ...prev])
+      return true
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Unknown error')
+      return false
+    }
   }
 
-  function isWatched(type: WatchlistItem['type'], value: string): boolean {
-    return (data ?? []).some((item) => item.type === type && item.value === value)
+  const removeFromWatchlist = async (id: string): Promise<boolean> => {
+    try {
+      const response = await fetch('/api/watchlist', {
+        method: 'DELETE',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ id }),
+      })
+
+      if (!response.ok) {
+        throw new Error('Failed to remove from watchlist')
+      }
+
+      setItems((prev) => prev.filter((item) => item.id !== id))
+      return true
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Unknown error')
+      return false
+    }
+  }
+
+  const isInWatchlist = (type: string, value: string): boolean => {
+    return items.some((item) => item.type === type && item.value === value)
+  }
+
+  const getWatchlistItem = (type: string, value: string): WatchlistItem | undefined => {
+    return items.find((item) => item.type === type && item.value === value)
   }
 
   return {
-    items: data ?? [],
+    items,
     isLoading,
     error,
     addToWatchlist,
     removeFromWatchlist,
-    isWatched,
+    isInWatchlist,
+    getWatchlistItem,
+    refresh: fetchWatchlist,
   }
 }
