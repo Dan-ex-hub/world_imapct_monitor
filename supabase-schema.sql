@@ -53,7 +53,66 @@ create policy "Events can be updated by authenticated users"
   using (auth.role() = 'authenticated');
 
 -- ============================================================================
--- FOREX PAIRS TABLE
+-- EVENT FOREX IMPACTS TABLE (linked to events)
+-- ============================================================================
+create table public.event_forex_impacts (
+  id uuid primary key default uuid_generate_v4(),
+  event_id uuid not null references public.events(id) on delete cascade,
+  pair text not null,
+  direction integer not null check (direction in (1, -1)),
+  magnitude text not null check (magnitude in ('Large', 'Medium', 'Small')),
+  move_percent text not null,
+  reasoning text not null,
+  created_at timestamptz not null default now()
+);
+
+-- Indexes for event_forex_impacts
+create index idx_event_forex_impacts_event_id on public.event_forex_impacts(event_id);
+create index idx_event_forex_impacts_pair on public.event_forex_impacts(pair);
+
+-- Enable RLS
+alter table public.event_forex_impacts enable row level security;
+
+-- RLS Policies for event_forex_impacts
+create policy "Event forex impacts are viewable by everyone"
+  on public.event_forex_impacts for select
+  using (true);
+
+create policy "Event forex impacts can be inserted by authenticated users"
+  on public.event_forex_impacts for insert
+  with check (auth.role() = 'authenticated');
+
+-- ============================================================================
+-- FOREX CACHE TABLE (latest prices from Twelve Data)
+-- ============================================================================
+create table public.forex_cache (
+  pair text primary key,
+  current_price numeric(16,6),
+  change_24h numeric(10,6),
+  change_percent_24h numeric(8,4),
+  sparkline_data jsonb,
+  driving_event_id uuid references public.events(id) on delete set null,
+  last_updated timestamptz not null default now()
+);
+
+-- Indexes for forex_cache
+create index idx_forex_cache_last_updated on public.forex_cache(last_updated desc);
+create index idx_forex_cache_change_percent on public.forex_cache(abs(change_percent_24h) desc);
+
+-- Enable RLS
+alter table public.forex_cache enable row level security;
+
+-- RLS Policies for forex_cache
+create policy "Forex cache is viewable by everyone"
+  on public.forex_cache for select
+  using (true);
+
+create policy "Forex cache can be modified by service role"
+  on public.forex_cache for all
+  using (auth.role() = 'service_role');
+
+-- ============================================================================
+-- FOREX PAIRS TABLE (kept for backward compatibility)
 -- ============================================================================
 create table public.forex_pairs (
   id uuid primary key default uuid_generate_v4(),
@@ -227,6 +286,101 @@ create policy "Users can insert their own push subscriptions"
 
 create policy "Users can delete their own push subscriptions"
   on public.push_subscriptions for delete
+  using (auth.uid() = user_id);
+
+-- ============================================================================
+-- RSS SOURCES TABLE
+-- ============================================================================
+create table public.rss_sources (
+  id uuid primary key default uuid_generate_v4(),
+  name text not null,
+  url text not null unique,
+  is_active boolean not null default true,
+  last_polled_at timestamptz,
+  created_at timestamptz not null default now()
+);
+
+-- Indexes for rss_sources
+create index idx_rss_sources_is_active on public.rss_sources(is_active) where is_active = true;
+create index idx_rss_sources_last_polled on public.rss_sources(last_polled_at);
+
+-- Enable RLS
+alter table public.rss_sources enable row level security;
+
+-- RLS Policies for rss_sources
+create policy "RSS sources are viewable by everyone"
+  on public.rss_sources for select
+  using (true);
+
+create policy "RSS sources can be modified by service role"
+  on public.rss_sources for all
+  using (auth.role() = 'service_role');
+
+-- ============================================================================
+-- EVENT DEDUPLICATION LOG TABLE
+-- ============================================================================
+create table public.event_dedup_log (
+  id uuid primary key default uuid_generate_v4(),
+  source_headline text not null,
+  source_url text,
+  matched_event_id uuid references public.events(id) on delete set null,
+  action text not null check (action in ('created', 'merged', 'skipped')),
+  created_at timestamptz not null default now()
+);
+
+-- Indexes for event_dedup_log
+create index idx_event_dedup_log_created_at on public.event_dedup_log(created_at desc);
+create index idx_event_dedup_log_source_url on public.event_dedup_log(source_url);
+
+-- Enable RLS
+alter table public.event_dedup_log enable row level security;
+
+-- RLS Policies for event_dedup_log
+create policy "Event dedup log is viewable by authenticated users"
+  on public.event_dedup_log for select
+  using (auth.role() = 'authenticated');
+
+create policy "Event dedup log can be inserted by service role"
+  on public.event_dedup_log for insert
+  with check (auth.role() = 'service_role');
+
+-- ============================================================================
+-- API KEYS TABLE (for API tier - future use)
+-- ============================================================================
+create table public.api_keys (
+  id uuid primary key default uuid_generate_v4(),
+  user_id uuid not null references public.users(id) on delete cascade,
+  key_hash text not null unique,
+  key_prefix text not null,
+  name text,
+  last_used_at timestamptz,
+  is_active boolean not null default true,
+  created_at timestamptz not null default now()
+);
+
+-- Indexes for api_keys
+create index idx_api_keys_user_id on public.api_keys(user_id);
+create index idx_api_keys_key_hash on public.api_keys(key_hash);
+create index idx_api_keys_is_active on public.api_keys(is_active) where is_active = true;
+
+-- Enable RLS
+alter table public.api_keys enable row level security;
+
+-- RLS Policies for api_keys
+create policy "Users can view their own API keys"
+  on public.api_keys for select
+  using (auth.uid() = user_id);
+
+create policy "Users can insert their own API keys"
+  on public.api_keys for insert
+  with check (auth.uid() = user_id);
+
+create policy "Users can update their own API keys"
+  on public.api_keys for update
+  using (auth.uid() = user_id);
+
+create policy "Users can delete their own API keys"
+  on public.api_keys for delete
   using (auth.uid() = user_id);
 
 -- ============================================================================

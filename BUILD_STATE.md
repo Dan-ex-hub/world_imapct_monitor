@@ -1,22 +1,28 @@
 # ImpactGlobe Build State
 
-## Current Phase: 3 — Database, Supabase & Realtime (COMPLETE)
+## Current Phase: 4 — AI Pipeline & News Analysis (COMPLETE)
 
 ## Completed
 - [x] Phase 0: Foundation, folder structure, types, utils, env setup
 - [x] Phase 1: Three.js Globe Renderer + Environmental Layer System
 - [x] Phase 2: UI Shell & All Interface Components
 - [x] Phase 3: Database, Supabase & Realtime ✅
+- [x] Phase 4: AI Pipeline & News Analysis ✅
 
 ## Phase 3 Details (COMPLETE)
 - Task 3.1: Database schema (supabase-schema.sql) ✅
   - Events table with RLS policies
-  - Forex pairs table
+  - Event forex impacts table (linked to events)
+  - Forex cache table (Twelve Data prices)
+  - Forex pairs table (backward compatibility)
   - Environmental data cache table
   - AQI history table
   - Users table (extends auth.users)
   - Watchlist table
   - Push subscriptions table
+  - RSS sources table
+  - Event deduplication log table
+  - API keys table (future use)
   - Triggers for updated_at timestamps
   - Function to auto-create user profiles
   - Realtime publication for events and forex_pairs
@@ -27,8 +33,46 @@
   - Realtime events subscription
   - Fallback to mock data when Supabase not configured
 
+## Phase 4 Details (COMPLETE)
+- Task 4.1: Anthropic Claude client (src/lib/anthropic/client.ts) ✅
+  - Claude Sonnet 4 (claude-sonnet-4-20250514) integration
+  - Helper function for API calls with consistent settings
+- Task 4.2: AI prompts (src/lib/anthropic/prompts.ts) ✅
+  - Event analysis system and user prompts
+  - Forex impact analysis prompts
+  - Event deduplication prompts
+- Task 4.3: RSS feed parser (src/lib/rss/parser.ts) ✅
+  - Parse RSS/Atom feeds
+  - Filter by date
+  - Deduplicate by GUID/link
+  - Batch parsing support
+- Task 4.4: RSS sources (src/lib/rss/sources.ts) ✅
+  - Default RSS sources (Reuters, BBC, Al Jazeera, FT, Bloomberg, etc.)
+  - Source categorization (geopolitical, economic, regional)
+  - Priority levels
+- Task 4.5: Event generator (src/lib/ai/eventGenerator.ts) ✅
+  - AI-powered news analysis
+  - Event generation from RSS items
+  - Deduplication against existing events
+  - Batch processing with rate limiting
+- Task 4.6: Events API routes ✅
+  - GET /api/events - Fetch events with filters
+  - POST /api/events - Create event (authenticated)
+  - GET /api/events/[id] - Fetch single event
+  - PATCH /api/events/[id] - Update event (authenticated)
+  - DELETE /api/events/[id] - Delete event (authenticated)
+  - POST /api/events/analyze - AI analysis of news item
+  - POST /api/events/confirm - Confirm and save AI-generated event
+  - GET /api/events/export - Export events as CSV (authenticated)
+- Task 4.7: RSS polling cron job (src/app/api/rss/poll/route.ts) ✅
+  - Poll RSS feeds every 15 minutes
+  - AI analysis of new items
+  - Deduplication against existing events
+  - Auto-create events in database
+  - Protected by CRON_SECRET
+
 ## Next Tasks
-- Phase 4: AI Pipeline & News Analysis (Anthropic Claude integration)
+- Phase 5: Forex Data Integration (Twelve Data API)
 
 ## Technical Notes
 - **Next.js version:** 16.2.4 (spec said 14, but latest was installed)
