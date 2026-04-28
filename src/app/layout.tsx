@@ -29,7 +29,7 @@ const jetbrainsMono = JetBrains_Mono({
 export const metadata: Metadata = {
   title: 'ImpactGlobe — Real-time Geopolitical Risk Monitor',
   description:
-    'Interactive 3D globe tracking impactful global news, forex market movements, and live environmental data. Real-time geopolitical risk monitoring with AI-powered analysis.',
+    'Track global news events and their forex impact in real time. Interactive 3D globe with live environmental data, powered by AI. 100% free.',
   keywords: [
     'geopolitical risk',
     'forex impact',
@@ -40,7 +40,30 @@ export const metadata: Metadata = {
     'air quality',
     'earthquakes',
     'wildfires',
+    'market intelligence',
   ],
+  authors: [{ name: 'ImpactGlobe' }],
+  openGraph: {
+    title: 'ImpactGlobe — Real-time Geopolitical Risk Monitor',
+    description: 'Track global news events and their forex impact in real time on an interactive 3D globe.',
+    type: 'website',
+    locale: 'en_US',
+    siteName: 'ImpactGlobe',
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'ImpactGlobe — Real-time Geopolitical Risk Monitor',
+    description: 'Track global news events and their forex impact in real time.',
+  },
+  robots: {
+    index: true,
+    follow: true,
+  },
+  viewport: {
+    width: 'device-width',
+    initialScale: 1,
+    maximumScale: 5,
+  },
 }
 
 export default function RootLayout({

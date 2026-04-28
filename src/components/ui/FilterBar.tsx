@@ -2,8 +2,9 @@
 
 import { useGlobeStore } from '@/store/useGlobeStore'
 import { EventCategory, ImpactLevel } from '@/store/types'
-import { Search, X } from 'lucide-react'
-import { useState } from 'react'
+import { Search, X, Download, RotateCcw } from 'lucide-react'
+import { useState, useEffect } from 'react'
+import { useRouter, useSearchParams } from 'next/navigation'
 
 const CATEGORIES: EventCategory[] = [
   'Geopolitical',
@@ -26,9 +27,53 @@ const TIME_RANGES = [
 ]
 
 export function FilterBar() {
+  const router = useRouter()
+  const searchParams = useSearchParams()
   const filters = useGlobeStore((s) => s.filters)
   const setFilters = useGlobeStore((s) => s.setFilters)
+  const setPlaybackMode = useGlobeStore((s) => s.setPlaybackMode)
   const [searchInput, setSearchInput] = useState(filters.searchQuery)
+  const [isExporting, setIsExporting] = useState(false)
+
+  // Initialize filters from URL params on mount
+  useEffect(() => {
+    const categoryParam = searchParams.get('category')
+    const impactParam = searchParams.get('impact')
+    const timeRangeParam = searchParams.get('timeRange')
+    const searchParam = searchParams.get('q')
+
+    const newFilters = {
+      categories: categoryParam ? (categoryParam.split(',') as EventCategory[]) : [],
+      impactLevels: impactParam ? (impactParam.split(',') as ImpactLevel[]) : [],
+      timeRange: (timeRangeParam as '1h' | '6h' | '24h' | '48h') || '48h',
+      searchQuery: searchParam || '',
+    }
+
+    setFilters(newFilters)
+    setSearchInput(newFilters.searchQuery)
+  }, []) // Only run on mount
+
+  // Update URL params when filters change
+  useEffect(() => {
+    const params = new URLSearchParams()
+
+    if (filters.categories.length > 0) {
+      params.set('category', filters.categories.join(','))
+    }
+    if (filters.impactLevels.length > 0) {
+      params.set('impact', filters.impactLevels.join(','))
+    }
+    if (filters.timeRange !== '48h') {
+      params.set('timeRange', filters.timeRange)
+    }
+    if (filters.searchQuery) {
+      params.set('q', filters.searchQuery)
+    }
+
+    const queryString = params.toString()
+    const newUrl = queryString ? `/?${queryString}` : '/'
+    router.replace(newUrl, { scroll: false })
+  }, [filters, router])
 
   const toggleCategory = (category: EventCategory) => {
     const newCategories = filters.categories.includes(category)
@@ -52,6 +97,53 @@ export function FilterBar() {
   const clearSearch = () => {
     setSearchInput('')
     setFilters({ ...filters, searchQuery: '' })
+  }
+
+  const clearAllFilters = () => {
+    const defaultFilters = {
+      categories: [],
+      impactLevels: [],
+      timeRange: '48h' as const,
+      searchQuery: '',
+    }
+    setFilters(defaultFilters)
+    setSearchInput('')
+  }
+
+  const handleExportCSV = async () => {
+    setIsExporting(true)
+    try {
+      const params = new URLSearchParams()
+      params.set('timeRange', filters.timeRange)
+      if (filters.categories.length > 0) {
+        params.set('category', filters.categories.join(','))
+      }
+      if (filters.impactLevels.length > 0) {
+        params.set('impactLevel', filters.impactLevels.join(','))
+      }
+
+      const response = await fetch(`/api/events/export?${params.toString()}`)
+      if (!response.ok) throw new Error('Export failed')
+
+      const blob = await response.blob()
+      const url = window.URL.createObjectURL(blob)
+      const a = document.createElement('a')
+      a.href = url
+      a.download = `impactglobe-events-${new Date().toISOString().split('T')[0]}.csv`
+      document.body.appendChild(a)
+      a.click()
+      window.URL.revokeObjectURL(url)
+      document.body.removeChild(a)
+    } catch (error) {
+      console.error('Failed to export CSV:', error)
+      alert('Failed to export events. Please try again.')
+    } finally {
+      setIsExporting(false)
+    }
+  }
+
+  const handleEnterPlayback = () => {
+    setPlaybackMode(true)
   }
 
   const activeFilterCount =
@@ -104,6 +196,38 @@ export function FilterBar() {
             {activeFilterCount}
           </span>
         )}
+      </button>
+
+      {/* Clear filters button */}
+      {activeFilterCount > 0 && (
+        <button
+          onClick={clearAllFilters}
+          className="flex items-center gap-2 rounded-lg border border-border-subtle bg-bg-card px-3 py-2 text-xs font-medium text-text-muted transition-colors hover:bg-bg-elevated hover:text-text-secondary"
+        >
+          <X className="h-3 w-3" />
+          Clear
+        </button>
+      )}
+
+      {/* Export CSV button (FREE) */}
+      <button
+        onClick={handleExportCSV}
+        disabled={isExporting}
+        className="flex items-center gap-2 rounded-lg border border-border-subtle bg-bg-card px-3 py-2 text-xs font-medium text-text-primary transition-colors hover:bg-bg-elevated disabled:opacity-50"
+        title="Export events as CSV"
+      >
+        <Download className="h-3 w-3" />
+        {isExporting ? 'Exporting...' : 'Export CSV'}
+      </button>
+
+      {/* Historical Playback button (FREE) */}
+      <button
+        onClick={handleEnterPlayback}
+        className="flex items-center gap-2 rounded-lg border border-border-subtle bg-bg-card px-3 py-2 text-xs font-medium text-text-primary transition-colors hover:bg-bg-elevated"
+        title="Replay last 48 hours"
+      >
+        <RotateCcw className="h-3 w-3" />
+        Playback
       </button>
     </div>
   )

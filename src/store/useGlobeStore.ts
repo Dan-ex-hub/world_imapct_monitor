@@ -31,6 +31,9 @@ interface GlobeState {
   // Playback
   isPlaybackMode: boolean
   playbackTimestamp: string | null
+  playbackTime: Date
+  playbackSpeed: 1 | 2 | 5 | 10
+  isPlaybackPlaying: boolean
 
   // Connection
   isConnected: boolean
@@ -60,6 +63,11 @@ interface GlobeState {
   // Actions — Playback
   setPlaybackMode: (enabled: boolean) => void
   setPlaybackTimestamp: (ts: string | null) => void
+  enterPlayback: () => void
+  exitPlayback: () => void
+  setPlaybackTime: (time: Date | ((prev: Date) => Date)) => void
+  setPlaybackSpeed: (speed: 1 | 2 | 5 | 10) => void
+  togglePlayback: () => void
 
   // Actions — Connection
   setConnected: (connected: boolean) => void
@@ -87,6 +95,9 @@ export const useGlobeStore = create<GlobeState>((set) => ({
   filters: defaultFilters,
   isPlaybackMode: false,
   playbackTimestamp: null,
+  playbackTime: new Date(),
+  playbackSpeed: 1,
+  isPlaybackPlaying: false,
   isConnected: false,
   user: null,
 
@@ -141,6 +152,17 @@ export const useGlobeStore = create<GlobeState>((set) => ({
   // Playback
   setPlaybackMode: (enabled) => set({ isPlaybackMode: enabled }),
   setPlaybackTimestamp: (ts) => set({ playbackTimestamp: ts }),
+  enterPlayback: () => set({ isPlaybackMode: true }),
+  exitPlayback: () => set({ isPlaybackMode: false, isPlaybackPlaying: false }),
+  setPlaybackTime: (time) =>
+    set((state) => ({
+      playbackTime: typeof time === 'function' ? time(state.playbackTime) : time,
+    })),
+  setPlaybackSpeed: (speed) => set({ playbackSpeed: speed }),
+  togglePlayback: () =>
+    set((state) => ({
+      isPlaybackPlaying: !state.isPlaybackPlaying,
+    })),
 
   // Connection
   setConnected: (connected) => set({ isConnected: connected }),

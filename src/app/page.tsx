@@ -10,6 +10,7 @@ import { EnvDataPanel } from '@/components/ui/EnvDataPanel'
 import { NewsTicker } from '@/components/ui/NewsTicker'
 import { EnvLayerPanel } from '@/components/ui/EnvLayerPanel'
 import { PlaybackControls } from '@/components/ui/PlaybackControls'
+import { OnboardingFlow } from '@/components/ui/OnboardingFlow'
 import { useRealtimeEvents } from '@/lib/realtime/useRealtimeEvents'
 import { MOCK_EVENTS } from '@/lib/mock/events'
 import { useGlobeStore } from '@/store/useGlobeStore'
@@ -89,6 +90,9 @@ export default function Home() {
 
       {/* Event modal */}
       <EventModal />
+
+      {/* Onboarding flow (shows only on first visit) */}
+      <OnboardingFlow />
     </AppShell>
   )
 }

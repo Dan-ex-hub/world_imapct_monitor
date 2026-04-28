@@ -1,6 +1,6 @@
 # ImpactGlobe Build State
 
-## Current Phase: 7 — Auth, Watchlist & Push Notifications (COMPLETE)
+## Current Phase: 8 — Historical Playback & Advanced Features (COMPLETE)
 
 ## Completed
 - [x] Phase 0: Foundation, folder structure, types, utils, env setup
@@ -11,58 +11,73 @@
 - [x] Phase 5: Forex Data Integration ✅
 - [x] Phase 6: Environmental Data Integration ✅
 - [x] Phase 7: Auth, Watchlist & Push Notifications (FREE) ✅
+- [x] Phase 8: Historical Playback & Advanced Features ✅
 
-## Phase 7 Details (COMPLETE)
-### Task 7.1: Supabase Auth ✅
-- **SignupForm.tsx**: Full email/password signup with validation, confirmation email flow
-- **LoginForm.tsx**: Email/password login with error handling
-- **TopBar.tsx**: User session management, dropdown menu, sign out
-- **Auth pages**: `/login` and `/signup` with branded layouts
-- **Session persistence**: Auto-load user on mount, listen for auth state changes
-- **No Stripe, no billing, no paywalls** — 100% free product
+## Phase 8 Details (COMPLETE)
+### Task 8.1: Historical Playback (FREE) ✅
+- **usePlayback.ts hook**: Complete playback system
+  - `enterPlayback()`: Fetches last 48h events including expired
+  - `exitPlayback()`: Restores live events
+  - `setSpeed(1|2|5|10)`: Playback speed control
+  - `seekTo(date)`: Jump to specific time
+  - Auto-advance with configurable speed
+  - Pause/play controls
+- **PlaybackControls.tsx**: Updated with full controls
+  - Timeline scrubber with progress bar
+  - Play/pause/restart buttons
+  - Speed selector (1x, 2x, 5x, 10x)
+  - Current time display
+  - Exit playback button
+- **Events API**: Added `include_expired=true` parameter support
 
-### Task 7.2: Watchlist Feature (FREE) ✅
-- **API Routes**:
-  - `GET /api/watchlist` — Fetch user's watchlist items
-  - `POST /api/watchlist` — Add item (country, forex_pair, or event)
-  - `DELETE /api/watchlist` — Remove item by ID
-  - All routes require authentication
-  - Duplicate prevention
-- **useWatchlist.ts hook**:
-  - `addToWatchlist(type, value)` — Add item
-  - `removeFromWatchlist(id)` — Remove item
-  - `isInWatchlist(type, value)` — Check if item exists
-  - `getWatchlistItem(type, value)` — Get specific item
-  - Auto-fetch on mount
+### Task 8.2: CSV Export (FREE) ✅
+- **API Route**: `/api/events/export`
+  - Exports events as CSV with all fields
+  - Respects current filters (category, impact, time range)
+  - Proper CSV escaping for quotes
+  - Filename includes current date
+  - No authentication required (FREE)
+- **FilterBar**: Added "Export CSV" button
+  - Downloads CSV file directly
+  - Shows loading state during export
   - Error handling
-- **WatchlistButton.tsx**: Updated to use real API
-  - Shows "Watching" when item is in watchlist
-  - Loading states
-  - Redirects to login if not authenticated
-  - Real-time sync with watchlist state
 
-### Task 7.3: Push Notifications (FREE) ✅
-- **API Routes**:
-  - `POST /api/push/subscribe` — Subscribe to push notifications
-  - `DELETE /api/push/subscribe` — Unsubscribe
-  - `POST /api/push/notify` — Send notifications (admin/cron only)
-  - VAPID key configuration
-  - Invalid subscription cleanup (410 Gone)
-- **Service Worker** (`public/sw.js`):
-  - Push event handler
-  - Notification click handler
-  - Auto-install and activate
-- **Push utilities** (`src/lib/push/notifications.ts`):
-  - `isPushSupported()` — Check browser support
-  - `requestNotificationPermission()` — Request permission
-  - `registerServiceWorker()` — Register SW
-  - `subscribeToPush()` — Subscribe with VAPID key
-  - `unsubscribeFromPush()` — Unsubscribe
-  - `saveSubscriptionToServer()` — Save to database
-  - `removeSubscriptionFromServer()` — Remove from database
-- **VAPID key generator** (`scripts/generate-vapid-keys.js`):
-  - Run: `node scripts/generate-vapid-keys.js`
-  - Generates public/private VAPID keys for .env.local
+### Task 8.3: URL Param Filter Sync ✅
+- **FilterBar.tsx**: Complete URL synchronization
+  - Reads URL params on mount
+  - Updates URL on filter changes (router.replace)
+  - Shareable URLs: `/?category=Geopolitical&impact=Critical&timeRange=24h&q=Japan`
+  - No history pollution (uses replace, not push)
+  - Supports: category, impact, timeRange, search query
+
+### Task 8.4: Clear Filters & Playback Button ✅
+- **Clear filters button**: Appears when filters active
+  - Resets all filters to defaults
+  - Updates URL params
+- **Playback button**: Added to FilterBar
+  - Triggers `enterPlayback()` from store
+  - FREE access (no ProGate)
+
+### Task 8.5: Onboarding Flow ✅
+- **OnboardingFlow.tsx**: 3-step welcome flow
+  - Step 1: Welcome + globe interaction
+  - Step 2: Filter bar explanation
+  - Step 3: Sign up CTA
+  - Progress dots indicator
+  - Skip button + Escape key support
+  - localStorage persistence (`hasSeenOnboarding`)
+  - Backdrop blur effect
+  - Animated transitions
+
+### Task 8.6: SEO & Metadata ✅
+- **layout.tsx**: Complete metadata
+  - Title: "ImpactGlobe — Real-time Geopolitical Risk Monitor"
+  - Description optimized for search
+  - Keywords array
+  - OpenGraph tags for social sharing
+  - Twitter card metadata
+  - Robots meta (index, follow)
+  - Viewport configuration
 
 ## What Was REMOVED (per CLAUDE.md)
 - ❌ ALL Stripe integration
@@ -81,8 +96,12 @@
 - `push_subscriptions` — Push notification subscriptions (endpoint, keys)
 
 ## Next Tasks
-- Phase 8: Historical Playback & Advanced Features
 - Phase 9: Pre-Launch & Deployment
+  - Vercel deployment
+  - Production environment variables
+  - Performance audit (Lighthouse)
+  - Error monitoring (Sentry)
+  - Pre-launch checklist
 
 ## Technical Notes
 - **Next.js version:** 16.2.4
@@ -94,4 +113,4 @@
 - **Build status:** Code complete, Google Fonts network issue (temporary)
 
 ## Last Updated
-2026-04-28 (Phase 7 complete)
+2026-04-28 (Phase 8 complete)

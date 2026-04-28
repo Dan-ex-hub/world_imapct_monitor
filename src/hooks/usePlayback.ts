@@ -1,69 +1,135 @@
-'use client'
-
-import { useState, useCallback, useEffect, useRef } from 'react'
+import { useEffect, useRef } from 'react'
 import { useGlobeStore } from '@/store/useGlobeStore'
+import type { GlobeEvent } from '@/store/types'
 
-/** Historical event playback controller */
 export function usePlayback() {
-  const setPlaybackMode = useGlobeStore((s) => s.setPlaybackMode)
-  const setPlaybackTimestamp = useGlobeStore((s) => s.setPlaybackTimestamp)
-  const isPlaybackMode = useGlobeStore((s) => s.isPlaybackMode)
-  const playbackTimestamp = useGlobeStore((s) => s.playbackTimestamp)
+  const {
+    isPlaybackMode,
+    playbackTime,
+    playbackSpeed,
+    isPlaybackPlaying,
+    events,
+    setEvents,
+    enterPlayback: enterPlaybackStore,
+    exitPlayback: exitPlaybackStore,
+    setPlaybackTime,
+    setPlaybackSpeed: setPlaybackSpeedStore,
+    togglePlayback,
+  } = useGlobeStore()
 
-  const [isPlaying, setIsPlaying] = useState(false)
-  const [speed, setSpeed] = useState(1) // 1x, 2x, 4x
-  const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null)
+  const intervalRef = useRef<NodeJS.Timeout | null>(null)
+  const playbackEventsRef = useRef<GlobeEvent[]>([])
+  const liveEventsRef = useRef<GlobeEvent[]>([])
 
-  const startPlayback = useCallback((fromTimestamp: string) => {
-    setPlaybackMode(true)
-    setPlaybackTimestamp(fromTimestamp)
-    setIsPlaying(true)
-  }, [setPlaybackMode, setPlaybackTimestamp])
+  // Fetch historical events when entering playback mode
+  const enterPlayback = async () => {
+    try {
+      // Store current live events
+      liveEventsRef.current = events
 
-  const stopPlayback = useCallback(() => {
-    setPlaybackMode(false)
-    setPlaybackTimestamp(null)
-    setIsPlaying(false)
+      // Fetch all events from last 48h including expired ones
+      const response = await fetch('/api/events?include_expired=true&timeRange=48h&limit=500')
+      if (!response.ok) throw new Error('Failed to fetch historical events')
+
+      const data = await response.json()
+      playbackEventsRef.current = data.events.sort(
+        (a: GlobeEvent, b: GlobeEvent) =>
+          new Date(a.publishedAt).getTime() - new Date(b.publishedAt).getTime()
+      )
+
+      // Set playback time to 48 hours ago
+      const now = new Date()
+      const startTime = new Date(now.getTime() - 48 * 60 * 60 * 1000)
+      setPlaybackTime(startTime)
+
+      // Enter playback mode in store
+      enterPlaybackStore()
+
+      // Start with no events visible (will be filtered by playback time)
+      setEvents([])
+    } catch (error) {
+      console.error('Failed to enter playback mode:', error)
+    }
+  }
+
+  // Exit playback mode and restore live events
+  const exitPlayback = () => {
     if (intervalRef.current) {
       clearInterval(intervalRef.current)
       intervalRef.current = null
     }
-  }, [setPlaybackMode, setPlaybackTimestamp])
 
-  const togglePlayPause = useCallback(() => {
-    setIsPlaying((prev) => !prev)
-  }, [])
+    // Restore live events
+    setEvents(liveEventsRef.current)
+    playbackEventsRef.current = []
 
-  // Advance timestamp while playing
+    exitPlaybackStore()
+  }
+
+  // Update visible events based on playback time
   useEffect(() => {
-    if (isPlaying && isPlaybackMode) {
-      intervalRef.current = setInterval(() => {
-        const current = useGlobeStore.getState().playbackTimestamp
-        if (!current) return
-        const next = new Date(new Date(current).getTime() + speed * 60_000)
-        if (next > new Date()) {
-          stopPlayback()
-          return
-        }
-        setPlaybackTimestamp(next.toISOString())
-      }, 1000 / speed)
-    } else if (intervalRef.current) {
-      clearInterval(intervalRef.current)
-      intervalRef.current = null
+    if (!isPlaybackMode) return
+
+    const visibleEvents = playbackEventsRef.current.filter((event) => {
+      const eventTime = new Date(event.publishedAt).getTime()
+      const currentTime = playbackTime.getTime()
+      return eventTime <= currentTime
+    })
+
+    setEvents(visibleEvents)
+  }, [playbackTime, isPlaybackMode, setEvents])
+
+  // Handle playback animation
+  useEffect(() => {
+    if (!isPlaybackMode || !isPlaybackPlaying) {
+      if (intervalRef.current) {
+        clearInterval(intervalRef.current)
+        intervalRef.current = null
+      }
+      return
     }
+
+    // Advance time every 100ms
+    intervalRef.current = setInterval(() => {
+      setPlaybackTime((prevTime) => {
+        const now = new Date()
+        const newTime = new Date(prevTime.getTime() + 100 * playbackSpeed)
+
+        // Stop at current time
+        if (newTime >= now) {
+          togglePlayback() // Pause playback
+          return now
+        }
+
+        return newTime
+      })
+    }, 100)
 
     return () => {
-      if (intervalRef.current) clearInterval(intervalRef.current)
+      if (intervalRef.current) {
+        clearInterval(intervalRef.current)
+        intervalRef.current = null
+      }
     }
-  }, [isPlaying, isPlaybackMode, speed, setPlaybackTimestamp, stopPlayback])
+  }, [isPlaybackMode, isPlaybackPlaying, playbackSpeed, setPlaybackTime, togglePlayback])
+
+  const setSpeed = (speed: 1 | 2 | 5 | 10) => {
+    setPlaybackSpeedStore(speed)
+  }
+
+  const seekTo = (time: Date) => {
+    setPlaybackTime(time)
+  }
 
   return {
     isPlaybackMode,
-    isPlaying,
-    speed,
-    startPlayback,
-    stopPlayback,
-    togglePlayPause,
+    playbackTime,
+    playbackSpeed,
+    isPlaybackPlaying,
+    enterPlayback,
+    exitPlayback,
+    togglePlayback,
     setSpeed,
+    seekTo,
   }
 }

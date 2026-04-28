@@ -12,6 +12,7 @@ export async function GET(request: NextRequest) {
     const category = searchParams.get('category')
     const impactLevel = searchParams.get('impactLevel')
     const country = searchParams.get('country')
+    const includeExpired = searchParams.get('include_expired') === 'true'
 
     const supabase = await createClient()
 
@@ -30,8 +31,12 @@ export async function GET(request: NextRequest) {
       .from('events')
       .select('*')
       .gte('published_at', threshold)
-      .lte('expires_at', new Date(Date.now() + 48 * 60 * 60 * 1000).toISOString())
       .order('published_at', { ascending: false })
+
+    // Only filter by expiration if not including expired events
+    if (!includeExpired) {
+      query = query.lte('expires_at', new Date(Date.now() + 48 * 60 * 60 * 1000).toISOString())
+    }
 
     // Apply filters
     if (category) {
