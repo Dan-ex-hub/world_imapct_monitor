@@ -1,0 +1,28 @@
+{
+  "crons": [
+    {
+      "path": "/api/rss/poll",
+      "schedule": "*/15 * * * *"
+    },
+    {
+      "path": "/api/forex/refresh",
+      "schedule": "* * * * *"
+    },
+    {
+      "path": "/api/env/earthquakes",
+      "schedule": "*/5 * * * *"
+    },
+    {
+      "path": "/api/env/wildfires",
+      "schedule": "*/15 * * * *"
+    },
+    {
+      "path": "/api/env/aqi",
+      "schedule": "*/30 * * * *"
+    },
+    {
+      "path": "/api/env/weather",
+      "schedule": "0 * * * *"
+    }
+  ]
+}
