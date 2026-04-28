@@ -1,6 +1,6 @@
 # ImpactGlobe Build State
 
-## Current Phase: 5 — Forex Data Integration (COMPLETE)
+## Current Phase: 6 — Environmental Data Integration (COMPLETE)
 
 ## Completed
 - [x] Phase 0: Foundation, folder structure, types, utils, env setup
@@ -9,44 +9,7 @@
 - [x] Phase 3: Database, Supabase & Realtime ✅
 - [x] Phase 4: AI Pipeline & News Analysis ✅
 - [x] Phase 5: Forex Data Integration ✅
-
-## Phase 4 Details (COMPLETE)
-- Task 4.1: Anthropic Claude client (src/lib/anthropic/client.ts) ✅
-  - Claude Sonnet 4 (claude-sonnet-4-20250514) integration
-  - Helper function for API calls with consistent settings
-- Task 4.2: AI prompts (src/lib/anthropic/prompts.ts) ✅
-  - Event analysis system and user prompts
-  - Forex impact analysis prompts
-  - Event deduplication prompts
-- Task 4.3: RSS feed parser (src/lib/rss/parser.ts) ✅
-  - Parse RSS/Atom feeds
-  - Filter by date
-  - Deduplicate by GUID/link
-  - Batch parsing support
-- Task 4.4: RSS sources (src/lib/rss/sources.ts) ✅
-  - Default RSS sources (Reuters, BBC, Al Jazeera, FT, Bloomberg, etc.)
-  - Source categorization (geopolitical, economic, regional)
-  - Priority levels
-- Task 4.5: Event generator (src/lib/ai/eventGenerator.ts) ✅
-  - AI-powered news analysis
-  - Event generation from RSS items
-  - Deduplication against existing events
-  - Batch processing with rate limiting
-- Task 4.6: Events API routes ✅
-  - GET /api/events - Fetch events with filters
-  - POST /api/events - Create event (authenticated)
-  - GET /api/events/[id] - Fetch single event
-  - PATCH /api/events/[id] - Update event (authenticated)
-  - DELETE /api/events/[id] - Delete event (authenticated)
-  - POST /api/events/analyze - AI analysis of news item
-  - POST /api/events/confirm - Confirm and save AI-generated event
-  - GET /api/events/export - Export events as CSV (authenticated)
-- Task 4.7: RSS polling cron job (src/app/api/rss/poll/route.ts) ✅
-  - Poll RSS feeds every 15 minutes
-  - AI analysis of new items
-  - Deduplication against existing events
-  - Auto-create events in database
-  - Protected by CRON_SECRET
+- [x] Phase 6: Environmental Data Integration ✅
 
 ## Phase 5 Details (COMPLETE)
 - Task 5.1: Twelve Data API client (src/lib/forex/twelvedata.ts) ✅
@@ -83,8 +46,41 @@
   - Driving event display
   - Last updated timestamps
 
+## Phase 6 Details (COMPLETE)
+- Task 6.1: Environmental API wrappers (already existed from Phase 0) ✅
+  - src/lib/env/openmeteo.ts - Wind grid + temperature anomalies
+  - src/lib/env/openaq.ts - Global AQI data with EPA conversion
+  - src/lib/env/usgs.ts - Recent earthquakes (M2.5+, last 24h)
+  - src/lib/env/eonet.ts - Wildfires and severe storms
+  - src/lib/env/cache.ts - In-memory cache with TTL
+- Task 6.2: Environmental API routes ✅
+  - GET /api/env/weather - Wind + temperature anomaly (1h cache)
+  - GET /api/env/aqi - Air quality index (30min cache)
+  - GET /api/env/earthquakes - Recent earthquakes (5min cache)
+  - GET /api/env/wildfires - Active wildfires (15min cache)
+  - GET /api/env/storms - Severe storms (15min cache)
+  - GET /api/env/sea-temp - Sea surface temperature (24h cache, placeholder)
+- Task 6.3: useEnvLayer hook updates ✅
+  - Handles weather endpoint returning both wind and temp data
+  - Auto-refresh intervals per layer type
+  - Syncs to Zustand store
+- Task 6.4: Database caching ✅
+  - All env data cached in env_data_cache table
+  - AQI history stored in aqi_history table for sparklines
+  - Automatic cache expiration
+  - Stale-while-revalidate strategy
+
+## Data Sources (All Free, No API Keys Required)
+- **Open-Meteo:** Wind speed/direction, temperature anomalies
+- **OpenAQ:** Global air quality index (PM2.5)
+- **USGS:** Earthquake feed (GeoJSON)
+- **NASA EONET:** Wildfires and severe storms
+- **NOAA:** Weather alerts (future integration)
+
 ## Next Tasks
-- Phase 6: Environmental Data Integration (Open-Meteo, OpenAQ, USGS, NASA EONET)
+- Phase 7: Auth, Watchlist & Push Notifications (FREE - no Stripe)
+- Phase 8: Historical Playback & Advanced Features
+- Phase 9: Pre-Launch & Deployment
 
 ## Technical Notes
 - **Next.js version:** 16.2.4 (spec said 14, but latest was installed)

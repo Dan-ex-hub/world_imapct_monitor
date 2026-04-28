@@ -1,41 +1,88 @@
 import { NextResponse } from 'next/server'
+import { createClient } from '@/lib/supabase/server'
 import { getWindGrid, getTempAnomalies } from '@/lib/env/openmeteo'
-import { getCachedEnvData, setCachedEnvData } from '@/lib/env/cache'
 import type { EnvLayerData } from '@/store/types'
 
-/** GET /api/env/weather — Wind grid or temperature anomaly data */
-export async function GET(request: Request) {
-  const { searchParams } = new URL(request.url)
-  const type = searchParams.get('type') || 'wind'
-  const layerType = type === 'temp' ? 'temperature_anomaly' as const : 'wind' as const
-
-  // Check cache first
-  const cached = getCachedEnvData(layerType)
-  if (cached) {
-    return NextResponse.json(cached, {
-      headers: { 'Cache-Control': 'public, max-age=3600' },
-    })
-  }
-
+/**
+ * GET /api/env/weather
+ * Fetch wind and temperature anomaly data from Open-Meteo
+ * Caches in env_data_cache table for 1 hour
+ */
+export async function GET() {
   try {
-    let data: EnvLayerData
+    const supabase = await createClient()
 
-    if (type === 'temp') {
-      const tempAnomalies = await getTempAnomalies()
-      data = { type: 'temperature_anomaly', updatedAt: new Date().toISOString(), tempAnomalies }
-    } else {
-      const wind = await getWindGrid()
-      data = { type: 'wind', updatedAt: new Date().toISOString(), wind }
+    // Check cache first
+    const { data: cached } = await supabase
+      .from('env_data_cache')
+      .select('*')
+      .in('layer_type', ['wind', 'temperature_anomaly'])
+      .gt('expires_at', new Date().toISOString())
+
+    const now = new Date()
+    const windCache = cached?.find((c) => c.layer_type === 'wind')
+    const tempCache = cached?.find((c) => c.layer_type === 'temperature_anomaly')
+
+    let windData = windCache?.data
+    let tempData = tempCache?.data
+
+    // Fetch wind data if not cached or expired
+    if (!windData) {
+      console.log('Fetching wind data from Open-Meteo...')
+      const windPoints = await getWindGrid()
+      windData = {
+        type: 'wind' as const,
+        updatedAt: now.toISOString(),
+        wind: windPoints,
+      }
+
+      // Cache for 1 hour
+      await supabase.from('env_data_cache').upsert({
+        layer_type: 'wind',
+        data: windData,
+        fetched_at: now.toISOString(),
+        expires_at: new Date(now.getTime() + 3600_000).toISOString(),
+      })
     }
 
-    setCachedEnvData(layerType, data)
+    // Fetch temperature anomaly data if not cached or expired
+    if (!tempData) {
+      console.log('Fetching temperature anomaly data from Open-Meteo...')
+      const tempPoints = await getTempAnomalies()
+      tempData = {
+        type: 'temperature_anomaly' as const,
+        updatedAt: now.toISOString(),
+        tempAnomalies: tempPoints,
+      }
 
-    return NextResponse.json(data, {
-      headers: { 'Cache-Control': 'public, max-age=3600' },
-    })
-  } catch {
-    // Return stale data if available, else empty
-    const stale = getCachedEnvData(layerType)
-    return NextResponse.json(stale ?? { type: layerType, updatedAt: new Date().toISOString() })
+      // Cache for 6 hours
+      await supabase.from('env_data_cache').upsert({
+        layer_type: 'temperature_anomaly',
+        data: tempData,
+        fetched_at: now.toISOString(),
+        expires_at: new Date(now.getTime() + 21600_000).toISOString(),
+      })
+    }
+
+    return NextResponse.json(
+      {
+        wind: windData,
+        temperature_anomaly: tempData,
+      },
+      {
+        headers: {
+          'Cache-Control': 'public, s-maxage=3600, stale-while-revalidate=7200',
+        },
+      }
+    )
+  } catch (error) {
+    console.error('Weather API error:', error)
+    return NextResponse.json(
+      {
+        error: 'Failed to fetch weather data',
+        details: error instanceof Error ? error.message : 'Unknown error',
+      },
+      { status: 500 }
+    )
   }
 }

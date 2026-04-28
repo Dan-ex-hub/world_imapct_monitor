@@ -10,8 +10,8 @@ const fetcher = (url: string) => fetch(url).then((r) => r.json())
 /** Map layer type to API path */
 function layerTypeToPath(type: EnvLayerType): string {
   switch (type) {
-    case 'wind': return 'weather?type=wind'
-    case 'temperature_anomaly': return 'weather?type=temp'
+    case 'wind': return 'weather'
+    case 'temperature_anomaly': return 'weather'
     case 'aqi': return 'aqi'
     case 'earthquakes': return 'earthquakes'
     case 'wildfires': return 'wildfires'
@@ -40,7 +40,7 @@ export function useEnvLayer(layerType: EnvLayerType) {
   const path = layerTypeToPath(layerType)
   const endpoint = layerType === 'none' || !path ? null : `/api/env/${path}`
 
-  const { data, isLoading, error } = useSWR<EnvLayerData>(
+  const { data, isLoading, error } = useSWR<EnvLayerData | { wind: EnvLayerData; temperature_anomaly: EnvLayerData }>(
     endpoint,
     fetcher,
     {
@@ -50,8 +50,19 @@ export function useEnvLayer(layerType: EnvLayerType) {
   )
 
   useEffect(() => {
-    if (data) setEnvLayerData(data)
-  }, [data, setEnvLayerData])
+    if (data) {
+      // Handle weather endpoint which returns both wind and temp data
+      if ('wind' in data && 'temperature_anomaly' in data) {
+        if (layerType === 'wind') {
+          setEnvLayerData(data.wind)
+        } else if (layerType === 'temperature_anomaly') {
+          setEnvLayerData(data.temperature_anomaly)
+        }
+      } else {
+        setEnvLayerData(data as EnvLayerData)
+      }
+    }
+  }, [data, layerType, setEnvLayerData])
 
   return { isLoading, error }
 }
