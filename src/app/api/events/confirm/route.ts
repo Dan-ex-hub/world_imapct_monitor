@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { createClient } from '@/lib/supabase/server'
+import { notifyEventWatchers } from '@/lib/push/server'
 
 /**
  * POST /api/events/confirm
@@ -87,6 +88,15 @@ export async function POST(request: NextRequest) {
         action: 'created',
       })
     }
+
+    // Send push notifications to watchers (async, don't await)
+    notifyEventWatchers({
+      country: body.country,
+      headline: body.headline,
+      forexImpacts: body.forexImpacts || [],
+    }).catch((error) => {
+      console.error('Failed to send push notifications:', error)
+    })
 
     // Transform to app format
     const event = {
