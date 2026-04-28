@@ -1,4 +1,4 @@
-import { callClaude } from '@/lib/anthropic/client'
+import { analyzeWithGemini } from '@/lib/gemini/client'
 import {
   EVENT_ANALYSIS_SYSTEM_PROMPT,
   EVENT_ANALYSIS_USER_PROMPT,
@@ -10,7 +10,7 @@ import type { RSSItem } from '@/lib/rss/parser'
 
 /**
  * AI-powered event generation from news articles
- * Uses Claude to analyze news and generate structured event data
+ * Uses Google Gemini (free tier) to analyze news and generate structured event data
  */
 
 export interface EventAnalysisResult {
@@ -30,20 +30,27 @@ export interface DeduplicationResult {
  */
 export async function analyzeNewsItem(item: RSSItem): Promise<EventAnalysisResult> {
   try {
-    const prompt = EVENT_ANALYSIS_USER_PROMPT(
+    const userPrompt = EVENT_ANALYSIS_USER_PROMPT(
       item.title,
       item.contentSnippet || item.content,
       item.link
     )
 
-    const response = await callClaude(
-      EVENT_ANALYSIS_SYSTEM_PROMPT,
-      prompt,
-      { temperature: 0.7 }
-    )
+    // Combine system and user prompts for Gemini
+    const fullPrompt = `${EVENT_ANALYSIS_SYSTEM_PROMPT}\n\n${userPrompt}`
+
+    const response = await analyzeWithGemini(fullPrompt)
+
+    // Extract JSON from response (Gemini sometimes wraps it in markdown)
+    let jsonText = response.trim()
+    if (jsonText.startsWith('```json')) {
+      jsonText = jsonText.replace(/```json\n?/g, '').replace(/```\n?/g, '')
+    } else if (jsonText.startsWith('```')) {
+      jsonText = jsonText.replace(/```\n?/g, '')
+    }
 
     // Parse JSON response
-    const result = JSON.parse(response) as EventAnalysisResult
+    const result = JSON.parse(jsonText) as EventAnalysisResult
 
     // Validate the response structure
     if (!result.shouldDisplay) {
@@ -74,15 +81,22 @@ export async function checkDuplicate(
   existingHeadline: string
 ): Promise<DeduplicationResult> {
   try {
-    const prompt = EVENT_DEDUP_USER_PROMPT(newHeadline, existingHeadline)
+    const userPrompt = EVENT_DEDUP_USER_PROMPT(newHeadline, existingHeadline)
+    
+    // Combine system and user prompts for Gemini
+    const fullPrompt = `${EVENT_DEDUP_SYSTEM_PROMPT}\n\n${userPrompt}`
 
-    const response = await callClaude(
-      EVENT_DEDUP_SYSTEM_PROMPT,
-      prompt,
-      { temperature: 0.3 } // Lower temperature for more consistent deduplication
-    )
+    const response = await analyzeWithGemini(fullPrompt)
 
-    const result = JSON.parse(response) as DeduplicationResult
+    // Extract JSON from response
+    let jsonText = response.trim()
+    if (jsonText.startsWith('```json')) {
+      jsonText = jsonText.replace(/```json\n?/g, '').replace(/```\n?/g, '')
+    } else if (jsonText.startsWith('```')) {
+      jsonText = jsonText.replace(/```\n?/g, '')
+    }
+
+    const result = JSON.parse(jsonText) as DeduplicationResult
 
     return result
   } catch (error) {
