@@ -147,7 +147,8 @@ export async function getForexQuotesBatch(pairs: string[]): Promise<Record<strin
     throw new Error('TWELVE_DATA_API_KEY not configured')
   }
 
-  const symbols = pairs.map((p) => p.replace('/', '')).join(',')
+  // Twelve Data API accepts symbols with slashes: EUR/USD,USD/JPY
+  const symbols = pairs.join(',')
   const url = `${BASE_URL}/quote?symbol=${symbols}&apikey=${API_KEY}`
 
   const response = await fetch(url, {
@@ -172,9 +173,8 @@ export async function getForexQuotesBatch(pairs: string[]): Promise<Record<strin
 
   for (const [symbol, quote] of Object.entries(data)) {
     if (typeof quote === 'object' && quote !== null && 'symbol' in quote) {
-      // Convert symbol back to pair format (e.g., EURUSD -> EUR/USD)
-      const pair = symbol.slice(0, 3) + '/' + symbol.slice(3)
-      result[pair] = quote as TwelveDataQuote
+      // Symbol is already in correct format (EUR/USD)
+      result[symbol] = quote as TwelveDataQuote
     }
   }
 
