@@ -3,6 +3,7 @@
 import { ReactNode } from 'react'
 import TopBar from './TopBar'
 import { ConnectionStatus } from '@/components/ui/ConnectionStatus'
+import { Footer } from './Footer'
 
 interface AppShellProps {
   children: ReactNode
@@ -19,8 +20,11 @@ export default function AppShell({ children }: AppShellProps) {
         {children}
       </main>
 
+      {/* Footer with data attribution */}
+      <Footer />
+
       {/* Connection status indicator - bottom right */}
-      <div className="fixed bottom-4 right-4 z-50">
+      <div className="fixed bottom-16 right-4 z-50">
         <ConnectionStatus />
       </div>
     </div>

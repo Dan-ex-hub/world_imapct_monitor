@@ -2,13 +2,23 @@ import { NextResponse } from 'next/server'
 import { createClient } from '@/lib/supabase/server'
 import { getRecentEarthquakes } from '@/lib/env/usgs'
 import type { EnvLayerData } from '@/store/types'
+import { isRateLimited, RATE_LIMITS } from '@/lib/utils/ratelimit'
 
 /**
  * GET /api/env/earthquakes
  * Fetch earthquake data from USGS
  * Caches in env_data_cache table for 5 minutes
  */
-export async function GET() {
+export async function GET(request: Request) {
+  // Rate limiting
+  const identifier = `env-earthquakes-${request.headers.get('x-forwarded-for') || 'unknown'}`
+  if (isRateLimited(identifier, RATE_LIMITS.ENV_API)) {
+    return NextResponse.json(
+      { error: 'Rate limit exceeded. Please try again later.' },
+      { status: 429 }
+    )
+  }
+
   try {
     const supabase = await createClient()
 
@@ -54,6 +64,32 @@ export async function GET() {
     })
   } catch (error) {
     console.error('Earthquakes API error:', error)
+    
+    // Try to return stale data if upstream API is down
+    const supabase = await createClient()
+    const { data: staleData } = await supabase
+      .from('env_data_cache')
+      .select('*')
+      .eq('layer_type', 'earthquakes')
+      .order('fetched_at', { ascending: false })
+      .limit(1)
+      .single()
+
+    if (staleData?.data) {
+      console.log('Returning stale earthquake data due to upstream error')
+      return NextResponse.json(
+        {
+          ...staleData.data,
+          warning: 'Using cached data due to upstream service unavailability',
+        },
+        {
+          headers: {
+            'Cache-Control': 'public, s-maxage=300, stale-while-revalidate=600',
+          },
+        }
+      )
+    }
+
     return NextResponse.json(
       {
         error: 'Failed to fetch earthquake data',
