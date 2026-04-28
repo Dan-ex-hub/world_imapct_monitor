@@ -38,13 +38,19 @@ export function PlaybackControls() {
           setIsPlaying(false)
           return now
         }
-        setPlaybackTimestamp(next.toISOString())
         return next
       })
     }, 1000)
 
     return () => clearInterval(interval)
-  }, [isPlaying, isPlaybackMode, now, setPlaybackTimestamp])
+  }, [isPlaying, isPlaybackMode, now])
+
+  // Separate effect to sync playback timestamp with current time
+  useEffect(() => {
+    if (isPlaybackMode && isPlaying) {
+      setPlaybackTimestamp(currentTime.toISOString())
+    }
+  }, [currentTime, isPlaybackMode, isPlaying, setPlaybackTimestamp])
 
   const handleTogglePlayback = () => {
     if (!isPlaybackMode) {

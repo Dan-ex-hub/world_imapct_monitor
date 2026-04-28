@@ -5,11 +5,11 @@ const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY || '')
 
 /**
  * Get Gemini model instance
- * Using gemini-1.5-flash for fast, free analysis
+ * Using gemini-1.5-flash-latest for fast, free analysis
  */
 export function getGeminiModel() {
   return genAI.getGenerativeModel({ 
-    model: 'gemini-1.5-flash',
+    model: 'gemini-1.5-flash-latest',
     generationConfig: {
       temperature: 0.7,
       topP: 0.95,
