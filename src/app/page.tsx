@@ -10,6 +10,7 @@ import { EnvDataPanel } from '@/components/ui/EnvDataPanel'
 import { NewsTicker } from '@/components/ui/NewsTicker'
 import { EnvLayerPanel } from '@/components/ui/EnvLayerPanel'
 import { PlaybackControls } from '@/components/ui/PlaybackControls'
+import { useRealtimeEvents } from '@/lib/realtime/useRealtimeEvents'
 import { MOCK_EVENTS } from '@/lib/mock/events'
 import { useGlobeStore } from '@/store/useGlobeStore'
 import type { GlobeRef } from '@/components/globe/GlobeRenderer'
@@ -17,15 +18,22 @@ import type { GlobeEvent } from '@/store/types'
 
 export default function Home() {
   const globeRef = useRef<GlobeRef>(null)
+  const events = useGlobeStore((s) => s.events)
   const setEvents = useGlobeStore((s) => s.setEvents)
   const setSelectedEvent = useGlobeStore((s) => s.setSelectedEvent)
   const setHoveredEvent = useGlobeStore((s) => s.setHoveredEvent)
   const activeEnvLayer = useGlobeStore((s) => s.activeEnvLayer)
 
-  // Load mock events into store on mount
+  // Subscribe to realtime events from Supabase
+  useRealtimeEvents()
+
+  // Fallback to mock events if no events loaded from Supabase (for development)
   useEffect(() => {
-    setEvents(MOCK_EVENTS)
-  }, [setEvents])
+    if (events.length === 0) {
+      console.log('[App] No events from Supabase, using mock data')
+      setEvents(MOCK_EVENTS)
+    }
+  }, [events.length, setEvents])
 
   const handleEventClick = useCallback((event: GlobeEvent) => {
     console.log('[ImpactGlobe] Event clicked:', event.headline)
@@ -50,7 +58,7 @@ export default function Home() {
       {/* 3D Globe — full viewport */}
       <GlobeWrapper
         ref={globeRef}
-        events={MOCK_EVENTS}
+        events={events}
         onEventClick={handleEventClick}
         onEventHover={handleEventHover}
       />

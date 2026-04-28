@@ -1,32 +1,34 @@
 # ImpactGlobe Build State
 
-## Current Phase: 3 — Database, Supabase & Realtime
+## Current Phase: 3 — Database, Supabase & Realtime (COMPLETE)
 
 ## Completed
 - [x] Phase 0: Foundation, folder structure, types, utils, env setup
 - [x] Phase 1: Three.js Globe Renderer + Environmental Layer System
-- [x] Phase 2: UI Shell & All Interface Components ✅
+- [x] Phase 2: UI Shell & All Interface Components
+- [x] Phase 3: Database, Supabase & Realtime ✅
 
-## Phase 2 Details (COMPLETE)
-- Task 2.1: AppShell layout component ✅
-- Task 2.2: TopBar with logo, connection status, filters, auth ✅
-- Task 2.3: ConnectionStatus component ✅
-- Task 2.4: FilterBar component ✅
-- Task 2.5: ImpactBadge component ✅
-- Task 2.6: CategoryBadge component ✅
-- Task 2.7: TooltipOverlay component ✅
-- Task 2.8: EventModal component ✅
-- Task 2.9: WatchlistButton component ✅
-- Task 2.10: ForexPanel component ✅
-- Task 2.11: SparklineChart component ✅
-- Task 2.12: NewsTicker component ✅
-- Task 2.13: EnvLayerPanel component ✅
-- Task 2.14: EnvDataPanel component ✅
-- Task 2.15: EnvTooltip component ✅
-- Task 2.16: PlaybackControls component ✅
+## Phase 3 Details (COMPLETE)
+- Task 3.1: Database schema (supabase-schema.sql) ✅
+  - Events table with RLS policies
+  - Forex pairs table
+  - Environmental data cache table
+  - AQI history table
+  - Users table (extends auth.users)
+  - Watchlist table
+  - Push subscriptions table
+  - Triggers for updated_at timestamps
+  - Function to auto-create user profiles
+  - Realtime publication for events and forex_pairs
+- Task 3.2: Database types (src/types/database.types.ts) ✅
+- Task 3.3: Realtime subscription hook (src/lib/realtime/useRealtimeEvents.ts) ✅
+- Task 3.4: Supabase setup documentation (SUPABASE_SETUP.md) ✅
+- Task 3.5: Integration with main app (src/app/page.tsx) ✅
+  - Realtime events subscription
+  - Fallback to mock data when Supabase not configured
 
 ## Next Tasks
-- Phase 3: Database schema, Supabase setup, Realtime subscriptions
+- Phase 4: AI Pipeline & News Analysis (Anthropic Claude integration)
 
 ## Technical Notes
 - **Next.js version:** 16.2.4 (spec said 14, but latest was installed)

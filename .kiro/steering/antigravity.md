@@ -1,30 +1,95 @@
 ---
-inclusion: auto
+description: Autonomous development loop that verifies code changes in live browser, detects errors, and fixes them automatically
+inclusion: always
 ---
 
-## Anti-Gravity Dev Loop Rules
+# Anti-Gravity Development Loop
 
-You are an autonomous developer. After every code change, you MUST verify the running app.
+## Core Principle
 
-### Dev Server
-- Start command: `npm run dev`
-- App URL: http://localhost:3000
-- Always check if server is running before opening browser
+After every code change that affects the UI, API routes, or application behavior, you MUST verify the running application in a live browser environment. Never consider a task complete without browser verification.
 
-### Autonomous Loop — follow this every time you make a code change:
-1. Check if dev server is running. If not, run `npm run dev` in terminal
-2. Wait 3 seconds for server to start
-3. Use Playwright MCP → navigate to http://localhost:3000
-4. Take a snapshot of the accessibility tree to understand page structure
-5. Take a screenshot to visually verify the UI
-6. Check browser console messages for any JS errors or warnings
-7. Interact with the UI — click buttons, fill forms, test core flows
-8. Check network requests for failed API calls (4xx, 5xx)
-9. If ANY error is found (visual, console, network, or broken interaction):
-   - Read the relevant source file
-   - Fix the error
-   - Save the file
-   - Re-navigate to the app and verify again
-10. Only report "✅ Done" when the browser shows no errors and core interactions work
+## Development Server
 
-### Never consider a task complete without a clean browser run.
+- **Start command**: `npm run dev`
+- **Application URL**: `http://localhost:3000`
+- **Framework**: Next.js (React-based)
+- **Check server status**: Use `listProcesses` to verify dev server is running before browser operations
+
+## Verification Loop (Execute After Every Code Change)
+
+### 1. Server Management
+- Check if dev server process is running using `listProcesses`
+- If not running, start with `controlPwshProcess` action="start", command="npm run dev"
+- Wait 3-5 seconds for server initialization before proceeding
+
+### 2. Browser Navigation
+- Use `mcp_playwright_browser_navigate` to `http://localhost:3000`
+- Wait for page load completion before proceeding
+
+### 3. Page Structure Analysis
+- Use `mcp_playwright_browser_snapshot` to capture accessibility tree
+- Verify expected UI elements are present and properly structured
+- Check for missing components or layout issues
+
+### 4. Visual Verification
+- Use `mcp_playwright_browser_take_screenshot` to capture current UI state
+- Compare against expected visual appearance
+- Look for rendering issues, broken layouts, or missing styles
+
+### 5. Console Error Detection
+- Use `mcp_playwright_browser_console_messages` with level="error"
+- Check for JavaScript runtime errors, React errors, or warnings
+- Pay special attention to hydration errors, component errors, and API failures
+
+### 6. Interactive Testing
+- Test core user flows relevant to your changes:
+  - Use `mcp_playwright_browser_click` for button interactions
+  - Use `mcp_playwright_browser_type` for form inputs
+  - Use `mcp_playwright_browser_hover` for hover states
+- Verify state changes, navigation, and dynamic content updates
+
+### 7. Network Request Validation
+- Use `mcp_playwright_browser_network_requests` to inspect API calls
+- Filter for failed requests (4xx, 5xx status codes)
+- Verify expected API endpoints are called with correct payloads
+- Check for CORS errors, timeout issues, or malformed responses
+
+### 8. Error Resolution Loop
+If ANY issue is detected (console errors, visual bugs, failed requests, broken interactions):
+1. **Identify root cause**: Read relevant source files to understand the error
+2. **Implement fix**: Make targeted code changes to resolve the issue
+3. **Save changes**: Ensure all modified files are saved
+4. **Re-verify**: Navigate to the app again and repeat steps 2-7
+5. **Iterate**: Continue until all errors are resolved
+
+### 9. Completion Criteria
+Only report task completion when ALL of the following are true:
+- ✅ No console errors or warnings related to your changes
+- ✅ UI renders correctly with no visual regressions
+- ✅ All interactive elements function as expected
+- ✅ Network requests succeed with appropriate responses
+- ✅ Core user flows complete without errors
+
+## Tool Usage Guidelines
+
+- **Process management**: Use `controlPwshProcess` and `listProcesses` for dev server
+- **Browser automation**: Use `mcp_playwright_browser_*` tools for all browser interactions
+- **Avoid manual commands**: Don't use bash commands for browser testing; use Playwright MCP tools
+- **Screenshot naming**: Use descriptive filenames when taking screenshots for debugging
+
+## Error Handling
+
+- **Build errors**: Check terminal output from dev server process using `getProcessOutput`
+- **Runtime errors**: Check browser console messages for client-side errors
+- **API errors**: Check network requests for server-side failures
+- **Hydration errors**: Common in Next.js; verify server/client rendering consistency
+
+## When to Skip Verification
+
+You may skip browser verification only when:
+- Changes are purely backend (database schemas, server utilities with no API exposure)
+- Changes are to documentation, configuration files, or non-executable code
+- Changes are to test files that don't affect application runtime
+
+For all other changes, browser verification is mandatory.

@@ -12,11 +12,9 @@ export function PlaybackControls() {
   const setPlaybackTimestamp = useGlobeStore((s) => s.setPlaybackTimestamp)
 
   const [isPlaying, setIsPlaying] = useState(false)
-  const [currentTime, setCurrentTime] = useState<Date>(new Date())
-
-  // Playback range: last 48 hours
-  const now = new Date()
-  const startTime = subHours(now, 48)
+  const [currentTime, setCurrentTime] = useState<Date>(() => new Date())
+  const [now] = useState<Date>(() => new Date())
+  const [startTime] = useState<Date>(() => subHours(new Date(), 48))
 
   useEffect(() => {
     if (!isPlaybackMode) {
