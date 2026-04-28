@@ -1,13 +1,16 @@
 'use client'
 
 import { useGlobeStore } from '@/store/useGlobeStore'
+import { useForex } from '@/hooks/useForex'
 import { SparklineChart } from './SparklineChart'
 import { TrendingUp, TrendingDown, RefreshCw } from 'lucide-react'
 import { formatDistanceToNow } from 'date-fns'
+import { useState } from 'react'
 
 export function ForexPanel() {
-  const forexPairs = useGlobeStore((s) => s.forexPairs)
   const events = useGlobeStore((s) => s.events)
+  const { pairs: forexPairs, isLoading, refresh } = useForex()
+  const [isRefreshing, setIsRefreshing] = useState(false)
 
   // Get top 5 pairs by absolute change
   const topPairs = [...forexPairs]
@@ -15,8 +18,12 @@ export function ForexPanel() {
     .slice(0, 5)
 
   const handleRefresh = async () => {
-    // Will be implemented in Phase 5
-    console.log('Refreshing forex data...')
+    setIsRefreshing(true)
+    try {
+      await refresh()
+    } finally {
+      setTimeout(() => setIsRefreshing(false), 1000)
+    }
   }
 
   return (
@@ -29,10 +36,11 @@ export function ForexPanel() {
           </h2>
           <button
             onClick={handleRefresh}
-            className="rounded-lg p-2 text-text-muted transition-colors hover:bg-bg-elevated hover:text-text-primary"
+            disabled={isRefreshing}
+            className="rounded-lg p-2 text-text-muted transition-colors hover:bg-bg-elevated hover:text-primary disabled:opacity-50"
             title="Refresh forex data"
           >
-            <RefreshCw className="h-4 w-4" />
+            <RefreshCw className={`h-4 w-4 ${isRefreshing ? 'animate-spin' : ''}`} />
           </button>
         </div>
         <p className="mt-1 text-xs text-text-muted">Most volatile pairs (24h)</p>
@@ -40,12 +48,19 @@ export function ForexPanel() {
 
       {/* Forex pairs list */}
       <div className="overflow-y-auto" style={{ height: 'calc(100% - 73px)' }}>
-        {topPairs.length === 0 ? (
+        {isLoading && topPairs.length === 0 ? (
+          <div className="flex h-full items-center justify-center p-8 text-center">
+            <div>
+              <div className="mb-2 text-4xl opacity-20 animate-pulse">📊</div>
+              <p className="text-sm text-text-muted">Loading forex data...</p>
+            </div>
+          </div>
+        ) : topPairs.length === 0 ? (
           <div className="flex h-full items-center justify-center p-8 text-center">
             <div>
               <div className="mb-2 text-4xl opacity-20">📊</div>
               <p className="text-sm text-text-muted">No forex data available</p>
-              <p className="mt-1 text-xs text-text-muted">Data will load in Phase 5</p>
+              <p className="mt-1 text-xs text-text-muted">Configure TWELVE_DATA_API_KEY to enable</p>
             </div>
           </div>
         ) : (

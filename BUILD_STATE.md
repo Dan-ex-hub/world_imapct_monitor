@@ -1,6 +1,6 @@
 # ImpactGlobe Build State
 
-## Current Phase: 4 — AI Pipeline & News Analysis (COMPLETE)
+## Current Phase: 5 — Forex Data Integration (COMPLETE)
 
 ## Completed
 - [x] Phase 0: Foundation, folder structure, types, utils, env setup
@@ -8,30 +8,7 @@
 - [x] Phase 2: UI Shell & All Interface Components
 - [x] Phase 3: Database, Supabase & Realtime ✅
 - [x] Phase 4: AI Pipeline & News Analysis ✅
-
-## Phase 3 Details (COMPLETE)
-- Task 3.1: Database schema (supabase-schema.sql) ✅
-  - Events table with RLS policies
-  - Event forex impacts table (linked to events)
-  - Forex cache table (Twelve Data prices)
-  - Forex pairs table (backward compatibility)
-  - Environmental data cache table
-  - AQI history table
-  - Users table (extends auth.users)
-  - Watchlist table
-  - Push subscriptions table
-  - RSS sources table
-  - Event deduplication log table
-  - API keys table (future use)
-  - Triggers for updated_at timestamps
-  - Function to auto-create user profiles
-  - Realtime publication for events and forex_pairs
-- Task 3.2: Database types (src/types/database.types.ts) ✅
-- Task 3.3: Realtime subscription hook (src/lib/realtime/useRealtimeEvents.ts) ✅
-- Task 3.4: Supabase setup documentation (SUPABASE_SETUP.md) ✅
-- Task 3.5: Integration with main app (src/app/page.tsx) ✅
-  - Realtime events subscription
-  - Fallback to mock data when Supabase not configured
+- [x] Phase 5: Forex Data Integration ✅
 
 ## Phase 4 Details (COMPLETE)
 - Task 4.1: Anthropic Claude client (src/lib/anthropic/client.ts) ✅
@@ -71,8 +48,43 @@
   - Auto-create events in database
   - Protected by CRON_SECRET
 
+## Phase 5 Details (COMPLETE)
+- Task 5.1: Twelve Data API client (src/lib/forex/twelvedata.ts) ✅
+  - Real-time forex quotes
+  - Time series data for sparklines (24h hourly)
+  - Batch quote requests
+  - Major forex pairs configuration (10 pairs)
+  - Rate limiting support (8 requests/minute)
+  - 24h change calculation
+  - Sparkline data extraction
+- Task 5.2: Forex cache management (src/lib/forex/cache.ts) ✅
+  - Get cached forex pairs from database
+  - Update single pair cache
+  - Batch update multiple pairs
+  - Get top N movers by absolute change
+  - Link forex pairs to driving events
+  - Cache staleness detection
+- Task 5.3: Forex API routes ✅
+  - GET /api/forex/pairs - Fetch cached forex data
+  - GET /api/forex/pairs?top=5 - Get top N movers
+  - GET /api/forex/refresh - Refresh from Twelve Data (cron/admin)
+  - GET /api/forex/sparkline/[pair] - Get sparkline for specific pair
+- Task 5.4: useForex hook integration ✅
+  - Already implemented, now fetches real data
+  - 1-minute refresh interval
+  - Syncs to Zustand store
+  - Manual refresh support
+- Task 5.5: ForexPanel UI updates ✅
+  - Integrated useForex hook
+  - Loading states
+  - Refresh button with animation
+  - Real-time data display
+  - Sparkline charts
+  - Driving event display
+  - Last updated timestamps
+
 ## Next Tasks
-- Phase 5: Forex Data Integration (Twelve Data API)
+- Phase 6: Environmental Data Integration (Open-Meteo, OpenAQ, USGS, NASA EONET)
 
 ## Technical Notes
 - **Next.js version:** 16.2.4 (spec said 14, but latest was installed)

@@ -1,59 +1,212 @@
-import axios from 'axios'
+/**
+ * Twelve Data API client for forex data
+ * Free tier: 800 API credits/day, 8 requests/minute
+ * https://twelvedata.com/docs
+ */
 
 const BASE_URL = 'https://api.twelvedata.com'
+const API_KEY = process.env.TWELVE_DATA_API_KEY
 
-/** Fetch current price for a forex pair */
-export async function getForexPrice(pair: string): Promise<{
-  price: number
-  timestamp: string
-} | null> {
-  try {
-    const symbol = pair.replace('/', '')
-    const { data } = await axios.get(`${BASE_URL}/price`, {
-      params: {
-        symbol: `${symbol}`,
-        apikey: process.env.TWELVE_DATA_API_KEY,
-      },
-    })
-    if (data.price) {
-      return { price: parseFloat(data.price), timestamp: new Date().toISOString() }
-    }
-    return null
-  } catch {
-    return null
-  }
+/**
+ * Major forex pairs to track
+ */
+export const MAJOR_PAIRS = [
+  'EUR/USD', // Euro / US Dollar
+  'GBP/USD', // British Pound / US Dollar
+  'USD/JPY', // US Dollar / Japanese Yen
+  'USD/CHF', // US Dollar / Swiss Franc
+  'AUD/USD', // Australian Dollar / US Dollar
+  'USD/CAD', // US Dollar / Canadian Dollar
+  'NZD/USD', // New Zealand Dollar / US Dollar
+  'EUR/GBP', // Euro / British Pound
+  'EUR/JPY', // Euro / Japanese Yen
+  'GBP/JPY', // British Pound / Japanese Yen
+]
+
+export interface TwelveDataQuote {
+  symbol: string
+  name: string
+  exchange: string
+  currency: string
+  datetime: string
+  timestamp: number
+  open: string
+  high: string
+  low: string
+  close: string
+  volume?: string
+  previous_close: string
+  change: string
+  percent_change: string
+  average_volume?: string
+  is_market_open: boolean
 }
 
-/** Fetch time series for sparkline data */
+export interface TwelveDataTimeSeriesValue {
+  datetime: string
+  open: string
+  high: string
+  low: string
+  close: string
+  volume?: string
+}
+
+export interface TwelveDataTimeSeries {
+  meta: {
+    symbol: string
+    interval: string
+    currency: string
+    exchange_timezone: string
+    exchange: string
+    type: string
+  }
+  values: TwelveDataTimeSeriesValue[]
+  status: string
+}
+
+/**
+ * Get real-time quote for a forex pair
+ */
+export async function getForexQuote(pair: string): Promise<TwelveDataQuote> {
+  if (!API_KEY) {
+    throw new Error('TWELVE_DATA_API_KEY not configured')
+  }
+
+  const symbol = pair.replace('/', '')
+  const url = `${BASE_URL}/quote?symbol=${symbol}&apikey=${API_KEY}`
+
+  const response = await fetch(url, {
+    headers: {
+      'Accept': 'application/json',
+    },
+  })
+
+  if (!response.ok) {
+    const error = await response.text()
+    throw new Error(`Twelve Data API error: ${response.status} ${error}`)
+  }
+
+  const data = await response.json()
+
+  if (data.code === 429) {
+    throw new Error('Twelve Data API rate limit exceeded')
+  }
+
+  if (data.status === 'error') {
+    throw new Error(`Twelve Data API error: ${data.message}`)
+  }
+
+  return data
+}
+
+/**
+ * Get time series data for sparkline (last 24 hours, hourly)
+ */
 export async function getForexTimeSeries(
   pair: string,
-  interval = '1h',
-  outputSize = 24
-): Promise<number[]> {
-  try {
-    const symbol = pair.replace('/', '')
-    const { data } = await axios.get(`${BASE_URL}/time_series`, {
-      params: {
-        symbol,
-        interval,
-        outputsize: outputSize,
-        apikey: process.env.TWELVE_DATA_API_KEY,
-      },
-    })
-    if (data.values) {
-      return data.values
-        .map((v: { close: string }) => parseFloat(v.close))
-        .reverse()
+  interval: '1h' | '5min' | '15min' | '30min' = '1h',
+  outputsize = 24
+): Promise<TwelveDataTimeSeries> {
+  if (!API_KEY) {
+    throw new Error('TWELVE_DATA_API_KEY not configured')
+  }
+
+  const symbol = pair.replace('/', '')
+  const url = `${BASE_URL}/time_series?symbol=${symbol}&interval=${interval}&outputsize=${outputsize}&apikey=${API_KEY}`
+
+  const response = await fetch(url, {
+    headers: {
+      'Accept': 'application/json',
+    },
+  })
+
+  if (!response.ok) {
+    const error = await response.text()
+    throw new Error(`Twelve Data API error: ${response.status} ${error}`)
+  }
+
+  const data = await response.json()
+
+  if (data.code === 429) {
+    throw new Error('Twelve Data API rate limit exceeded')
+  }
+
+  if (data.status === 'error') {
+    throw new Error(`Twelve Data API error: ${data.message}`)
+  }
+
+  return data
+}
+
+/**
+ * Get quotes for multiple pairs (batch request)
+ * Note: Batch requests count as 1 API credit per symbol
+ */
+export async function getForexQuotesBatch(pairs: string[]): Promise<Record<string, TwelveDataQuote>> {
+  if (!API_KEY) {
+    throw new Error('TWELVE_DATA_API_KEY not configured')
+  }
+
+  const symbols = pairs.map((p) => p.replace('/', '')).join(',')
+  const url = `${BASE_URL}/quote?symbol=${symbols}&apikey=${API_KEY}`
+
+  const response = await fetch(url, {
+    headers: {
+      'Accept': 'application/json',
+    },
+  })
+
+  if (!response.ok) {
+    const error = await response.text()
+    throw new Error(`Twelve Data API error: ${response.status} ${error}`)
+  }
+
+  const data = await response.json()
+
+  if (data.code === 429) {
+    throw new Error('Twelve Data API rate limit exceeded')
+  }
+
+  // Batch response is an object with symbol keys
+  const result: Record<string, TwelveDataQuote> = {}
+
+  for (const [symbol, quote] of Object.entries(data)) {
+    if (typeof quote === 'object' && quote !== null && 'symbol' in quote) {
+      // Convert symbol back to pair format (e.g., EURUSD -> EUR/USD)
+      const pair = symbol.slice(0, 3) + '/' + symbol.slice(3)
+      result[pair] = quote as TwelveDataQuote
     }
-    return []
-  } catch {
-    return []
+  }
+
+  return result
+}
+
+/**
+ * Calculate 24h change from time series data
+ */
+export function calculate24hChange(values: TwelveDataTimeSeriesValue[]): {
+  change: number
+  changePercent: number
+} {
+  if (values.length < 2) {
+    return { change: 0, changePercent: 0 }
+  }
+
+  const latest = parseFloat(values[0].close)
+  const oldest = parseFloat(values[values.length - 1].close)
+
+  const change = latest - oldest
+  const changePercent = (change / oldest) * 100
+
+  return {
+    change: parseFloat(change.toFixed(5)),
+    changePercent: parseFloat(changePercent.toFixed(2)),
   }
 }
 
-/** Major forex pairs to track */
-export const MAJOR_PAIRS = [
-  'EUR/USD', 'GBP/USD', 'USD/JPY', 'USD/CHF',
-  'AUD/USD', 'USD/CAD', 'NZD/USD', 'EUR/GBP',
-  'EUR/JPY', 'GBP/JPY',
-]
+/**
+ * Extract sparkline data from time series (close prices only)
+ */
+export function extractSparklineData(values: TwelveDataTimeSeriesValue[]): number[] {
+  return values.reverse().map((v) => parseFloat(v.close))
+}
