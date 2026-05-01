@@ -1,0 +1,283 @@
+- generic [ref=e1]:
+  - generic [ref=e2]:
+    - banner [ref=e3]:
+      - generic [ref=e4]:
+        - link "ImpactGlobe" [ref=e5] [cursor=pointer]:
+          - /url: /
+          - heading "ImpactGlobe" [level=1] [ref=e6]
+        - generic [ref=e9]: Live
+      - generic [ref=e11]:
+        - generic [ref=e12]:
+          - img [ref=e13]
+          - textbox "Search events..." [ref=e16]
+        - generic [ref=e17]:
+          - button "1H" [ref=e18]
+          - button "6H" [ref=e19]
+          - button "24H" [ref=e20]
+          - button "48H" [ref=e21]
+        - button "Filters" [ref=e22]:
+          - generic [ref=e23]: Filters
+        - button "Export CSV" [ref=e24]:
+          - img [ref=e25]
+          - text: Export CSV
+        - button "Playback" [ref=e28]:
+          - img [ref=e29]
+          - text: Playback
+      - generic [ref=e32]:
+        - generic [ref=e35]: 12 EVENTS TRACKED
+        - generic [ref=e36]:
+          - link "Log In" [ref=e37] [cursor=pointer]:
+            - /url: /login
+          - link "Sign Up" [ref=e38] [cursor=pointer]:
+            - /url: /signup
+    - main [ref=e39]:
+      - generic [ref=e120]:
+        - generic [ref=e121]:
+          - generic [ref=e122]:
+            - img [ref=e123]
+            - heading "Air Quality Index" [level=2] [ref=e126]
+          - generic [ref=e127]:
+            - generic [ref=e128]: "Source: OpenAQ"
+            - generic [ref=e129]: Updated 2 minutes ago
+        - generic [ref=e131]:
+          - generic [ref=e132]:
+            - generic [ref=e133]: Monitoring Stations
+            - generic [ref=e134]: "380"
+          - generic [ref=e135]:
+            - heading "Most Polluted Cities" [level=4] [ref=e136]
+            - generic [ref=e137]:
+              - generic [ref=e138]:
+                - generic [ref=e140]: 40.0°, -80.0°
+                - generic [ref=e141]:
+                  - generic [ref=e142]: "83"
+                  - generic [ref=e143]: Moderate
+              - generic [ref=e144]:
+                - generic [ref=e146]: 40.0°, -170.0°
+                - generic [ref=e147]:
+                  - generic [ref=e148]: "70"
+                  - generic [ref=e149]: Moderate
+              - generic [ref=e150]:
+                - generic [ref=e152]: 10.0°, -10.0°
+                - generic [ref=e153]:
+                  - generic [ref=e154]: "70"
+                  - generic [ref=e155]: Moderate
+              - generic [ref=e156]:
+                - generic [ref=e158]: 30.0°, 0.0°
+                - generic [ref=e159]:
+                  - generic [ref=e160]: "70"
+                  - generic [ref=e161]: Moderate
+              - generic [ref=e162]:
+                - generic [ref=e164]: 50.0°, -30.0°
+                - generic [ref=e165]:
+                  - generic [ref=e166]: "67"
+                  - generic [ref=e167]: Moderate
+      - generic [ref=e63]:
+        - generic [ref=e64]:
+          - button "🌐 None" [ref=e65]:
+            - generic [ref=e66]: 🌐
+            - generic [ref=e67]: None
+          - button "💨 Wind" [ref=e68]:
+            - generic [ref=e69]: 💨
+            - generic [ref=e70]: Wind
+          - button "😷 AQI" [active] [ref=e71]:
+            - generic [ref=e72]: 😷
+            - generic [ref=e73]: AQI
+          - button "🌡️ Temp" [ref=e74]:
+            - generic [ref=e75]: 🌡️
+            - generic [ref=e76]: Temp
+          - button "⚡ Quakes" [ref=e77]:
+            - generic [ref=e78]: ⚡
+            - generic [ref=e79]: Quakes
+          - button "🔥 Fire" [ref=e80]:
+            - generic [ref=e81]: 🔥
+            - generic [ref=e82]: Fire
+          - button "🌀 Storms" [ref=e83]:
+            - generic [ref=e84]: 🌀
+            - generic [ref=e85]: Storms
+          - button "🌊 Sea Temp" [ref=e86]:
+            - generic [ref=e87]: 🌊
+            - generic [ref=e88]: Sea Temp
+        - generic [ref=e168]:
+          - generic [ref=e169]: Legend
+          - generic [ref=e170]:
+            - generic [ref=e171]: Good
+            - generic [ref=e172]: Moderate
+            - generic [ref=e173]: Unhealthy
+            - generic [ref=e174]: Very Unhealthy
+            - generic [ref=e175]: Hazardous
+      - button "Replay Last 48 Hours" [ref=e90]:
+        - img [ref=e91]
+        - text: Replay Last 48 Hours
+      - generic [ref=e176]:
+        - generic [ref=e177]:
+          - generic [ref=e182]: Live
+          - generic [ref=e183]: 12 events tracked
+          - generic [ref=e184]: Hover to pause
+        - generic [ref=e186]:
+          - button "Critical US-China Trade Talks Resume in Geneva Amid Tariff Standoff • United States 25m ago" [ref=e187] [cursor=pointer]:
+            - generic [ref=e188]: Critical
+            - generic [ref=e189]: US-China Trade Talks Resume in Geneva Amid Tariff Standoff
+            - generic [ref=e190]: •
+            - generic [ref=e191]: United States
+            - generic [ref=e192]: 25m ago
+          - button "Critical India Conducts Airstrikes on Pakistan-Administered Kashmir After Attack • India 45m ago" [ref=e193] [cursor=pointer]:
+            - generic [ref=e194]: Critical
+            - generic [ref=e195]: India Conducts Airstrikes on Pakistan-Administered Kashmir After Attack
+            - generic [ref=e196]: •
+            - generic [ref=e197]: India
+            - generic [ref=e198]: 45m ago
+          - button "High Ukraine Drones Strike Russian Tuapse Oil Refinery for Third Time • Ukraine 1h ago" [ref=e199] [cursor=pointer]:
+            - generic [ref=e200]: High
+            - generic [ref=e201]: Ukraine Drones Strike Russian Tuapse Oil Refinery for Third Time
+            - generic [ref=e202]: •
+            - generic [ref=e203]: Ukraine
+            - generic [ref=e204]: 1h ago
+          - button "Medium GM Expects $500M Trump Tariff Refund, Raises 2026 Earnings Outlook • United States 2h ago" [ref=e205] [cursor=pointer]:
+            - generic [ref=e206]: Medium
+            - generic [ref=e207]: GM Expects $500M Trump Tariff Refund, Raises 2026 Earnings Outlook
+            - generic [ref=e208]: •
+            - generic [ref=e209]: United States
+            - generic [ref=e210]: 2h ago
+          - button "High ECB Signals June Rate Cut as Eurozone Inflation Falls to 2.2% • Germany 2h ago" [ref=e211] [cursor=pointer]:
+            - generic [ref=e212]: High
+            - generic [ref=e213]: ECB Signals June Rate Cut as Eurozone Inflation Falls to 2.2%
+            - generic [ref=e214]: •
+            - generic [ref=e215]: Germany
+            - generic [ref=e216]: 2h ago
+          - button "High Jamie Dimon Warns of Bond Market Crisis as US Debt Hits $37 Trillion • United States 3h ago" [ref=e217] [cursor=pointer]:
+            - generic [ref=e218]: High
+            - generic [ref=e219]: Jamie Dimon Warns of Bond Market Crisis as US Debt Hits $37 Trillion
+            - generic [ref=e220]: •
+            - generic [ref=e221]: United States
+            - generic [ref=e222]: 3h ago
+          - 'button "High Germany''s Merz: US Being Humiliated by Iran as Nuclear Talks Stall • Germany 4h ago" [ref=e223] [cursor=pointer]':
+            - generic [ref=e224]: High
+            - generic [ref=e225]: "Germany's Merz: US Being Humiliated by Iran as Nuclear Talks Stall"
+            - generic [ref=e226]: •
+            - generic [ref=e227]: Germany
+            - generic [ref=e228]: 4h ago
+          - button "Medium Google Signs Classified AI Deal with US Pentagon • United States 5h ago" [ref=e229] [cursor=pointer]:
+            - generic [ref=e230]: Medium
+            - generic [ref=e231]: Google Signs Classified AI Deal with US Pentagon
+            - generic [ref=e232]: •
+            - generic [ref=e233]: United States
+            - generic [ref=e234]: 5h ago
+          - button "Medium Russia's Africa Corps Prevents Coup in Mali After Rebels Seize Towns • Mali 6h ago" [ref=e235] [cursor=pointer]:
+            - generic [ref=e236]: Medium
+            - generic [ref=e237]: Russia's Africa Corps Prevents Coup in Mali After Rebels Seize Towns
+            - generic [ref=e238]: •
+            - generic [ref=e239]: Mali
+            - generic [ref=e240]: 6h ago
+          - button "Medium US Gas Prices Surge to 4-Year High at $4.15 Per Gallon • United States 7h ago" [ref=e241] [cursor=pointer]:
+            - generic [ref=e242]: Medium
+            - generic [ref=e243]: US Gas Prices Surge to 4-Year High at $4.15 Per Gallon
+            - generic [ref=e244]: •
+            - generic [ref=e245]: United States
+            - generic [ref=e246]: 7h ago
+          - button "Medium OpenAI Brings Models to Amazon Cloud After Ending Microsoft Exclusivity • United States 8h ago" [ref=e247] [cursor=pointer]:
+            - generic [ref=e248]: Medium
+            - generic [ref=e249]: OpenAI Brings Models to Amazon Cloud After Ending Microsoft Exclusivity
+            - generic [ref=e250]: •
+            - generic [ref=e251]: United States
+            - generic [ref=e252]: 8h ago
+          - button "Low King Charles Visits White House on First US State Visit Since Coronation • United Kingdom 10h ago" [ref=e253] [cursor=pointer]:
+            - generic [ref=e254]: Low
+            - generic [ref=e255]: King Charles Visits White House on First US State Visit Since Coronation
+            - generic [ref=e256]: •
+            - generic [ref=e257]: United Kingdom
+            - generic [ref=e258]: 10h ago
+          - button "Critical US-China Trade Talks Resume in Geneva Amid Tariff Standoff • United States 25m ago" [ref=e259] [cursor=pointer]:
+            - generic [ref=e260]: Critical
+            - generic [ref=e261]: US-China Trade Talks Resume in Geneva Amid Tariff Standoff
+            - generic [ref=e262]: •
+            - generic [ref=e263]: United States
+            - generic [ref=e264]: 25m ago
+          - button "Critical India Conducts Airstrikes on Pakistan-Administered Kashmir After Attack • India 45m ago" [ref=e265] [cursor=pointer]:
+            - generic [ref=e266]: Critical
+            - generic [ref=e267]: India Conducts Airstrikes on Pakistan-Administered Kashmir After Attack
+            - generic [ref=e268]: •
+            - generic [ref=e269]: India
+            - generic [ref=e270]: 45m ago
+          - button "High Ukraine Drones Strike Russian Tuapse Oil Refinery for Third Time • Ukraine 1h ago" [ref=e271] [cursor=pointer]:
+            - generic [ref=e272]: High
+            - generic [ref=e273]: Ukraine Drones Strike Russian Tuapse Oil Refinery for Third Time
+            - generic [ref=e274]: •
+            - generic [ref=e275]: Ukraine
+            - generic [ref=e276]: 1h ago
+          - button "Medium GM Expects $500M Trump Tariff Refund, Raises 2026 Earnings Outlook • United States 2h ago" [ref=e277] [cursor=pointer]:
+            - generic [ref=e278]: Medium
+            - generic [ref=e279]: GM Expects $500M Trump Tariff Refund, Raises 2026 Earnings Outlook
+            - generic [ref=e280]: •
+            - generic [ref=e281]: United States
+            - generic [ref=e282]: 2h ago
+          - button "High ECB Signals June Rate Cut as Eurozone Inflation Falls to 2.2% • Germany 2h ago" [ref=e283] [cursor=pointer]:
+            - generic [ref=e284]: High
+            - generic [ref=e285]: ECB Signals June Rate Cut as Eurozone Inflation Falls to 2.2%
+            - generic [ref=e286]: •
+            - generic [ref=e287]: Germany
+            - generic [ref=e288]: 2h ago
+          - button "High Jamie Dimon Warns of Bond Market Crisis as US Debt Hits $37 Trillion • United States 3h ago" [ref=e289] [cursor=pointer]:
+            - generic [ref=e290]: High
+            - generic [ref=e291]: Jamie Dimon Warns of Bond Market Crisis as US Debt Hits $37 Trillion
+            - generic [ref=e292]: •
+            - generic [ref=e293]: United States
+            - generic [ref=e294]: 3h ago
+          - 'button "High Germany''s Merz: US Being Humiliated by Iran as Nuclear Talks Stall • Germany 4h ago" [ref=e295] [cursor=pointer]':
+            - generic [ref=e296]: High
+            - generic [ref=e297]: "Germany's Merz: US Being Humiliated by Iran as Nuclear Talks Stall"
+            - generic [ref=e298]: •
+            - generic [ref=e299]: Germany
+            - generic [ref=e300]: 4h ago
+          - button "Medium Google Signs Classified AI Deal with US Pentagon • United States 5h ago" [ref=e301] [cursor=pointer]:
+            - generic [ref=e302]: Medium
+            - generic [ref=e303]: Google Signs Classified AI Deal with US Pentagon
+            - generic [ref=e304]: •
+            - generic [ref=e305]: United States
+            - generic [ref=e306]: 5h ago
+          - button "Medium Russia's Africa Corps Prevents Coup in Mali After Rebels Seize Towns • Mali 6h ago" [ref=e307] [cursor=pointer]:
+            - generic [ref=e308]: Medium
+            - generic [ref=e309]: Russia's Africa Corps Prevents Coup in Mali After Rebels Seize Towns
+            - generic [ref=e310]: •
+            - generic [ref=e311]: Mali
+            - generic [ref=e312]: 6h ago
+          - button "Medium US Gas Prices Surge to 4-Year High at $4.15 Per Gallon • United States 7h ago" [ref=e313] [cursor=pointer]:
+            - generic [ref=e314]: Medium
+            - generic [ref=e315]: US Gas Prices Surge to 4-Year High at $4.15 Per Gallon
+            - generic [ref=e316]: •
+            - generic [ref=e317]: United States
+            - generic [ref=e318]: 7h ago
+          - button "Medium OpenAI Brings Models to Amazon Cloud After Ending Microsoft Exclusivity • United States 8h ago" [ref=e319] [cursor=pointer]:
+            - generic [ref=e320]: Medium
+            - generic [ref=e321]: OpenAI Brings Models to Amazon Cloud After Ending Microsoft Exclusivity
+            - generic [ref=e322]: •
+            - generic [ref=e323]: United States
+            - generic [ref=e324]: 8h ago
+          - button "Low King Charles Visits White House on First US State Visit Since Coronation • United Kingdom 10h ago" [ref=e325] [cursor=pointer]:
+            - generic [ref=e326]: Low
+            - generic [ref=e327]: King Charles Visits White House on First US State Visit Since Coronation
+            - generic [ref=e328]: •
+            - generic [ref=e329]: United Kingdom
+            - generic [ref=e330]: 10h ago
+    - contentinfo [ref=e94]:
+      - generic [ref=e96]:
+        - generic [ref=e97]:
+          - generic [ref=e98]: "Data sources:"
+          - link "Open-Meteo" [ref=e99] [cursor=pointer]:
+            - /url: https://open-meteo.com
+          - link "OpenAQ" [ref=e100] [cursor=pointer]:
+            - /url: https://openaq.org
+          - link "USGS" [ref=e101] [cursor=pointer]:
+            - /url: https://earthquake.usgs.gov
+          - link "NASA EONET" [ref=e102] [cursor=pointer]:
+            - /url: https://eonet.gsfc.nasa.gov
+          - link "NOAA" [ref=e103] [cursor=pointer]:
+            - /url: https://www.weather.gov
+        - generic [ref=e104]:
+          - link "Privacy" [ref=e105] [cursor=pointer]:
+            - /url: /privacy
+          - link "Terms" [ref=e106] [cursor=pointer]:
+            - /url: /terms
+          - generic [ref=e107]: © 2026 ImpactGlobe
+  - button "Open Next.js Dev Tools" [ref=e113] [cursor=pointer]:
+    - img [ref=e114]
+  - alert [ref=e117]

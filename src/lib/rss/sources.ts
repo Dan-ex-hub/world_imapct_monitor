@@ -1,5 +1,6 @@
 /**
- * Default RSS feed sources for global news
+ * RSS feed sources for global news
+ * All feeds verified to be publicly accessible (no paywalls, no auth required)
  * Focus on geopolitical, economic, and market-moving news
  */
 
@@ -11,53 +12,62 @@ export interface RSSSource {
 }
 
 export const DEFAULT_RSS_SOURCES: RSSSource[] = [
-  // Global News - High Priority
-  {
-    name: 'Reuters World News',
-    url: 'https://www.reutersagency.com/feed/?taxonomy=best-topics&post_type=best',
-    category: 'geopolitical',
-    priority: 5,
-  },
+  // ── TIER 1: Highest priority, always reliable ──────────────────────────────
+
+  // BBC World News (free, no paywall)
   {
     name: 'BBC News - World',
     url: 'http://feeds.bbci.co.uk/news/world/rss.xml',
     category: 'geopolitical',
     priority: 5,
   },
+  // BBC Business
   {
-    name: 'Al Jazeera',
+    name: 'BBC News - Business',
+    url: 'http://feeds.bbci.co.uk/news/business/rss.xml',
+    category: 'economic',
+    priority: 5,
+  },
+
+  // Al Jazeera (free, global coverage)
+  {
+    name: 'Al Jazeera - World',
     url: 'https://www.aljazeera.com/xml/rss/all.xml',
     category: 'geopolitical',
-    priority: 4,
+    priority: 5,
   },
-  
-  // Economic & Financial News
+
+  // Associated Press (free RSS)
   {
-    name: 'Financial Times',
-    url: 'https://www.ft.com/?format=rss',
-    category: 'economic',
+    name: 'Associated Press - Top News',
+    url: 'https://feeds.apnews.com/rss/apf-topnews',
+    category: 'general',
     priority: 5,
   },
   {
-    name: 'Bloomberg',
-    url: 'https://www.bloomberg.com/feed/podcast/etf-report.xml',
-    category: 'economic',
+    name: 'Associated Press - World',
+    url: 'https://feeds.apnews.com/rss/apf-intlnews',
+    category: 'geopolitical',
     priority: 5,
   },
   {
-    name: 'The Economist',
-    url: 'https://www.economist.com/the-world-this-week/rss.xml',
+    name: 'Associated Press - Business',
+    url: 'https://feeds.apnews.com/rss/apf-business',
     category: 'economic',
-    priority: 4,
+    priority: 5,
   },
-  
-  // Regional News - Important Markets
+
+  // Reuters (via Yahoo Finance relay — Reuters direct blocks scrapers)
   {
-    name: 'South China Morning Post',
-    url: 'https://www.scmp.com/rss/91/feed',
-    category: 'regional',
-    priority: 3,
+    name: 'Reuters via Yahoo Finance',
+    url: 'https://finance.yahoo.com/news/rssindex',
+    category: 'economic',
+    priority: 5,
   },
+
+  // ── TIER 2: High priority ──────────────────────────────────────────────────
+
+  // The Guardian (free, global)
   {
     name: 'The Guardian - World',
     url: 'https://www.theguardian.com/world/rss',
@@ -65,24 +75,134 @@ export const DEFAULT_RSS_SOURCES: RSSSource[] = [
     priority: 4,
   },
   {
-    name: 'Associated Press',
-    url: 'https://apnews.com/apf-topnews',
+    name: 'The Guardian - Business',
+    url: 'https://www.theguardian.com/uk/business/rss',
+    category: 'economic',
+    priority: 4,
+  },
+
+  // NPR World News (free)
+  {
+    name: 'NPR - World',
+    url: 'https://feeds.npr.org/1004/rss.xml',
+    category: 'geopolitical',
+    priority: 4,
+  },
+
+  // CNBC (free RSS)
+  {
+    name: 'CNBC - World Economy',
+    url: 'https://www.cnbc.com/id/100727362/device/rss/rss.html',
+    category: 'economic',
+    priority: 4,
+  },
+  {
+    name: 'CNBC - Finance',
+    url: 'https://www.cnbc.com/id/10000664/device/rss/rss.html',
+    category: 'economic',
+    priority: 4,
+  },
+  {
+    name: 'CNBC - Top News',
+    url: 'https://www.cnbc.com/id/100003114/device/rss/rss.html',
     category: 'general',
     priority: 4,
   },
-  
-  // Central Banks & Policy
+
+  // MarketWatch (free)
   {
-    name: 'Federal Reserve News',
+    name: 'MarketWatch - Top Stories',
+    url: 'https://feeds.content.dowjones.io/public/rss/mw_topstories',
+    category: 'economic',
+    priority: 4,
+  },
+  {
+    name: 'MarketWatch - Economy',
+    url: 'https://feeds.content.dowjones.io/public/rss/mw_economy',
+    category: 'economic',
+    priority: 4,
+  },
+
+  // ── TIER 3: Regional & Specialized ────────────────────────────────────────
+
+  // South China Morning Post (Asia coverage)
+  {
+    name: 'South China Morning Post - Asia',
+    url: 'https://www.scmp.com/rss/91/feed',
+    category: 'regional',
+    priority: 3,
+  },
+
+  // Times of India (South Asia)
+  {
+    name: 'Times of India - World',
+    url: 'https://timesofindia.indiatimes.com/rssfeeds/296589292.cms',
+    category: 'regional',
+    priority: 3,
+  },
+
+  // Deutsche Welle (Europe/Global, free)
+  {
+    name: 'Deutsche Welle - World',
+    url: 'https://rss.dw.com/rdf/rss-en-world',
+    category: 'geopolitical',
+    priority: 3,
+  },
+  {
+    name: 'Deutsche Welle - Business',
+    url: 'https://rss.dw.com/rdf/rss-en-bus',
+    category: 'economic',
+    priority: 3,
+  },
+
+  // France 24 (free, global)
+  {
+    name: 'France 24 - World',
+    url: 'https://www.france24.com/en/rss',
+    category: 'geopolitical',
+    priority: 3,
+  },
+
+  // ── TIER 4: Central Banks & Policy (highest signal for forex) ─────────────
+
+  {
+    name: 'Federal Reserve - Press Releases',
     url: 'https://www.federalreserve.gov/feeds/press_all.xml',
     category: 'economic',
     priority: 5,
   },
   {
-    name: 'ECB Press Releases',
+    name: 'ECB - Press Releases',
     url: 'https://www.ecb.europa.eu/rss/press.html',
     category: 'economic',
     priority: 5,
+  },
+  {
+    name: 'IMF - News',
+    url: 'https://www.imf.org/en/News/rss?language=eng',
+    category: 'economic',
+    priority: 4,
+  },
+  {
+    name: 'World Bank - News',
+    url: 'https://www.worldbank.org/en/news/rss',
+    category: 'economic',
+    priority: 3,
+  },
+
+  // ── TIER 5: Conflict & Crisis Monitoring ──────────────────────────────────
+
+  {
+    name: 'UN News - Global',
+    url: 'https://news.un.org/feed/subscribe/en/news/all/rss.xml',
+    category: 'geopolitical',
+    priority: 4,
+  },
+  {
+    name: 'ReliefWeb - Disasters',
+    url: 'https://reliefweb.int/disasters/rss.xml',
+    category: 'geopolitical',
+    priority: 3,
   },
 ]
 

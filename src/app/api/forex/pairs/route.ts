@@ -29,7 +29,8 @@ export async function GET(request: Request) {
 
     return NextResponse.json(pairs, {
       headers: {
-        'Cache-Control': 'public, s-maxage=60, stale-while-revalidate=120',
+        // No CDN caching — forex data changes every minute, always serve fresh
+        'Cache-Control': 'no-store, no-cache, must-revalidate',
       },
     })
   } catch (error) {

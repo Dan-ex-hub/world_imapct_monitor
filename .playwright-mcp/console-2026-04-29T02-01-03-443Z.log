@@ -1,0 +1,236 @@
+[     130ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[     344ms] [LOG] [Fast Refresh] done in 318ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[     468ms] [INFO] %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[     490ms] [LOG] [HMR] connected @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[     503ms] [WARNING] %c%s%c [33m[1m⚠[22m[39m Unsupported metadata viewport is configured in metadata export in /. Please move it to viewport export instead.
+Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport background: #e6e6e6;background: light-dark(rgba(0,0,0,0.1), rgba(255,255,255,0.25));color: #000000;color: light-dark(#000000, #ffffff);border-radius: 2px  Server   @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[     611ms] [LOG] [useEnvLayer] Data received: {layerType: none, hasData: false, data: undefined} @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[     613ms] [LOG] [App] envLayerData updated: null @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[     613ms] [LOG] [App] No events from Supabase, using mock data for development @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[     718ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[     724ms] [WARNING] %c%s%c [33m[1m⚠[22m[39m Unsupported metadata viewport is configured in metadata export in /. Please move it to viewport export instead.
+Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport background: #e6e6e6;background: light-dark(rgba(0,0,0,0.1), rgba(255,255,255,0.25));color: #000000;color: light-dark(#000000, #ffffff);border-radius: 2px  Server   @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[     725ms] [LOG] [Fast Refresh] done in 131ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[     908ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[     953ms] [LOG] [Fast Refresh] done in 147ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[    1403ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[    1406ms] [LOG] [Fast Refresh] done in 448ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[    1407ms] [WARNING] %c%s%c [33m[1m⚠[22m[39m Unsupported metadata viewport is configured in metadata export in /. Please move it to viewport export instead.
+Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport background: #e6e6e6;background: light-dark(rgba(0,0,0,0.1), rgba(255,255,255,0.25));color: #000000;color: light-dark(#000000, #ffffff);border-radius: 2px  Server   @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[    1450ms] [LOG] [Realtime] Subscription status: SUBSCRIBED @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[    1473ms] [LOG] [Realtime] Loaded 0 initial events @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[    1493ms] [LOG] [App] No events from Supabase, using mock data for development @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[    6089ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[    6114ms] [LOG] [Fast Refresh] done in 134ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[    6296ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[    6511ms] [LOG] [Fast Refresh] done in 100ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   23244ms] [LOG] [useEnvLayer] Data received: {layerType: wind, hasData: false, data: undefined} @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   23294ms] [LOG] [useEnvLayer] Data received: {layerType: wind, hasData: true, data: Object} @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   23296ms] [LOG] [useEnvLayer] Setting wind data @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   23322ms] [LOG] [GlobeRenderer] Applying heatmap for layer: wind @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   23331ms] [LOG] [GlobeRenderer] Heatmap texture applied @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   23334ms] [LOG] [App] envLayerData updated: {type: wind, updatedAt: 2026-04-29T01:59:47.219Z, wind: Array(1406)} @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   35190ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   35215ms] [LOG] [Fast Refresh] done in 125ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   40024ms] [LOG] [ImpactGlobe] Hovering: EU Imposes New Sanctions on Russian Energy Exports @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   40075ms] [LOG] [ImpactGlobe] Hovering: EU Imposes New Sanctions on Russian Energy Exports @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   41777ms] [LOG] [ImpactGlobe] Hovering: Federal Reserve Holds Rates Steady at 5.25-5.50% @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   41811ms] [LOG] [ImpactGlobe] Hovering: Federal Reserve Holds Rates Steady at 5.25-5.50% @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   44769ms] [LOG] [GlobeRenderer] Applying heatmap for layer: sea_temp @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   44770ms] [WARNING] [GlobeRenderer] Failed to create heatmap texture @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   44770ms] [LOG] [useEnvLayer] Data received: {layerType: sea_temp, hasData: false, data: undefined} @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   44807ms] [LOG] [useEnvLayer] Data received: {layerType: sea_temp, hasData: true, data: Object} @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   44808ms] [LOG] [useEnvLayer] Setting env layer data: sea_temp @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   44827ms] [LOG] [GlobeRenderer] Applying heatmap for layer: sea_temp @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   44829ms] [WARNING] [GlobeRenderer] Failed to create heatmap texture @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   44830ms] [LOG] [App] envLayerData updated: {type: sea_temp, updatedAt: 2026-04-28T17:47:00.709Z} @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   44936ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   45008ms] [LOG] [Fast Refresh] done in 173ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   47484ms] [LOG] [GlobeRenderer] Applying heatmap for layer: aqi @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   47484ms] [WARNING] [GlobeRenderer] Failed to create heatmap texture @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   47485ms] [LOG] [useEnvLayer] Data received: {layerType: aqi, hasData: false, data: undefined} @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   48170ms] [LOG] [GlobeRenderer] Applying heatmap for layer: temperature_anomaly @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   48172ms] [WARNING] [GlobeRenderer] Failed to create heatmap texture @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   48177ms] [LOG] [useEnvLayer] Data received: {layerType: temperature_anomaly, hasData: true, data: Object} @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   48179ms] [LOG] [useEnvLayer] Setting temp anomaly data @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   48197ms] [LOG] [GlobeRenderer] Applying heatmap for layer: temperature_anomaly @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   48202ms] [LOG] [GlobeRenderer] Heatmap texture applied @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   48206ms] [LOG] [App] envLayerData updated: {type: temperature_anomaly, updatedAt: 2026-04-29T01:59:47.219Z, tempAnomalies: Array(552)} @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   51429ms] [LOG] [GlobeRenderer] Applying heatmap for layer: aqi @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   51431ms] [WARNING] [GlobeRenderer] Failed to create heatmap texture @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   51433ms] [LOG] [useEnvLayer] Data received: {layerType: aqi, hasData: true, data: Object} @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   51435ms] [LOG] [useEnvLayer] Setting env layer data: aqi @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   51449ms] [LOG] [GlobeRenderer] Applying heatmap for layer: aqi @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   51449ms] [WARNING] [GlobeRenderer] Failed to create heatmap texture @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   51450ms] [LOG] [App] envLayerData updated: {type: aqi, updatedAt: 2026-04-29T02:01:50.954Z, aqi: Array(0), meta: Object} @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   53644ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   53708ms] [LOG] [Fast Refresh] done in 164ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   56583ms] [LOG] [GlobeRenderer] Applying heatmap for layer: temperature_anomaly @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   56585ms] [WARNING] [GlobeRenderer] Failed to create heatmap texture @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   56589ms] [LOG] [useEnvLayer] Data received: {layerType: temperature_anomaly, hasData: true, data: Object} @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   56590ms] [LOG] [useEnvLayer] Setting temp anomaly data @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   56603ms] [LOG] [GlobeRenderer] Applying heatmap for layer: temperature_anomaly @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   56605ms] [LOG] [GlobeRenderer] Heatmap texture applied @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   56606ms] [LOG] [App] envLayerData updated: {type: temperature_anomaly, updatedAt: 2026-04-29T01:59:47.219Z, tempAnomalies: Array(552)} @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   63868ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   63897ms] [LOG] [Fast Refresh] done in 132ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   71566ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   71577ms] [LOG] [Fast Refresh] done in 117ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   71704ms] [INFO] %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   71724ms] [LOG] [HMR] connected @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   71734ms] [WARNING] %c%s%c [33m[1m⚠[22m[39m Unsupported metadata viewport is configured in metadata export in /. Please move it to viewport export instead.
+Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport background: #e6e6e6;background: light-dark(rgba(0,0,0,0.1), rgba(255,255,255,0.25));color: #000000;color: light-dark(#000000, #ffffff);border-radius: 2px  Server   @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   71801ms] [LOG] [useEnvLayer] Data received: {layerType: none, hasData: false, data: undefined} @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   71801ms] [LOG] [App] envLayerData updated: null @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   71802ms] [LOG] [App] No events from Supabase, using mock data for development @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   71888ms] [WARNING] %c%s%c [33m[1m⚠[22m[39m Unsupported metadata viewport is configured in metadata export in /. Please move it to viewport export instead.
+Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport background: #e6e6e6;background: light-dark(rgba(0,0,0,0.1), rgba(255,255,255,0.25));color: #000000;color: light-dark(#000000, #ffffff);border-radius: 2px  Server   @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   72239ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   72245ms] [WARNING] %c%s%c [33m[1m⚠[22m[39m Unsupported metadata viewport is configured in metadata export in /. Please move it to viewport export instead.
+Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport background: #e6e6e6;background: light-dark(rgba(0,0,0,0.1), rgba(255,255,255,0.25));color: #000000;color: light-dark(#000000, #ffffff);border-radius: 2px  Server   @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   72247ms] [LOG] [Fast Refresh] done in 338ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   72295ms] [LOG] [Realtime] Loaded 0 initial events @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   72310ms] [LOG] [App] No events from Supabase, using mock data for development @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   72392ms] [LOG] [Realtime] Subscription status: SUBSCRIBED @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   72824ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   72835ms] [LOG] [Fast Refresh] done in 121ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   73649ms] [LOG] [useEnvLayer] Data received: {layerType: aqi, hasData: false, data: undefined} @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   73702ms] [LOG] [useEnvLayer] Data received: {layerType: aqi, hasData: true, data: Object} @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   73703ms] [LOG] [useEnvLayer] Setting env layer data: aqi @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   73724ms] [LOG] [GlobeRenderer] Applying heatmap for layer: aqi @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   73726ms] [WARNING] [GlobeRenderer] Failed to create heatmap texture @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   73727ms] [LOG] [App] envLayerData updated: {type: aqi, updatedAt: 2026-04-29T02:01:54.933Z, aqi: Array(0), meta: Object} @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   75488ms] [LOG] [useEnvLayer] Data received: {layerType: storms, hasData: false, data: undefined} @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   76351ms] [LOG] [GlobeRenderer] Applying heatmap for layer: wind @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   76352ms] [WARNING] [GlobeRenderer] Failed to create heatmap texture @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   76355ms] [LOG] [useEnvLayer] Data received: {layerType: wind, hasData: false, data: undefined} @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   79225ms] [LOG] [ImpactGlobe] Hovering: 7.2 Magnitude Earthquake Strikes Central Turkey @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   79271ms] [LOG] [ImpactGlobe] Hovering: 7.2 Magnitude Earthquake Strikes Central Turkey @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   79301ms] [LOG] [ImpactGlobe] Hovering: 7.2 Magnitude Earthquake Strikes Central Turkey @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   79329ms] [LOG] [ImpactGlobe] Hovering: 7.2 Magnitude Earthquake Strikes Central Turkey @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   79362ms] [LOG] [ImpactGlobe] Hovering: 7.2 Magnitude Earthquake Strikes Central Turkey @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   79438ms] [LOG] [useEnvLayer] Data received: {layerType: wind, hasData: true, data: Object} @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   79439ms] [LOG] [useEnvLayer] Setting wind data @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   79458ms] [LOG] [GlobeRenderer] Applying heatmap for layer: wind @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   79470ms] [LOG] [GlobeRenderer] Heatmap texture applied @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   79471ms] [LOG] [App] envLayerData updated: {type: wind, updatedAt: 2026-04-29T02:02:19.810Z, wind: Array(2109)} @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   79477ms] [LOG] [ImpactGlobe] Hovering: 7.2 Magnitude Earthquake Strikes Central Turkey @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   79537ms] [LOG] [ImpactGlobe] Hovering: 7.2 Magnitude Earthquake Strikes Central Turkey @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   79569ms] [LOG] [ImpactGlobe] Hovering: 7.2 Magnitude Earthquake Strikes Central Turkey @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   79580ms] [LOG] [ImpactGlobe] Event clicked: 7.2 Magnitude Earthquake Strikes Central Turkey @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   79633ms] [LOG] [ImpactGlobe] Hovering: 7.2 Magnitude Earthquake Strikes Central Turkey @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   79657ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   79664ms] [LOG] [Fast Refresh] done in 107ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   79690ms] [ERROR] Failed to load resource: the server responded with a status of 401 (Unauthorized) @ http://localhost:3000/api/watchlist:0
+[   79699ms] [LOG] [ImpactGlobe] Hovering: 7.2 Magnitude Earthquake Strikes Central Turkey @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   79718ms] [ERROR] Failed to load resource: the server responded with a status of 401 (Unauthorized) @ http://localhost:3000/api/watchlist:0
+[   79736ms] [LOG] [ImpactGlobe] Hovering: 7.2 Magnitude Earthquake Strikes Central Turkey @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   79762ms] [LOG] [ImpactGlobe] Hovering: 7.2 Magnitude Earthquake Strikes Central Turkey @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   79811ms] [LOG] [ImpactGlobe] Hovering: 7.2 Magnitude Earthquake Strikes Central Turkey @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   79845ms] [LOG] [ImpactGlobe] Hovering: 7.2 Magnitude Earthquake Strikes Central Turkey @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   79919ms] [LOG] [ImpactGlobe] Hovering: 7.2 Magnitude Earthquake Strikes Central Turkey @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   79943ms] [LOG] [ImpactGlobe] Hovering: 7.2 Magnitude Earthquake Strikes Central Turkey @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   79972ms] [LOG] [ImpactGlobe] Hovering: 7.2 Magnitude Earthquake Strikes Central Turkey @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   80004ms] [LOG] [ImpactGlobe] Hovering: 7.2 Magnitude Earthquake Strikes Central Turkey @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   80041ms] [LOG] [ImpactGlobe] Hovering: 7.2 Magnitude Earthquake Strikes Central Turkey @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   80104ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   80104ms] [LOG] [Fast Refresh] done in 113ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   80513ms] [LOG] [ImpactGlobe] Hovering: UK General Election Results: Labour Wins Historic Majority @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   80544ms] [LOG] [ImpactGlobe] Hovering: UK General Election Results: Labour Wins Historic Majority @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   80619ms] [LOG] [ImpactGlobe] Hovering: UK General Election Results: Labour Wins Historic Majority @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   80655ms] [LOG] [ImpactGlobe] Hovering: UK General Election Results: Labour Wins Historic Majority @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   80689ms] [LOG] [ImpactGlobe] Hovering: UK General Election Results: Labour Wins Historic Majority @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   80732ms] [LOG] [ImpactGlobe] Hovering: UK General Election Results: Labour Wins Historic Majority @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   80764ms] [LOG] [ImpactGlobe] Hovering: UK General Election Results: Labour Wins Historic Majority @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   80816ms] [LOG] [ImpactGlobe] Hovering: UK General Election Results: Labour Wins Historic Majority @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   80849ms] [LOG] [ImpactGlobe] Hovering: UK General Election Results: Labour Wins Historic Majority @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   80902ms] [LOG] [ImpactGlobe] Hovering: UK General Election Results: Labour Wins Historic Majority @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   80953ms] [LOG] [ImpactGlobe] Hovering: UK General Election Results: Labour Wins Historic Majority @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   80988ms] [LOG] [ImpactGlobe] Hovering: UK General Election Results: Labour Wins Historic Majority @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   81024ms] [LOG] [ImpactGlobe] Hovering: UK General Election Results: Labour Wins Historic Majority @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   81073ms] [LOG] [ImpactGlobe] Hovering: UK General Election Results: Labour Wins Historic Majority @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   81113ms] [LOG] [ImpactGlobe] Hovering: UK General Election Results: Labour Wins Historic Majority @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   81151ms] [LOG] [ImpactGlobe] Hovering: UK General Election Results: Labour Wins Historic Majority @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   81193ms] [LOG] [ImpactGlobe] Hovering: UK General Election Results: Labour Wins Historic Majority @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   81213ms] [LOG] [ImpactGlobe] Hovering: UK General Election Results: Labour Wins Historic Majority @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   81249ms] [LOG] [ImpactGlobe] Hovering: UK General Election Results: Labour Wins Historic Majority @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   81285ms] [LOG] [ImpactGlobe] Hovering: UK General Election Results: Labour Wins Historic Majority @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   81322ms] [LOG] [ImpactGlobe] Hovering: UK General Election Results: Labour Wins Historic Majority @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   81359ms] [LOG] [ImpactGlobe] Hovering: UK General Election Results: Labour Wins Historic Majority @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   81402ms] [LOG] [ImpactGlobe] Hovering: UK General Election Results: Labour Wins Historic Majority @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   81449ms] [LOG] [ImpactGlobe] Hovering: UK General Election Results: Labour Wins Historic Majority @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   81491ms] [LOG] [ImpactGlobe] Hovering: UK General Election Results: Labour Wins Historic Majority @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   81533ms] [LOG] [ImpactGlobe] Hovering: UK General Election Results: Labour Wins Historic Majority @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   81568ms] [LOG] [ImpactGlobe] Hovering: UK General Election Results: Labour Wins Historic Majority @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   81599ms] [LOG] [ImpactGlobe] Hovering: UK General Election Results: Labour Wins Historic Majority @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   81630ms] [LOG] [ImpactGlobe] Hovering: UK General Election Results: Labour Wins Historic Majority @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   81672ms] [LOG] [ImpactGlobe] Hovering: UK General Election Results: Labour Wins Historic Majority @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   81713ms] [LOG] [ImpactGlobe] Hovering: UK General Election Results: Labour Wins Historic Majority @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   81759ms] [LOG] [ImpactGlobe] Hovering: UK General Election Results: Labour Wins Historic Majority @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   81787ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   81790ms] [LOG] [ImpactGlobe] Hovering: UK General Election Results: Labour Wins Historic Majority @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   81831ms] [LOG] [ImpactGlobe] Hovering: UK General Election Results: Labour Wins Historic Majority @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   81920ms] [LOG] [Fast Refresh] done in 237ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   85344ms] [LOG] [ImpactGlobe] Hovering: Japan GDP Contracts 0.5% in Q1 — Recession Fears Mount @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   85377ms] [LOG] [ImpactGlobe] Hovering: Japan GDP Contracts 0.5% in Q1 — Recession Fears Mount @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   89107ms] [LOG] [ImpactGlobe] Hovering: Taiwan Strait Tensions Escalate After Military Drills @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   89143ms] [LOG] [ImpactGlobe] Hovering: Taiwan Strait Tensions Escalate After Military Drills @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   89179ms] [LOG] [ImpactGlobe] Hovering: Taiwan Strait Tensions Escalate After Military Drills @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   89637ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   89759ms] [LOG] [Fast Refresh] done in 201ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   90012ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   90218ms] [WARNING] %c%s%c [33m[1m⚠[22m[39m Unsupported metadata viewport is configured in metadata export in /. Please move it to viewport export instead.
+Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport background: #e6e6e6;background: light-dark(rgba(0,0,0,0.1), rgba(255,255,255,0.25));color: #000000;color: light-dark(#000000, #ffffff);border-radius: 2px  Server   @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   90283ms] [LOG] [Fast Refresh] done in 376ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   92015ms] [LOG] [ImpactGlobe] Hovering: Taiwan Strait Tensions Escalate After Military Drills @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   92048ms] [LOG] [ImpactGlobe] Hovering: Taiwan Strait Tensions Escalate After Military Drills @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   92085ms] [LOG] [ImpactGlobe] Hovering: Taiwan Strait Tensions Escalate After Military Drills @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   92110ms] [LOG] [ImpactGlobe] Hovering: Taiwan Strait Tensions Escalate After Military Drills @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   92136ms] [LOG] [ImpactGlobe] Hovering: Taiwan Strait Tensions Escalate After Military Drills @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   92165ms] [LOG] [ImpactGlobe] Hovering: Taiwan Strait Tensions Escalate After Military Drills @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   92200ms] [LOG] [ImpactGlobe] Hovering: Taiwan Strait Tensions Escalate After Military Drills @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   92232ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   92234ms] [LOG] [ImpactGlobe] Hovering: Taiwan Strait Tensions Escalate After Military Drills @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   92259ms] [LOG] [Fast Refresh] done in 141ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   92269ms] [LOG] [ImpactGlobe] Hovering: Taiwan Strait Tensions Escalate After Military Drills @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   92297ms] [LOG] [ImpactGlobe] Hovering: Taiwan Strait Tensions Escalate After Military Drills @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   92315ms] [LOG] [ImpactGlobe] Event clicked: Taiwan Strait Tensions Escalate After Military Drills @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   92350ms] [LOG] [ImpactGlobe] Hovering: Taiwan Strait Tensions Escalate After Military Drills @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   92400ms] [LOG] [ImpactGlobe] Hovering: Taiwan Strait Tensions Escalate After Military Drills @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   92438ms] [LOG] [ImpactGlobe] Hovering: Taiwan Strait Tensions Escalate After Military Drills @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   92459ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   92464ms] [LOG] [ImpactGlobe] Hovering: Taiwan Strait Tensions Escalate After Military Drills @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   92507ms] [LOG] [ImpactGlobe] Hovering: Taiwan Strait Tensions Escalate After Military Drills @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   92514ms] [ERROR] Failed to load resource: the server responded with a status of 401 (Unauthorized) @ http://localhost:3000/api/watchlist:0
+[   92520ms] [LOG] [Fast Refresh] done in 162ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   92542ms] [LOG] [ImpactGlobe] Hovering: Taiwan Strait Tensions Escalate After Military Drills @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   92576ms] [ERROR] Failed to load resource: the server responded with a status of 401 (Unauthorized) @ http://localhost:3000/api/watchlist:0
+[   92580ms] [LOG] [ImpactGlobe] Hovering: Taiwan Strait Tensions Escalate After Military Drills @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   92662ms] [LOG] [ImpactGlobe] Hovering: Taiwan Strait Tensions Escalate After Military Drills @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   92695ms] [LOG] [ImpactGlobe] Hovering: Taiwan Strait Tensions Escalate After Military Drills @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   92729ms] [LOG] [ImpactGlobe] Hovering: Taiwan Strait Tensions Escalate After Military Drills @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   92767ms] [LOG] [ImpactGlobe] Hovering: Taiwan Strait Tensions Escalate After Military Drills @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   92786ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   92804ms] [LOG] [ImpactGlobe] Hovering: Taiwan Strait Tensions Escalate After Military Drills @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   92839ms] [LOG] [ImpactGlobe] Hovering: Taiwan Strait Tensions Escalate After Military Drills @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   92919ms] [LOG] [Fast Refresh] done in 235ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   94338ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   94351ms] [LOG] [Fast Refresh] done in 123ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  123484ms] [LOG] [GlobeRenderer] Applying heatmap for layer: aqi @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  123485ms] [WARNING] [GlobeRenderer] Failed to create heatmap texture @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  123487ms] [LOG] [useEnvLayer] Data received: {layerType: aqi, hasData: true, data: Object} @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  123488ms] [LOG] [useEnvLayer] Setting env layer data: aqi @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  123509ms] [LOG] [GlobeRenderer] Applying heatmap for layer: aqi @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  123509ms] [WARNING] [GlobeRenderer] Failed to create heatmap texture @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  123511ms] [LOG] [App] envLayerData updated: {type: aqi, updatedAt: 2026-04-29T02:01:54.933Z, aqi: Array(0), meta: Object} @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  123559ms] [LOG] [useEnvLayer] Data received: {layerType: aqi, hasData: true, data: Object} @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  123560ms] [LOG] [useEnvLayer] Setting env layer data: aqi @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  123583ms] [LOG] [GlobeRenderer] Applying heatmap for layer: aqi @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  123584ms] [WARNING] [GlobeRenderer] Failed to create heatmap texture @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  123585ms] [LOG] [App] envLayerData updated: {type: aqi, updatedAt: 2026-04-29T02:02:17.307Z, aqi: Array(0), meta: Object} @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  123701ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  123738ms] [LOG] [Fast Refresh] done in 138ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  125786ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  125810ms] [LOG] [Fast Refresh] done in 126ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  139972ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  139975ms] [LOG] [Fast Refresh] done in 107ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431

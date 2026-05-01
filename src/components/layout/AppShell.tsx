@@ -1,32 +1,19 @@
-'use client'
+"use client";
 
-import { ReactNode } from 'react'
-import TopBar from './TopBar'
-import { ConnectionStatus } from '@/components/ui/ConnectionStatus'
-import { Footer } from './Footer'
+import { ReactNode } from "react";
+import TopBar from "./TopBar";
 
 interface AppShellProps {
-  children: ReactNode
+  children: ReactNode;
 }
 
 export default function AppShell({ children }: AppShellProps) {
   return (
     <div className="relative h-screen w-screen overflow-hidden bg-bg-primary">
-      {/* Top navigation bar */}
       <TopBar />
-
-      {/* Main content area - globe and overlays */}
-      <main className="relative h-[calc(100vh-64px)] w-full">
+      <main className="absolute inset-0 top-16 bottom-0 w-full">
         {children}
       </main>
-
-      {/* Footer with data attribution */}
-      <Footer />
-
-      {/* Connection status indicator - bottom right */}
-      <div className="fixed bottom-16 right-4 z-50">
-        <ConnectionStatus />
-      </div>
     </div>
-  )
+  );
 }

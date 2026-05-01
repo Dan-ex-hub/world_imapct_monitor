@@ -9,18 +9,14 @@ const API_KEY = process.env.TWELVE_DATA_API_KEY
 
 /**
  * Major forex pairs to track
+ * Limited to 5 pairs to fit within free tier (8 credits/minute)
  */
 export const MAJOR_PAIRS = [
   'EUR/USD', // Euro / US Dollar
   'GBP/USD', // British Pound / US Dollar
   'USD/JPY', // US Dollar / Japanese Yen
-  'USD/CHF', // US Dollar / Swiss Franc
   'AUD/USD', // Australian Dollar / US Dollar
   'USD/CAD', // US Dollar / Canadian Dollar
-  'NZD/USD', // New Zealand Dollar / US Dollar
-  'EUR/GBP', // Euro / British Pound
-  'EUR/JPY', // Euro / Japanese Yen
-  'GBP/JPY', // British Pound / Japanese Yen
 ]
 
 export interface TwelveDataQuote {
@@ -72,8 +68,8 @@ export async function getForexQuote(pair: string): Promise<TwelveDataQuote> {
     throw new Error('TWELVE_DATA_API_KEY not configured')
   }
 
-  const symbol = pair.replace('/', '')
-  const url = `${BASE_URL}/quote?symbol=${symbol}&apikey=${API_KEY}`
+  // Twelve Data API accepts symbols with slashes: EUR/USD
+  const url = `${BASE_URL}/quote?symbol=${pair}&apikey=${API_KEY}`
 
   const response = await fetch(url, {
     headers: {
@@ -111,8 +107,8 @@ export async function getForexTimeSeries(
     throw new Error('TWELVE_DATA_API_KEY not configured')
   }
 
-  const symbol = pair.replace('/', '')
-  const url = `${BASE_URL}/time_series?symbol=${symbol}&interval=${interval}&outputsize=${outputsize}&apikey=${API_KEY}`
+  // Twelve Data API accepts symbols with slashes: EUR/USD
+  const url = `${BASE_URL}/time_series?symbol=${pair}&interval=${interval}&outputsize=${outputsize}&apikey=${API_KEY}`
 
   const response = await fetch(url, {
     headers: {

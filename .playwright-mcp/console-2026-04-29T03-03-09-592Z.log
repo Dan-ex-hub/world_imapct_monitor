@@ -1,0 +1,711 @@
+[     125ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[     311ms] [LOG] [Fast Refresh] done in 294ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[     438ms] [INFO] %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[     463ms] [LOG] [HMR] connected @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[     477ms] [WARNING] %c%s%c [33m[1m⚠[22m[39m Unsupported metadata viewport is configured in metadata export in /. Please move it to viewport export instead.
+Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport background: #e6e6e6;background: light-dark(rgba(0,0,0,0.1), rgba(255,255,255,0.25));color: #000000;color: light-dark(#000000, #ffffff);border-radius: 2px  Server   @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[     592ms] [LOG] [App] envLayerData updated: null @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[     593ms] [LOG] [App] No events from Supabase, using mock data for development @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[     692ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[     725ms] [WARNING] %c%s%c [33m[1m⚠[22m[39m Unsupported metadata viewport is configured in metadata export in /. Please move it to viewport export instead.
+Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport background: #e6e6e6;background: light-dark(rgba(0,0,0,0.1), rgba(255,255,255,0.25));color: #000000;color: light-dark(#000000, #ffffff);border-radius: 2px  Server   @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[     726ms] [LOG] [Fast Refresh] done in 156ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[    1137ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[    1142ms] [LOG] [Fast Refresh] done in 413ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[    1232ms] [LOG] [Realtime] Subscription status: SUBSCRIBED @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[    1239ms] [WARNING] %c%s%c [33m[1m⚠[22m[39m Unsupported metadata viewport is configured in metadata export in /. Please move it to viewport export instead.
+Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport background: #e6e6e6;background: light-dark(rgba(0,0,0,0.1), rgba(255,255,255,0.25));color: #000000;color: light-dark(#000000, #ffffff);border-radius: 2px  Server   @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[    1540ms] [LOG] [Realtime] Loaded 0 initial events @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[    1565ms] [LOG] [App] No events from Supabase, using mock data for development @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   17647ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   18037ms] [LOG] [Fast Refresh] done in 497ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  120777ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  120870ms] [LOG] [Fast Refresh] done in 194ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  152870ms] [LOG] [ImpactGlobe] Hovering: GM Expects $500M Trump Tariff Refund, Raises 2026 Earnings Outlook @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  153298ms] [LOG] [ImpactGlobe] Hovering: Jamie Dimon Warns of Bond Market Crisis as US Debt Hits $37 Trillion @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  153346ms] [LOG] [ImpactGlobe] Hovering: Jamie Dimon Warns of Bond Market Crisis as US Debt Hits $37 Trillion @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  153380ms] [LOG] [ImpactGlobe] Hovering: Jamie Dimon Warns of Bond Market Crisis as US Debt Hits $37 Trillion @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  153424ms] [LOG] [ImpactGlobe] Hovering: Jamie Dimon Warns of Bond Market Crisis as US Debt Hits $37 Trillion @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  153473ms] [LOG] [ImpactGlobe] Hovering: Jamie Dimon Warns of Bond Market Crisis as US Debt Hits $37 Trillion @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  154423ms] [LOG] [ImpactGlobe] Event clicked: India Conducts Airstrikes on Pakistan-Administered Kashmir After Attack @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  154590ms] [ERROR] Failed to load resource: the server responded with a status of 401 (Unauthorized) @ http://localhost:3000/api/watchlist:0
+[  154737ms] [ERROR] Failed to load resource: the server responded with a status of 401 (Unauthorized) @ http://localhost:3000/api/watchlist:0
+[  155217ms] [LOG] [ImpactGlobe] Hovering: Russia's Africa Corps Prevents Coup in Mali After Rebels Seize Towns @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  155297ms] [LOG] [ImpactGlobe] Hovering: Russia's Africa Corps Prevents Coup in Mali After Rebels Seize Towns @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  155357ms] [LOG] [ImpactGlobe] Hovering: Russia's Africa Corps Prevents Coup in Mali After Rebels Seize Towns @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  155412ms] [LOG] [ImpactGlobe] Hovering: Russia's Africa Corps Prevents Coup in Mali After Rebels Seize Towns @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  155463ms] [LOG] [ImpactGlobe] Hovering: Russia's Africa Corps Prevents Coup in Mali After Rebels Seize Towns @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  155514ms] [LOG] [ImpactGlobe] Hovering: Russia's Africa Corps Prevents Coup in Mali After Rebels Seize Towns @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  155577ms] [LOG] [ImpactGlobe] Hovering: Russia's Africa Corps Prevents Coup in Mali After Rebels Seize Towns @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  155629ms] [LOG] [ImpactGlobe] Hovering: Russia's Africa Corps Prevents Coup in Mali After Rebels Seize Towns @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  155681ms] [LOG] [ImpactGlobe] Hovering: Russia's Africa Corps Prevents Coup in Mali After Rebels Seize Towns @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  155732ms] [LOG] [ImpactGlobe] Hovering: Russia's Africa Corps Prevents Coup in Mali After Rebels Seize Towns @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  155795ms] [LOG] [ImpactGlobe] Hovering: Russia's Africa Corps Prevents Coup in Mali After Rebels Seize Towns @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  155867ms] [LOG] [ImpactGlobe] Hovering: Russia's Africa Corps Prevents Coup in Mali After Rebels Seize Towns @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  155924ms] [LOG] [ImpactGlobe] Hovering: Russia's Africa Corps Prevents Coup in Mali After Rebels Seize Towns @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  155971ms] [LOG] [ImpactGlobe] Hovering: Russia's Africa Corps Prevents Coup in Mali After Rebels Seize Towns @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  156049ms] [LOG] [ImpactGlobe] Hovering: Russia's Africa Corps Prevents Coup in Mali After Rebels Seize Towns @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  156093ms] [LOG] [ImpactGlobe] Hovering: Russia's Africa Corps Prevents Coup in Mali After Rebels Seize Towns @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  156151ms] [LOG] [ImpactGlobe] Hovering: Russia's Africa Corps Prevents Coup in Mali After Rebels Seize Towns @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  156207ms] [LOG] [ImpactGlobe] Hovering: Russia's Africa Corps Prevents Coup in Mali After Rebels Seize Towns @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  156256ms] [LOG] [ImpactGlobe] Hovering: Russia's Africa Corps Prevents Coup in Mali After Rebels Seize Towns @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  156303ms] [LOG] [ImpactGlobe] Hovering: Russia's Africa Corps Prevents Coup in Mali After Rebels Seize Towns @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  156345ms] [LOG] [ImpactGlobe] Hovering: Russia's Africa Corps Prevents Coup in Mali After Rebels Seize Towns @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  156399ms] [LOG] [ImpactGlobe] Hovering: Russia's Africa Corps Prevents Coup in Mali After Rebels Seize Towns @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  156455ms] [LOG] [ImpactGlobe] Hovering: Russia's Africa Corps Prevents Coup in Mali After Rebels Seize Towns @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  156507ms] [LOG] [ImpactGlobe] Hovering: Russia's Africa Corps Prevents Coup in Mali After Rebels Seize Towns @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  156563ms] [LOG] [ImpactGlobe] Hovering: Russia's Africa Corps Prevents Coup in Mali After Rebels Seize Towns @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  156605ms] [LOG] [ImpactGlobe] Hovering: Russia's Africa Corps Prevents Coup in Mali After Rebels Seize Towns @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  156650ms] [LOG] [ImpactGlobe] Hovering: Russia's Africa Corps Prevents Coup in Mali After Rebels Seize Towns @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  156706ms] [LOG] [ImpactGlobe] Hovering: Russia's Africa Corps Prevents Coup in Mali After Rebels Seize Towns @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  156759ms] [LOG] [ImpactGlobe] Hovering: Russia's Africa Corps Prevents Coup in Mali After Rebels Seize Towns @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  156812ms] [LOG] [ImpactGlobe] Hovering: Russia's Africa Corps Prevents Coup in Mali After Rebels Seize Towns @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  156861ms] [LOG] [ImpactGlobe] Hovering: Russia's Africa Corps Prevents Coup in Mali After Rebels Seize Towns @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  156914ms] [LOG] [ImpactGlobe] Hovering: Russia's Africa Corps Prevents Coup in Mali After Rebels Seize Towns @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  156976ms] [LOG] [ImpactGlobe] Hovering: Russia's Africa Corps Prevents Coup in Mali After Rebels Seize Towns @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  157042ms] [LOG] [ImpactGlobe] Hovering: Russia's Africa Corps Prevents Coup in Mali After Rebels Seize Towns @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  157098ms] [LOG] [ImpactGlobe] Hovering: Russia's Africa Corps Prevents Coup in Mali After Rebels Seize Towns @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  157163ms] [LOG] [ImpactGlobe] Hovering: Russia's Africa Corps Prevents Coup in Mali After Rebels Seize Towns @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  157213ms] [LOG] [ImpactGlobe] Hovering: Russia's Africa Corps Prevents Coup in Mali After Rebels Seize Towns @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  157266ms] [LOG] [ImpactGlobe] Hovering: Russia's Africa Corps Prevents Coup in Mali After Rebels Seize Towns @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  157313ms] [LOG] [ImpactGlobe] Hovering: Russia's Africa Corps Prevents Coup in Mali After Rebels Seize Towns @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  157346ms] [LOG] [ImpactGlobe] Hovering: Russia's Africa Corps Prevents Coup in Mali After Rebels Seize Towns @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  157408ms] [LOG] [ImpactGlobe] Hovering: Russia's Africa Corps Prevents Coup in Mali After Rebels Seize Towns @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  157445ms] [LOG] [ImpactGlobe] Hovering: Russia's Africa Corps Prevents Coup in Mali After Rebels Seize Towns @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  157500ms] [LOG] [ImpactGlobe] Hovering: Russia's Africa Corps Prevents Coup in Mali After Rebels Seize Towns @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  157555ms] [LOG] [ImpactGlobe] Hovering: Russia's Africa Corps Prevents Coup in Mali After Rebels Seize Towns @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  157624ms] [LOG] [ImpactGlobe] Hovering: Russia's Africa Corps Prevents Coup in Mali After Rebels Seize Towns @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  157693ms] [LOG] [ImpactGlobe] Hovering: Russia's Africa Corps Prevents Coup in Mali After Rebels Seize Towns @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  157744ms] [LOG] [ImpactGlobe] Hovering: Russia's Africa Corps Prevents Coup in Mali After Rebels Seize Towns @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  157785ms] [LOG] [ImpactGlobe] Hovering: Russia's Africa Corps Prevents Coup in Mali After Rebels Seize Towns @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  157836ms] [LOG] [ImpactGlobe] Hovering: Russia's Africa Corps Prevents Coup in Mali After Rebels Seize Towns @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  157877ms] [LOG] [ImpactGlobe] Hovering: Russia's Africa Corps Prevents Coup in Mali After Rebels Seize Towns @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  157925ms] [LOG] [ImpactGlobe] Hovering: Russia's Africa Corps Prevents Coup in Mali After Rebels Seize Towns @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  157991ms] [LOG] [ImpactGlobe] Hovering: Russia's Africa Corps Prevents Coup in Mali After Rebels Seize Towns @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  158021ms] [LOG] [ImpactGlobe] Hovering: Russia's Africa Corps Prevents Coup in Mali After Rebels Seize Towns @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  158082ms] [LOG] [ImpactGlobe] Hovering: Russia's Africa Corps Prevents Coup in Mali After Rebels Seize Towns @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  158160ms] [LOG] [ImpactGlobe] Hovering: Russia's Africa Corps Prevents Coup in Mali After Rebels Seize Towns @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  158211ms] [LOG] [ImpactGlobe] Hovering: Russia's Africa Corps Prevents Coup in Mali After Rebels Seize Towns @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  158245ms] [LOG] [ImpactGlobe] Hovering: Russia's Africa Corps Prevents Coup in Mali After Rebels Seize Towns @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  158288ms] [LOG] [ImpactGlobe] Hovering: Russia's Africa Corps Prevents Coup in Mali After Rebels Seize Towns @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  158347ms] [LOG] [ImpactGlobe] Hovering: Russia's Africa Corps Prevents Coup in Mali After Rebels Seize Towns @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  158403ms] [LOG] [ImpactGlobe] Hovering: Russia's Africa Corps Prevents Coup in Mali After Rebels Seize Towns @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  158472ms] [LOG] [ImpactGlobe] Hovering: Russia's Africa Corps Prevents Coup in Mali After Rebels Seize Towns @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  158519ms] [LOG] [ImpactGlobe] Hovering: Russia's Africa Corps Prevents Coup in Mali After Rebels Seize Towns @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  158568ms] [LOG] [ImpactGlobe] Hovering: Russia's Africa Corps Prevents Coup in Mali After Rebels Seize Towns @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  158607ms] [LOG] [ImpactGlobe] Hovering: Russia's Africa Corps Prevents Coup in Mali After Rebels Seize Towns @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  158654ms] [LOG] [ImpactGlobe] Hovering: Russia's Africa Corps Prevents Coup in Mali After Rebels Seize Towns @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  158727ms] [LOG] [ImpactGlobe] Hovering: Russia's Africa Corps Prevents Coup in Mali After Rebels Seize Towns @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  158789ms] [LOG] [ImpactGlobe] Hovering: Russia's Africa Corps Prevents Coup in Mali After Rebels Seize Towns @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  158837ms] [LOG] [ImpactGlobe] Hovering: Russia's Africa Corps Prevents Coup in Mali After Rebels Seize Towns @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  158889ms] [LOG] [ImpactGlobe] Hovering: Russia's Africa Corps Prevents Coup in Mali After Rebels Seize Towns @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  158939ms] [LOG] [ImpactGlobe] Hovering: Russia's Africa Corps Prevents Coup in Mali After Rebels Seize Towns @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  159003ms] [LOG] [ImpactGlobe] Hovering: Russia's Africa Corps Prevents Coup in Mali After Rebels Seize Towns @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  159065ms] [LOG] [ImpactGlobe] Hovering: Russia's Africa Corps Prevents Coup in Mali After Rebels Seize Towns @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  159126ms] [LOG] [ImpactGlobe] Hovering: Russia's Africa Corps Prevents Coup in Mali After Rebels Seize Towns @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  159172ms] [LOG] [ImpactGlobe] Hovering: Russia's Africa Corps Prevents Coup in Mali After Rebels Seize Towns @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  159218ms] [LOG] [ImpactGlobe] Hovering: Russia's Africa Corps Prevents Coup in Mali After Rebels Seize Towns @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  159265ms] [LOG] [ImpactGlobe] Hovering: Russia's Africa Corps Prevents Coup in Mali After Rebels Seize Towns @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  159304ms] [LOG] [ImpactGlobe] Hovering: Russia's Africa Corps Prevents Coup in Mali After Rebels Seize Towns @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  159382ms] [LOG] [ImpactGlobe] Hovering: Russia's Africa Corps Prevents Coup in Mali After Rebels Seize Towns @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  159448ms] [LOG] [ImpactGlobe] Hovering: Russia's Africa Corps Prevents Coup in Mali After Rebels Seize Towns @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  159503ms] [LOG] [ImpactGlobe] Hovering: Russia's Africa Corps Prevents Coup in Mali After Rebels Seize Towns @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  159565ms] [LOG] [ImpactGlobe] Hovering: Russia's Africa Corps Prevents Coup in Mali After Rebels Seize Towns @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  159612ms] [LOG] [ImpactGlobe] Hovering: Russia's Africa Corps Prevents Coup in Mali After Rebels Seize Towns @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  159674ms] [LOG] [ImpactGlobe] Hovering: Russia's Africa Corps Prevents Coup in Mali After Rebels Seize Towns @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  159745ms] [LOG] [ImpactGlobe] Hovering: Russia's Africa Corps Prevents Coup in Mali After Rebels Seize Towns @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  159803ms] [LOG] [ImpactGlobe] Hovering: Russia's Africa Corps Prevents Coup in Mali After Rebels Seize Towns @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  159871ms] [LOG] [ImpactGlobe] Hovering: Russia's Africa Corps Prevents Coup in Mali After Rebels Seize Towns @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  159921ms] [LOG] [ImpactGlobe] Hovering: Russia's Africa Corps Prevents Coup in Mali After Rebels Seize Towns @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  159984ms] [LOG] [ImpactGlobe] Hovering: Russia's Africa Corps Prevents Coup in Mali After Rebels Seize Towns @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  160051ms] [LOG] [ImpactGlobe] Hovering: Russia's Africa Corps Prevents Coup in Mali After Rebels Seize Towns @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  160094ms] [LOG] [ImpactGlobe] Hovering: Russia's Africa Corps Prevents Coup in Mali After Rebels Seize Towns @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  161878ms] [LOG] [ImpactGlobe] Hovering: India Conducts Airstrikes on Pakistan-Administered Kashmir After Attack @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  161942ms] [LOG] [ImpactGlobe] Hovering: India Conducts Airstrikes on Pakistan-Administered Kashmir After Attack @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  162006ms] [LOG] [ImpactGlobe] Hovering: India Conducts Airstrikes on Pakistan-Administered Kashmir After Attack @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  162039ms] [LOG] [ImpactGlobe] Hovering: India Conducts Airstrikes on Pakistan-Administered Kashmir After Attack @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  162092ms] [LOG] [ImpactGlobe] Hovering: India Conducts Airstrikes on Pakistan-Administered Kashmir After Attack @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  162136ms] [LOG] [ImpactGlobe] Hovering: India Conducts Airstrikes on Pakistan-Administered Kashmir After Attack @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  162174ms] [LOG] [ImpactGlobe] Hovering: India Conducts Airstrikes on Pakistan-Administered Kashmir After Attack @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  162219ms] [LOG] [ImpactGlobe] Hovering: India Conducts Airstrikes on Pakistan-Administered Kashmir After Attack @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  162267ms] [LOG] [ImpactGlobe] Hovering: India Conducts Airstrikes on Pakistan-Administered Kashmir After Attack @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  162307ms] [LOG] [ImpactGlobe] Hovering: India Conducts Airstrikes on Pakistan-Administered Kashmir After Attack @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  162371ms] [LOG] [ImpactGlobe] Hovering: India Conducts Airstrikes on Pakistan-Administered Kashmir After Attack @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  162425ms] [LOG] [ImpactGlobe] Event clicked: India Conducts Airstrikes on Pakistan-Administered Kashmir After Attack @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  162457ms] [LOG] [ImpactGlobe] Hovering: India Conducts Airstrikes on Pakistan-Administered Kashmir After Attack @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  162488ms] [ERROR] Failed to load resource: the server responded with a status of 401 (Unauthorized) @ http://localhost:3000/api/watchlist:0
+[  162493ms] [LOG] [ImpactGlobe] Hovering: India Conducts Airstrikes on Pakistan-Administered Kashmir After Attack @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  162530ms] [ERROR] Failed to load resource: the server responded with a status of 401 (Unauthorized) @ http://localhost:3000/api/watchlist:0
+[  162535ms] [LOG] [ImpactGlobe] Hovering: India Conducts Airstrikes on Pakistan-Administered Kashmir After Attack @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  162583ms] [LOG] [ImpactGlobe] Hovering: India Conducts Airstrikes on Pakistan-Administered Kashmir After Attack @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  162630ms] [LOG] [ImpactGlobe] Hovering: India Conducts Airstrikes on Pakistan-Administered Kashmir After Attack @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  162674ms] [LOG] [ImpactGlobe] Hovering: India Conducts Airstrikes on Pakistan-Administered Kashmir After Attack @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  162746ms] [LOG] [ImpactGlobe] Hovering: India Conducts Airstrikes on Pakistan-Administered Kashmir After Attack @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  162811ms] [LOG] [ImpactGlobe] Hovering: India Conducts Airstrikes on Pakistan-Administered Kashmir After Attack @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  162850ms] [LOG] [ImpactGlobe] Hovering: India Conducts Airstrikes on Pakistan-Administered Kashmir After Attack @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  162910ms] [LOG] [ImpactGlobe] Hovering: India Conducts Airstrikes on Pakistan-Administered Kashmir After Attack @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  162962ms] [LOG] [ImpactGlobe] Hovering: India Conducts Airstrikes on Pakistan-Administered Kashmir After Attack @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  163020ms] [LOG] [ImpactGlobe] Hovering: India Conducts Airstrikes on Pakistan-Administered Kashmir After Attack @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  163078ms] [LOG] [ImpactGlobe] Hovering: India Conducts Airstrikes on Pakistan-Administered Kashmir After Attack @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  163126ms] [LOG] [ImpactGlobe] Hovering: India Conducts Airstrikes on Pakistan-Administered Kashmir After Attack @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  163194ms] [LOG] [ImpactGlobe] Hovering: India Conducts Airstrikes on Pakistan-Administered Kashmir After Attack @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  163250ms] [LOG] [ImpactGlobe] Hovering: India Conducts Airstrikes on Pakistan-Administered Kashmir After Attack @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  163294ms] [LOG] [ImpactGlobe] Hovering: India Conducts Airstrikes on Pakistan-Administered Kashmir After Attack @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  163334ms] [LOG] [ImpactGlobe] Hovering: India Conducts Airstrikes on Pakistan-Administered Kashmir After Attack @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  163396ms] [LOG] [ImpactGlobe] Hovering: India Conducts Airstrikes on Pakistan-Administered Kashmir After Attack @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  163460ms] [LOG] [ImpactGlobe] Hovering: India Conducts Airstrikes on Pakistan-Administered Kashmir After Attack @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  163521ms] [LOG] [ImpactGlobe] Hovering: India Conducts Airstrikes on Pakistan-Administered Kashmir After Attack @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  163563ms] [LOG] [ImpactGlobe] Hovering: India Conducts Airstrikes on Pakistan-Administered Kashmir After Attack @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  163602ms] [LOG] [ImpactGlobe] Hovering: India Conducts Airstrikes on Pakistan-Administered Kashmir After Attack @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  163659ms] [LOG] [ImpactGlobe] Hovering: India Conducts Airstrikes on Pakistan-Administered Kashmir After Attack @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  163709ms] [LOG] [ImpactGlobe] Hovering: India Conducts Airstrikes on Pakistan-Administered Kashmir After Attack @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  163772ms] [LOG] [ImpactGlobe] Hovering: India Conducts Airstrikes on Pakistan-Administered Kashmir After Attack @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  163805ms] [LOG] [ImpactGlobe] Hovering: India Conducts Airstrikes on Pakistan-Administered Kashmir After Attack @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  163866ms] [LOG] [ImpactGlobe] Hovering: India Conducts Airstrikes on Pakistan-Administered Kashmir After Attack @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  163912ms] [LOG] [ImpactGlobe] Hovering: India Conducts Airstrikes on Pakistan-Administered Kashmir After Attack @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  163977ms] [LOG] [ImpactGlobe] Hovering: India Conducts Airstrikes on Pakistan-Administered Kashmir After Attack @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  164009ms] [LOG] [ImpactGlobe] Hovering: India Conducts Airstrikes on Pakistan-Administered Kashmir After Attack @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  164064ms] [LOG] [ImpactGlobe] Hovering: India Conducts Airstrikes on Pakistan-Administered Kashmir After Attack @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  164112ms] [LOG] [ImpactGlobe] Hovering: India Conducts Airstrikes on Pakistan-Administered Kashmir After Attack @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  164161ms] [LOG] [ImpactGlobe] Hovering: India Conducts Airstrikes on Pakistan-Administered Kashmir After Attack @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  164214ms] [LOG] [ImpactGlobe] Hovering: India Conducts Airstrikes on Pakistan-Administered Kashmir After Attack @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  164256ms] [LOG] [ImpactGlobe] Hovering: India Conducts Airstrikes on Pakistan-Administered Kashmir After Attack @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  164312ms] [LOG] [ImpactGlobe] Hovering: India Conducts Airstrikes on Pakistan-Administered Kashmir After Attack @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  164365ms] [LOG] [ImpactGlobe] Hovering: India Conducts Airstrikes on Pakistan-Administered Kashmir After Attack @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  164399ms] [LOG] [ImpactGlobe] Hovering: India Conducts Airstrikes on Pakistan-Administered Kashmir After Attack @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  164445ms] [LOG] [ImpactGlobe] Hovering: India Conducts Airstrikes on Pakistan-Administered Kashmir After Attack @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  164516ms] [LOG] [ImpactGlobe] Hovering: India Conducts Airstrikes on Pakistan-Administered Kashmir After Attack @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  164573ms] [LOG] [ImpactGlobe] Hovering: India Conducts Airstrikes on Pakistan-Administered Kashmir After Attack @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  164623ms] [LOG] [ImpactGlobe] Hovering: India Conducts Airstrikes on Pakistan-Administered Kashmir After Attack @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  164666ms] [LOG] [ImpactGlobe] Hovering: India Conducts Airstrikes on Pakistan-Administered Kashmir After Attack @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  164713ms] [LOG] [ImpactGlobe] Hovering: India Conducts Airstrikes on Pakistan-Administered Kashmir After Attack @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  164762ms] [LOG] [ImpactGlobe] Hovering: India Conducts Airstrikes on Pakistan-Administered Kashmir After Attack @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  164827ms] [LOG] [ImpactGlobe] Hovering: India Conducts Airstrikes on Pakistan-Administered Kashmir After Attack @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  164872ms] [LOG] [ImpactGlobe] Hovering: India Conducts Airstrikes on Pakistan-Administered Kashmir After Attack @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  164918ms] [LOG] [ImpactGlobe] Hovering: India Conducts Airstrikes on Pakistan-Administered Kashmir After Attack @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  164993ms] [LOG] [ImpactGlobe] Hovering: India Conducts Airstrikes on Pakistan-Administered Kashmir After Attack @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  165052ms] [LOG] [ImpactGlobe] Hovering: India Conducts Airstrikes on Pakistan-Administered Kashmir After Attack @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  165115ms] [LOG] [ImpactGlobe] Hovering: India Conducts Airstrikes on Pakistan-Administered Kashmir After Attack @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  165151ms] [LOG] [ImpactGlobe] Hovering: India Conducts Airstrikes on Pakistan-Administered Kashmir After Attack @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  165217ms] [LOG] [ImpactGlobe] Hovering: India Conducts Airstrikes on Pakistan-Administered Kashmir After Attack @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  165263ms] [LOG] [ImpactGlobe] Hovering: India Conducts Airstrikes on Pakistan-Administered Kashmir After Attack @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  165309ms] [LOG] [ImpactGlobe] Hovering: India Conducts Airstrikes on Pakistan-Administered Kashmir After Attack @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  165358ms] [LOG] [ImpactGlobe] Hovering: India Conducts Airstrikes on Pakistan-Administered Kashmir After Attack @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  165404ms] [LOG] [ImpactGlobe] Hovering: India Conducts Airstrikes on Pakistan-Administered Kashmir After Attack @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  165460ms] [LOG] [ImpactGlobe] Hovering: India Conducts Airstrikes on Pakistan-Administered Kashmir After Attack @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  165502ms] [LOG] [ImpactGlobe] Hovering: India Conducts Airstrikes on Pakistan-Administered Kashmir After Attack @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  165543ms] [LOG] [ImpactGlobe] Hovering: India Conducts Airstrikes on Pakistan-Administered Kashmir After Attack @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  165606ms] [LOG] [ImpactGlobe] Hovering: India Conducts Airstrikes on Pakistan-Administered Kashmir After Attack @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  165668ms] [LOG] [ImpactGlobe] Hovering: India Conducts Airstrikes on Pakistan-Administered Kashmir After Attack @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  165727ms] [LOG] [ImpactGlobe] Hovering: India Conducts Airstrikes on Pakistan-Administered Kashmir After Attack @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  165780ms] [LOG] [ImpactGlobe] Hovering: India Conducts Airstrikes on Pakistan-Administered Kashmir After Attack @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  165829ms] [LOG] [ImpactGlobe] Hovering: India Conducts Airstrikes on Pakistan-Administered Kashmir After Attack @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  165878ms] [LOG] [ImpactGlobe] Hovering: India Conducts Airstrikes on Pakistan-Administered Kashmir After Attack @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  165919ms] [LOG] [ImpactGlobe] Hovering: India Conducts Airstrikes on Pakistan-Administered Kashmir After Attack @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  165987ms] [LOG] [ImpactGlobe] Hovering: India Conducts Airstrikes on Pakistan-Administered Kashmir After Attack @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  166037ms] [LOG] [ImpactGlobe] Hovering: India Conducts Airstrikes on Pakistan-Administered Kashmir After Attack @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  166072ms] [LOG] [ImpactGlobe] Hovering: India Conducts Airstrikes on Pakistan-Administered Kashmir After Attack @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  166113ms] [LOG] [ImpactGlobe] Hovering: India Conducts Airstrikes on Pakistan-Administered Kashmir After Attack @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  166165ms] [LOG] [ImpactGlobe] Hovering: India Conducts Airstrikes on Pakistan-Administered Kashmir After Attack @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  166230ms] [LOG] [ImpactGlobe] Hovering: India Conducts Airstrikes on Pakistan-Administered Kashmir After Attack @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  166280ms] [LOG] [ImpactGlobe] Hovering: India Conducts Airstrikes on Pakistan-Administered Kashmir After Attack @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  166340ms] [LOG] [ImpactGlobe] Hovering: India Conducts Airstrikes on Pakistan-Administered Kashmir After Attack @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  166396ms] [LOG] [ImpactGlobe] Hovering: India Conducts Airstrikes on Pakistan-Administered Kashmir After Attack @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  166457ms] [LOG] [ImpactGlobe] Hovering: India Conducts Airstrikes on Pakistan-Administered Kashmir After Attack @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  166496ms] [LOG] [ImpactGlobe] Hovering: India Conducts Airstrikes on Pakistan-Administered Kashmir After Attack @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  166542ms] [LOG] [ImpactGlobe] Hovering: India Conducts Airstrikes on Pakistan-Administered Kashmir After Attack @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  166596ms] [LOG] [ImpactGlobe] Hovering: India Conducts Airstrikes on Pakistan-Administered Kashmir After Attack @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  166635ms] [LOG] [ImpactGlobe] Hovering: India Conducts Airstrikes on Pakistan-Administered Kashmir After Attack @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  166690ms] [LOG] [ImpactGlobe] Hovering: India Conducts Airstrikes on Pakistan-Administered Kashmir After Attack @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  166728ms] [LOG] [ImpactGlobe] Hovering: India Conducts Airstrikes on Pakistan-Administered Kashmir After Attack @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  166796ms] [LOG] [ImpactGlobe] Hovering: India Conducts Airstrikes on Pakistan-Administered Kashmir After Attack @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  166846ms] [LOG] [ImpactGlobe] Hovering: India Conducts Airstrikes on Pakistan-Administered Kashmir After Attack @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  166892ms] [LOG] [ImpactGlobe] Hovering: India Conducts Airstrikes on Pakistan-Administered Kashmir After Attack @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  166943ms] [LOG] [ImpactGlobe] Hovering: India Conducts Airstrikes on Pakistan-Administered Kashmir After Attack @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  166994ms] [LOG] [ImpactGlobe] Hovering: India Conducts Airstrikes on Pakistan-Administered Kashmir After Attack @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  167045ms] [LOG] [ImpactGlobe] Hovering: India Conducts Airstrikes on Pakistan-Administered Kashmir After Attack @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  167082ms] [LOG] [ImpactGlobe] Hovering: India Conducts Airstrikes on Pakistan-Administered Kashmir After Attack @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  167154ms] [LOG] [ImpactGlobe] Hovering: India Conducts Airstrikes on Pakistan-Administered Kashmir After Attack @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  167209ms] [LOG] [ImpactGlobe] Hovering: India Conducts Airstrikes on Pakistan-Administered Kashmir After Attack @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  167258ms] [LOG] [ImpactGlobe] Hovering: India Conducts Airstrikes on Pakistan-Administered Kashmir After Attack @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  167305ms] [LOG] [ImpactGlobe] Hovering: India Conducts Airstrikes on Pakistan-Administered Kashmir After Attack @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  167346ms] [LOG] [ImpactGlobe] Hovering: India Conducts Airstrikes on Pakistan-Administered Kashmir After Attack @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  167388ms] [LOG] [ImpactGlobe] Hovering: India Conducts Airstrikes on Pakistan-Administered Kashmir After Attack @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  167433ms] [LOG] [ImpactGlobe] Hovering: India Conducts Airstrikes on Pakistan-Administered Kashmir After Attack @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  167488ms] [LOG] [ImpactGlobe] Hovering: India Conducts Airstrikes on Pakistan-Administered Kashmir After Attack @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  167537ms] [LOG] [ImpactGlobe] Hovering: India Conducts Airstrikes on Pakistan-Administered Kashmir After Attack @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  167585ms] [LOG] [ImpactGlobe] Hovering: India Conducts Airstrikes on Pakistan-Administered Kashmir After Attack @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  167645ms] [LOG] [ImpactGlobe] Hovering: India Conducts Airstrikes on Pakistan-Administered Kashmir After Attack @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  167707ms] [LOG] [ImpactGlobe] Hovering: India Conducts Airstrikes on Pakistan-Administered Kashmir After Attack @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  167749ms] [LOG] [ImpactGlobe] Hovering: India Conducts Airstrikes on Pakistan-Administered Kashmir After Attack @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  167780ms] [LOG] [ImpactGlobe] Hovering: India Conducts Airstrikes on Pakistan-Administered Kashmir After Attack @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  167827ms] [LOG] [ImpactGlobe] Hovering: India Conducts Airstrikes on Pakistan-Administered Kashmir After Attack @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  167871ms] [LOG] [ImpactGlobe] Hovering: India Conducts Airstrikes on Pakistan-Administered Kashmir After Attack @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  167919ms] [LOG] [ImpactGlobe] Hovering: India Conducts Airstrikes on Pakistan-Administered Kashmir After Attack @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  167989ms] [LOG] [ImpactGlobe] Hovering: India Conducts Airstrikes on Pakistan-Administered Kashmir After Attack @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  168044ms] [LOG] [ImpactGlobe] Hovering: India Conducts Airstrikes on Pakistan-Administered Kashmir After Attack @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  168101ms] [LOG] [ImpactGlobe] Hovering: India Conducts Airstrikes on Pakistan-Administered Kashmir After Attack @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  168142ms] [LOG] [ImpactGlobe] Hovering: India Conducts Airstrikes on Pakistan-Administered Kashmir After Attack @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  168179ms] [LOG] [ImpactGlobe] Hovering: India Conducts Airstrikes on Pakistan-Administered Kashmir After Attack @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  168222ms] [LOG] [ImpactGlobe] Hovering: India Conducts Airstrikes on Pakistan-Administered Kashmir After Attack @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  168276ms] [LOG] [ImpactGlobe] Hovering: India Conducts Airstrikes on Pakistan-Administered Kashmir After Attack @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  168319ms] [LOG] [ImpactGlobe] Hovering: India Conducts Airstrikes on Pakistan-Administered Kashmir After Attack @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  168381ms] [LOG] [ImpactGlobe] Hovering: India Conducts Airstrikes on Pakistan-Administered Kashmir After Attack @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  168450ms] [LOG] [ImpactGlobe] Hovering: India Conducts Airstrikes on Pakistan-Administered Kashmir After Attack @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  168504ms] [LOG] [ImpactGlobe] Hovering: India Conducts Airstrikes on Pakistan-Administered Kashmir After Attack @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  168551ms] [LOG] [ImpactGlobe] Hovering: India Conducts Airstrikes on Pakistan-Administered Kashmir After Attack @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  168610ms] [LOG] [ImpactGlobe] Hovering: India Conducts Airstrikes on Pakistan-Administered Kashmir After Attack @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  168667ms] [LOG] [ImpactGlobe] Hovering: India Conducts Airstrikes on Pakistan-Administered Kashmir After Attack @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  168728ms] [LOG] [ImpactGlobe] Hovering: India Conducts Airstrikes on Pakistan-Administered Kashmir After Attack @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  168782ms] [LOG] [ImpactGlobe] Hovering: India Conducts Airstrikes on Pakistan-Administered Kashmir After Attack @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  168834ms] [LOG] [ImpactGlobe] Hovering: India Conducts Airstrikes on Pakistan-Administered Kashmir After Attack @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  168879ms] [LOG] [ImpactGlobe] Hovering: India Conducts Airstrikes on Pakistan-Administered Kashmir After Attack @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  168947ms] [LOG] [ImpactGlobe] Hovering: India Conducts Airstrikes on Pakistan-Administered Kashmir After Attack @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  169007ms] [LOG] [ImpactGlobe] Hovering: India Conducts Airstrikes on Pakistan-Administered Kashmir After Attack @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  169055ms] [LOG] [ImpactGlobe] Hovering: India Conducts Airstrikes on Pakistan-Administered Kashmir After Attack @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  169104ms] [LOG] [ImpactGlobe] Hovering: India Conducts Airstrikes on Pakistan-Administered Kashmir After Attack @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  169172ms] [LOG] [ImpactGlobe] Hovering: India Conducts Airstrikes on Pakistan-Administered Kashmir After Attack @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  169217ms] [LOG] [ImpactGlobe] Hovering: India Conducts Airstrikes on Pakistan-Administered Kashmir After Attack @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  169264ms] [LOG] [ImpactGlobe] Hovering: India Conducts Airstrikes on Pakistan-Administered Kashmir After Attack @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  169324ms] [LOG] [ImpactGlobe] Hovering: India Conducts Airstrikes on Pakistan-Administered Kashmir After Attack @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  169391ms] [LOG] [ImpactGlobe] Hovering: India Conducts Airstrikes on Pakistan-Administered Kashmir After Attack @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  169449ms] [LOG] [ImpactGlobe] Hovering: India Conducts Airstrikes on Pakistan-Administered Kashmir After Attack @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  169492ms] [LOG] [ImpactGlobe] Hovering: India Conducts Airstrikes on Pakistan-Administered Kashmir After Attack @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  169534ms] [LOG] [ImpactGlobe] Hovering: India Conducts Airstrikes on Pakistan-Administered Kashmir After Attack @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  169576ms] [LOG] [ImpactGlobe] Hovering: India Conducts Airstrikes on Pakistan-Administered Kashmir After Attack @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  169626ms] [LOG] [ImpactGlobe] Hovering: India Conducts Airstrikes on Pakistan-Administered Kashmir After Attack @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  169667ms] [LOG] [ImpactGlobe] Hovering: India Conducts Airstrikes on Pakistan-Administered Kashmir After Attack @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  169710ms] [LOG] [ImpactGlobe] Hovering: India Conducts Airstrikes on Pakistan-Administered Kashmir After Attack @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  169764ms] [LOG] [ImpactGlobe] Hovering: India Conducts Airstrikes on Pakistan-Administered Kashmir After Attack @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  169807ms] [LOG] [ImpactGlobe] Hovering: India Conducts Airstrikes on Pakistan-Administered Kashmir After Attack @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  169880ms] [LOG] [ImpactGlobe] Hovering: India Conducts Airstrikes on Pakistan-Administered Kashmir After Attack @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  169941ms] [LOG] [ImpactGlobe] Hovering: India Conducts Airstrikes on Pakistan-Administered Kashmir After Attack @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  169993ms] [LOG] [ImpactGlobe] Hovering: India Conducts Airstrikes on Pakistan-Administered Kashmir After Attack @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  170052ms] [LOG] [ImpactGlobe] Hovering: India Conducts Airstrikes on Pakistan-Administered Kashmir After Attack @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  170106ms] [LOG] [ImpactGlobe] Hovering: India Conducts Airstrikes on Pakistan-Administered Kashmir After Attack @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  170160ms] [LOG] [ImpactGlobe] Hovering: India Conducts Airstrikes on Pakistan-Administered Kashmir After Attack @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  170207ms] [LOG] [ImpactGlobe] Hovering: India Conducts Airstrikes on Pakistan-Administered Kashmir After Attack @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  170250ms] [LOG] [ImpactGlobe] Hovering: India Conducts Airstrikes on Pakistan-Administered Kashmir After Attack @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  170309ms] [LOG] [ImpactGlobe] Hovering: India Conducts Airstrikes on Pakistan-Administered Kashmir After Attack @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  170371ms] [LOG] [ImpactGlobe] Hovering: India Conducts Airstrikes on Pakistan-Administered Kashmir After Attack @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  170427ms] [LOG] [ImpactGlobe] Hovering: India Conducts Airstrikes on Pakistan-Administered Kashmir After Attack @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  170467ms] [LOG] [ImpactGlobe] Hovering: India Conducts Airstrikes on Pakistan-Administered Kashmir After Attack @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  170534ms] [LOG] [ImpactGlobe] Hovering: India Conducts Airstrikes on Pakistan-Administered Kashmir After Attack @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  170595ms] [LOG] [ImpactGlobe] Hovering: India Conducts Airstrikes on Pakistan-Administered Kashmir After Attack @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  170675ms] [LOG] [ImpactGlobe] Hovering: India Conducts Airstrikes on Pakistan-Administered Kashmir After Attack @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  170726ms] [LOG] [ImpactGlobe] Hovering: India Conducts Airstrikes on Pakistan-Administered Kashmir After Attack @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  170766ms] [LOG] [ImpactGlobe] Hovering: India Conducts Airstrikes on Pakistan-Administered Kashmir After Attack @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  170811ms] [LOG] [ImpactGlobe] Hovering: India Conducts Airstrikes on Pakistan-Administered Kashmir After Attack @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  178843ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  178968ms] [LOG] [Fast Refresh] done in 205ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  179254ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  179475ms] [WARNING] %c%s%c [33m[1m⚠[22m[39m Unsupported metadata viewport is configured in metadata export in /. Please move it to viewport export instead.
+Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport background: #e6e6e6;background: light-dark(rgba(0,0,0,0.1), rgba(255,255,255,0.25));color: #000000;color: light-dark(#000000, #ffffff);border-radius: 2px  Server   @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  179475ms] [LOG] [Fast Refresh] done in 332ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  180865ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  180996ms] [LOG] [Fast Refresh] done in 238ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  197666ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  197781ms] [LOG] [Fast Refresh] done in 193ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  197919ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  198136ms] [WARNING] %c%s%c [33m[1m⚠[22m[39m Unsupported metadata viewport is configured in metadata export in /. Please move it to viewport export instead.
+Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport background: #e6e6e6;background: light-dark(rgba(0,0,0,0.1), rgba(255,255,255,0.25));color: #000000;color: light-dark(#000000, #ffffff);border-radius: 2px  Server   @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  198151ms] [LOG] [Fast Refresh] done in 335ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  240851ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  240904ms] [LOG] [Fast Refresh] done in 161ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  282527ms] [LOG] [GlobeRenderer] Applying heatmap for layer: sea_temp @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  282529ms] [LOG] [GlobeRenderer] Heatmap texture applied @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  282532ms] [LOG] [App] envLayerData updated: {type: sea_temp, updatedAt: 2026-04-29T02:55:47.955Z, seaTemp: Array(423), meta: Object} @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  282661ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  282701ms] [LOG] [Fast Refresh] done in 143ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  289522ms] [LOG] [GlobeRenderer] Removing heatmap texture @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  290124ms] [LOG] [GlobeRenderer] Applying heatmap for layer: temperature_anomaly @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  290126ms] [WARNING] [GlobeRenderer] Failed to create heatmap texture @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  291029ms] [LOG] [App] envLayerData updated: {type: wildfires, updatedAt: 2026-04-29T02:56:55.729Z, wildfires: Array(50)} @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  291622ms] [LOG] [App] envLayerData updated: {type: earthquakes, updatedAt: 2026-04-29T03:08:00.599Z, earthquakes: Array(48)} @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  293335ms] [LOG] [ImpactGlobe] Hovering: M4.9 Earthquake @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  293377ms] [LOG] [ImpactGlobe] Hovering: M4.9 Earthquake @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  293425ms] [LOG] [ImpactGlobe] Hovering: M4.9 Earthquake @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  293480ms] [LOG] [ImpactGlobe] Hovering: M4.9 Earthquake @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  293529ms] [LOG] [ImpactGlobe] Hovering: M4.9 Earthquake @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  293581ms] [LOG] [ImpactGlobe] Hovering: M4.9 Earthquake @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  293633ms] [LOG] [ImpactGlobe] Hovering: M4.9 Earthquake @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  293686ms] [LOG] [ImpactGlobe] Hovering: M4.9 Earthquake @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  293739ms] [LOG] [ImpactGlobe] Hovering: M4.9 Earthquake @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  293794ms] [LOG] [ImpactGlobe] Hovering: M4.9 Earthquake @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  293845ms] [LOG] [ImpactGlobe] Hovering: M4.9 Earthquake @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  293863ms] [LOG] [ImpactGlobe] Event clicked: M4.9 Earthquake @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  293906ms] [LOG] [ImpactGlobe] Hovering: M4.9 Earthquake @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  293952ms] [ERROR] Failed to load resource: the server responded with a status of 401 (Unauthorized) @ http://localhost:3000/api/watchlist:0
+[  293976ms] [LOG] [ImpactGlobe] Hovering: M4.9 Earthquake @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  294014ms] [ERROR] Failed to load resource: the server responded with a status of 401 (Unauthorized) @ http://localhost:3000/api/watchlist:0
+[  294039ms] [LOG] [ImpactGlobe] Hovering: M4.9 Earthquake @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  294095ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  294117ms] [LOG] [Fast Refresh] done in 143ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  294121ms] [LOG] [ImpactGlobe] Hovering: M4.9 Earthquake @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  294176ms] [LOG] [ImpactGlobe] Hovering: M4.9 Earthquake @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  294258ms] [LOG] [ImpactGlobe] Hovering: M4.5 Earthquake @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  294331ms] [LOG] [ImpactGlobe] Hovering: M5.2 Earthquake @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  297231ms] [LOG] [GlobeRenderer] Applying heatmap for layer: temperature_anomaly @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  297232ms] [WARNING] [GlobeRenderer] Failed to create heatmap texture @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  297249ms] [LOG] [GlobeRenderer] Applying heatmap for layer: temperature_anomaly @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  297252ms] [LOG] [GlobeRenderer] Heatmap texture applied @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  297254ms] [LOG] [App] envLayerData updated: {type: temperature_anomaly, updatedAt: 2026-04-29T03:07:59.768Z, tempAnomalies: Array(1038)} @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  301459ms] [LOG] [GlobeRenderer] Applying heatmap for layer: aqi @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  301461ms] [WARNING] [GlobeRenderer] Failed to create heatmap texture @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  302340ms] [LOG] [GlobeRenderer] Applying heatmap for layer: aqi @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  302344ms] [LOG] [GlobeRenderer] Heatmap texture applied @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  302345ms] [LOG] [App] envLayerData updated: {type: aqi, updatedAt: 2026-04-29T03:08:11.117Z, aqi: Array(760), meta: Object} @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  302716ms] [LOG] [GlobeRenderer] Applying heatmap for layer: wind @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  302717ms] [WARNING] [GlobeRenderer] Failed to create heatmap texture @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  302743ms] [LOG] [GlobeRenderer] Applying heatmap for layer: wind @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  302753ms] [LOG] [GlobeRenderer] Heatmap texture applied @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  302754ms] [LOG] [App] envLayerData updated: {type: wind, updatedAt: 2026-04-29T03:07:59.768Z, wind: Array(2692)} @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  302801ms] [LOG] [GlobeRenderer] Applying heatmap for layer: wind @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  302819ms] [LOG] [GlobeRenderer] Heatmap texture applied @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  302824ms] [LOG] [App] envLayerData updated: {type: wind, updatedAt: 2026-04-29T03:08:06.870Z, wind: Array(2692)} @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  305399ms] [LOG] [GlobeRenderer] Removing heatmap texture @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  305429ms] [LOG] [App] envLayerData updated: {type: earthquakes, updatedAt: 2026-04-29T03:08:00.599Z, earthquakes: Array(48)} @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  306224ms] [LOG] [App] envLayerData updated: {type: wildfires, updatedAt: 2026-04-29T02:56:55.729Z, wildfires: Array(50)} @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  307030ms] [LOG] [App] envLayerData updated: {type: storms, updatedAt: 2026-04-29T02:56:55.140Z, storms: Array(0)} @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  308013ms] [LOG] [GlobeRenderer] Applying heatmap for layer: sea_temp @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  308015ms] [WARNING] [GlobeRenderer] Failed to create heatmap texture @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  308048ms] [LOG] [GlobeRenderer] Applying heatmap for layer: sea_temp @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  308052ms] [LOG] [GlobeRenderer] Heatmap texture applied @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  308053ms] [LOG] [App] envLayerData updated: {type: sea_temp, updatedAt: 2026-04-29T02:55:47.955Z, seaTemp: Array(423), meta: Object} @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  308632ms] [LOG] [GlobeRenderer] Applying heatmap for layer: sea_temp @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  308635ms] [LOG] [GlobeRenderer] Heatmap texture applied @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  308636ms] [LOG] [App] envLayerData updated: {type: sea_temp, updatedAt: 2026-04-29T03:08:17.668Z, seaTemp: Array(423), meta: Object} @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  309739ms] [LOG] [GlobeRenderer] Removing heatmap texture @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  420804ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  420869ms] [LOG] [Fast Refresh] done in 176ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  518341ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  518457ms] [LOG] [Fast Refresh] done in 210ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  518869ms] [WARNING] %c%s%c [33m[1m⚠[22m[39m Unsupported metadata viewport is configured in metadata export in /. Please move it to viewport export instead.
+Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport background: #e6e6e6;background: light-dark(rgba(0,0,0,0.1), rgba(255,255,255,0.25));color: #000000;color: light-dark(#000000, #ffffff);border-radius: 2px  Server   @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  519285ms] [WARNING] %c%s%c [33m[1m⚠[22m[39m Unsupported metadata viewport is configured in metadata export in /. Please move it to viewport export instead.
+Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport background: #e6e6e6;background: light-dark(rgba(0,0,0,0.1), rgba(255,255,255,0.25));color: #000000;color: light-dark(#000000, #ffffff);border-radius: 2px  Server   @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  519423ms] [WARNING] %c%s%c [33m[1m⚠[22m[39m Unsupported metadata viewport is configured in metadata export in /. Please move it to viewport export instead.
+Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport background: #e6e6e6;background: light-dark(rgba(0,0,0,0.1), rgba(255,255,255,0.25));color: #000000;color: light-dark(#000000, #ffffff);border-radius: 2px  Server   @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  519456ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  519586ms] [LOG] [Fast Refresh] done in 231ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  519602ms] [WARNING] %c%s%c [33m[1m⚠[22m[39m Unsupported metadata viewport is configured in metadata export in /. Please move it to viewport export instead.
+Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport background: #e6e6e6;background: light-dark(rgba(0,0,0,0.1), rgba(255,255,255,0.25));color: #000000;color: light-dark(#000000, #ffffff);border-radius: 2px  Server   @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  519605ms] [WARNING] %c%s%c [33m[1m⚠[22m[39m Unsupported metadata viewport is configured in metadata export in /. Please move it to viewport export instead.
+Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport background: #e6e6e6;background: light-dark(rgba(0,0,0,0.1), rgba(255,255,255,0.25));color: #000000;color: light-dark(#000000, #ffffff);border-radius: 2px  Server   @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  519606ms] [WARNING] %c%s%c [33m[1m⚠[22m[39m Unsupported metadata viewport is configured in metadata export in /. Please move it to viewport export instead.
+Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport background: #e6e6e6;background: light-dark(rgba(0,0,0,0.1), rgba(255,255,255,0.25));color: #000000;color: light-dark(#000000, #ffffff);border-radius: 2px  Server   @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  519695ms] [WARNING] %c%s%c [33m[1m⚠[22m[39m Unsupported metadata viewport is configured in metadata export in /. Please move it to viewport export instead.
+Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport background: #e6e6e6;background: light-dark(rgba(0,0,0,0.1), rgba(255,255,255,0.25));color: #000000;color: light-dark(#000000, #ffffff);border-radius: 2px  Server   @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  519762ms] [WARNING] %c%s%c [33m[1m⚠[22m[39m Unsupported metadata viewport is configured in metadata export in /. Please move it to viewport export instead.
+Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport background: #e6e6e6;background: light-dark(rgba(0,0,0,0.1), rgba(255,255,255,0.25));color: #000000;color: light-dark(#000000, #ffffff);border-radius: 2px  Server   @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  519883ms] [WARNING] %c%s%c [33m[1m⚠[22m[39m Unsupported metadata viewport is configured in metadata export in /. Please move it to viewport export instead.
+Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport background: #e6e6e6;background: light-dark(rgba(0,0,0,0.1), rgba(255,255,255,0.25));color: #000000;color: light-dark(#000000, #ffffff);border-radius: 2px  Server   @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  519930ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  520007ms] [LOG] [Fast Refresh] done in 180ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  520025ms] [WARNING] %c%s%c [33m[1m⚠[22m[39m Unsupported metadata viewport is configured in metadata export in /. Please move it to viewport export instead.
+Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport background: #e6e6e6;background: light-dark(rgba(0,0,0,0.1), rgba(255,255,255,0.25));color: #000000;color: light-dark(#000000, #ffffff);border-radius: 2px  Server   @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  520026ms] [WARNING] %c%s%c [33m[1m⚠[22m[39m Unsupported metadata viewport is configured in metadata export in /. Please move it to viewport export instead.
+Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport background: #e6e6e6;background: light-dark(rgba(0,0,0,0.1), rgba(255,255,255,0.25));color: #000000;color: light-dark(#000000, #ffffff);border-radius: 2px  Server   @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  520097ms] [WARNING] %c%s%c [33m[1m⚠[22m[39m Unsupported metadata viewport is configured in metadata export in /. Please move it to viewport export instead.
+Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport background: #e6e6e6;background: light-dark(rgba(0,0,0,0.1), rgba(255,255,255,0.25));color: #000000;color: light-dark(#000000, #ffffff);border-radius: 2px  Server   @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  520152ms] [WARNING] %c%s%c [33m[1m⚠[22m[39m Unsupported metadata viewport is configured in metadata export in /. Please move it to viewport export instead.
+Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport background: #e6e6e6;background: light-dark(rgba(0,0,0,0.1), rgba(255,255,255,0.25));color: #000000;color: light-dark(#000000, #ffffff);border-radius: 2px  Server   @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  520246ms] [WARNING] %c%s%c [33m[1m⚠[22m[39m Unsupported metadata viewport is configured in metadata export in /. Please move it to viewport export instead.
+Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport background: #e6e6e6;background: light-dark(rgba(0,0,0,0.1), rgba(255,255,255,0.25));color: #000000;color: light-dark(#000000, #ffffff);border-radius: 2px  Server   @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  520325ms] [WARNING] %c%s%c [33m[1m⚠[22m[39m Unsupported metadata viewport is configured in metadata export in /. Please move it to viewport export instead.
+Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport background: #e6e6e6;background: light-dark(rgba(0,0,0,0.1), rgba(255,255,255,0.25));color: #000000;color: light-dark(#000000, #ffffff);border-radius: 2px  Server   @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  520401ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  520460ms] [LOG] [Fast Refresh] done in 176ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  520477ms] [WARNING] %c%s%c [33m[1m⚠[22m[39m Unsupported metadata viewport is configured in metadata export in /. Please move it to viewport export instead.
+Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport background: #e6e6e6;background: light-dark(rgba(0,0,0,0.1), rgba(255,255,255,0.25));color: #000000;color: light-dark(#000000, #ffffff);border-radius: 2px  Server   @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  520483ms] [WARNING] %c%s%c [33m[1m⚠[22m[39m Unsupported metadata viewport is configured in metadata export in /. Please move it to viewport export instead.
+Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport background: #e6e6e6;background: light-dark(rgba(0,0,0,0.1), rgba(255,255,255,0.25));color: #000000;color: light-dark(#000000, #ffffff);border-radius: 2px  Server   @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  520488ms] [WARNING] %c%s%c [33m[1m⚠[22m[39m Unsupported metadata viewport is configured in metadata export in /. Please move it to viewport export instead.
+Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport background: #e6e6e6;background: light-dark(rgba(0,0,0,0.1), rgba(255,255,255,0.25));color: #000000;color: light-dark(#000000, #ffffff);border-radius: 2px  Server   @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  520530ms] [WARNING] %c%s%c [33m[1m⚠[22m[39m Unsupported metadata viewport is configured in metadata export in /. Please move it to viewport export instead.
+Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport background: #e6e6e6;background: light-dark(rgba(0,0,0,0.1), rgba(255,255,255,0.25));color: #000000;color: light-dark(#000000, #ffffff);border-radius: 2px  Server   @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  520590ms] [WARNING] %c%s%c [33m[1m⚠[22m[39m Unsupported metadata viewport is configured in metadata export in /. Please move it to viewport export instead.
+Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport background: #e6e6e6;background: light-dark(rgba(0,0,0,0.1), rgba(255,255,255,0.25));color: #000000;color: light-dark(#000000, #ffffff);border-radius: 2px  Server   @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  520625ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  520646ms] [LOG] [Fast Refresh] done in 142ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  520779ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  520804ms] [WARNING] %c%s%c [33m[1m⚠[22m[39m Unsupported metadata viewport is configured in metadata export in /. Please move it to viewport export instead.
+Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport background: #e6e6e6;background: light-dark(rgba(0,0,0,0.1), rgba(255,255,255,0.25));color: #000000;color: light-dark(#000000, #ffffff);border-radius: 2px  Server   @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  520805ms] [WARNING] %c%s%c [33m[1m⚠[22m[39m Unsupported metadata viewport is configured in metadata export in /. Please move it to viewport export instead.
+Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport background: #e6e6e6;background: light-dark(rgba(0,0,0,0.1), rgba(255,255,255,0.25));color: #000000;color: light-dark(#000000, #ffffff);border-radius: 2px  Server   @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  520807ms] [WARNING] %c%s%c [33m[1m⚠[22m[39m Unsupported metadata viewport is configured in metadata export in /. Please move it to viewport export instead.
+Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport background: #e6e6e6;background: light-dark(rgba(0,0,0,0.1), rgba(255,255,255,0.25));color: #000000;color: light-dark(#000000, #ffffff);border-radius: 2px  Server   @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  520838ms] [LOG] [Fast Refresh] done in 172ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  520875ms] [WARNING] %c%s%c [33m[1m⚠[22m[39m Unsupported metadata viewport is configured in metadata export in /. Please move it to viewport export instead.
+Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport background: #e6e6e6;background: light-dark(rgba(0,0,0,0.1), rgba(255,255,255,0.25));color: #000000;color: light-dark(#000000, #ffffff);border-radius: 2px  Server   @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  520914ms] [WARNING] %c%s%c [33m[1m⚠[22m[39m Unsupported metadata viewport is configured in metadata export in /. Please move it to viewport export instead.
+Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport background: #e6e6e6;background: light-dark(rgba(0,0,0,0.1), rgba(255,255,255,0.25));color: #000000;color: light-dark(#000000, #ffffff);border-radius: 2px  Server   @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  521022ms] [WARNING] %c%s%c [33m[1m⚠[22m[39m Unsupported metadata viewport is configured in metadata export in /. Please move it to viewport export instead.
+Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport background: #e6e6e6;background: light-dark(rgba(0,0,0,0.1), rgba(255,255,255,0.25));color: #000000;color: light-dark(#000000, #ffffff);border-radius: 2px  Server   @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  521134ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  521135ms] [WARNING] %c%s%c [33m[1m⚠[22m[39m Unsupported metadata viewport is configured in metadata export in /. Please move it to viewport export instead.
+Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport background: #e6e6e6;background: light-dark(rgba(0,0,0,0.1), rgba(255,255,255,0.25));color: #000000;color: light-dark(#000000, #ffffff);border-radius: 2px  Server   @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  521144ms] [WARNING] %c%s%c [33m[1m⚠[22m[39m Unsupported metadata viewport is configured in metadata export in /. Please move it to viewport export instead.
+Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport background: #e6e6e6;background: light-dark(rgba(0,0,0,0.1), rgba(255,255,255,0.25));color: #000000;color: light-dark(#000000, #ffffff);border-radius: 2px  Server   @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  521145ms] [WARNING] %c%s%c [33m[1m⚠[22m[39m Unsupported metadata viewport is configured in metadata export in /. Please move it to viewport export instead.
+Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport background: #e6e6e6;background: light-dark(rgba(0,0,0,0.1), rgba(255,255,255,0.25));color: #000000;color: light-dark(#000000, #ffffff);border-radius: 2px  Server   @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  521227ms] [LOG] [Fast Refresh] done in 201ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  521263ms] [WARNING] %c%s%c [33m[1m⚠[22m[39m Unsupported metadata viewport is configured in metadata export in /. Please move it to viewport export instead.
+Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport background: #e6e6e6;background: light-dark(rgba(0,0,0,0.1), rgba(255,255,255,0.25));color: #000000;color: light-dark(#000000, #ffffff);border-radius: 2px  Server   @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  521302ms] [WARNING] %c%s%c [33m[1m⚠[22m[39m Unsupported metadata viewport is configured in metadata export in /. Please move it to viewport export instead.
+Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport background: #e6e6e6;background: light-dark(rgba(0,0,0,0.1), rgba(255,255,255,0.25));color: #000000;color: light-dark(#000000, #ffffff);border-radius: 2px  Server   @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  521342ms] [WARNING] %c%s%c [33m[1m⚠[22m[39m Unsupported metadata viewport is configured in metadata export in /. Please move it to viewport export instead.
+Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport background: #e6e6e6;background: light-dark(rgba(0,0,0,0.1), rgba(255,255,255,0.25));color: #000000;color: light-dark(#000000, #ffffff);border-radius: 2px  Server   @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  521512ms] [WARNING] %c%s%c [33m[1m⚠[22m[39m Unsupported metadata viewport is configured in metadata export in /. Please move it to viewport export instead.
+Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport background: #e6e6e6;background: light-dark(rgba(0,0,0,0.1), rgba(255,255,255,0.25));color: #000000;color: light-dark(#000000, #ffffff);border-radius: 2px  Server   @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  521513ms] [WARNING] %c%s%c [33m[1m⚠[22m[39m Unsupported metadata viewport is configured in metadata export in /. Please move it to viewport export instead.
+Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport background: #e6e6e6;background: light-dark(rgba(0,0,0,0.1), rgba(255,255,255,0.25));color: #000000;color: light-dark(#000000, #ffffff);border-radius: 2px  Server   @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  521514ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  521603ms] [LOG] [Fast Refresh] done in 203ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  521686ms] [WARNING] %c%s%c [33m[1m⚠[22m[39m Unsupported metadata viewport is configured in metadata export in /. Please move it to viewport export instead.
+Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport background: #e6e6e6;background: light-dark(rgba(0,0,0,0.1), rgba(255,255,255,0.25));color: #000000;color: light-dark(#000000, #ffffff);border-radius: 2px  Server   @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  521689ms] [WARNING] %c%s%c [33m[1m⚠[22m[39m Unsupported metadata viewport is configured in metadata export in /. Please move it to viewport export instead.
+Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport background: #e6e6e6;background: light-dark(rgba(0,0,0,0.1), rgba(255,255,255,0.25));color: #000000;color: light-dark(#000000, #ffffff);border-radius: 2px  Server   @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  521731ms] [WARNING] %c%s%c [33m[1m⚠[22m[39m Unsupported metadata viewport is configured in metadata export in /. Please move it to viewport export instead.
+Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport background: #e6e6e6;background: light-dark(rgba(0,0,0,0.1), rgba(255,255,255,0.25));color: #000000;color: light-dark(#000000, #ffffff);border-radius: 2px  Server   @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  521791ms] [WARNING] %c%s%c [33m[1m⚠[22m[39m Unsupported metadata viewport is configured in metadata export in /. Please move it to viewport export instead.
+Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport background: #e6e6e6;background: light-dark(rgba(0,0,0,0.1), rgba(255,255,255,0.25));color: #000000;color: light-dark(#000000, #ffffff);border-radius: 2px  Server   @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  521896ms] [WARNING] %c%s%c [33m[1m⚠[22m[39m Unsupported metadata viewport is configured in metadata export in /. Please move it to viewport export instead.
+Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport background: #e6e6e6;background: light-dark(rgba(0,0,0,0.1), rgba(255,255,255,0.25));color: #000000;color: light-dark(#000000, #ffffff);border-radius: 2px  Server   @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  521898ms] [WARNING] %c%s%c [33m[1m⚠[22m[39m Unsupported metadata viewport is configured in metadata export in /. Please move it to viewport export instead.
+Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport background: #e6e6e6;background: light-dark(rgba(0,0,0,0.1), rgba(255,255,255,0.25));color: #000000;color: light-dark(#000000, #ffffff);border-radius: 2px  Server   @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  521923ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  521993ms] [LOG] [Fast Refresh] done in 177ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  522010ms] [WARNING] %c%s%c [33m[1m⚠[22m[39m Unsupported metadata viewport is configured in metadata export in /. Please move it to viewport export instead.
+Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport background: #e6e6e6;background: light-dark(rgba(0,0,0,0.1), rgba(255,255,255,0.25));color: #000000;color: light-dark(#000000, #ffffff);border-radius: 2px  Server   @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  522015ms] [WARNING] %c%s%c [33m[1m⚠[22m[39m Unsupported metadata viewport is configured in metadata export in /. Please move it to viewport export instead.
+Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport background: #e6e6e6;background: light-dark(rgba(0,0,0,0.1), rgba(255,255,255,0.25));color: #000000;color: light-dark(#000000, #ffffff);border-radius: 2px  Server   @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  522082ms] [WARNING] %c%s%c [33m[1m⚠[22m[39m Unsupported metadata viewport is configured in metadata export in /. Please move it to viewport export instead.
+Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport background: #e6e6e6;background: light-dark(rgba(0,0,0,0.1), rgba(255,255,255,0.25));color: #000000;color: light-dark(#000000, #ffffff);border-radius: 2px  Server   @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  522142ms] [WARNING] %c%s%c [33m[1m⚠[22m[39m Unsupported metadata viewport is configured in metadata export in /. Please move it to viewport export instead.
+Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport background: #e6e6e6;background: light-dark(rgba(0,0,0,0.1), rgba(255,255,255,0.25));color: #000000;color: light-dark(#000000, #ffffff);border-radius: 2px  Server   @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  522252ms] [WARNING] %c%s%c [33m[1m⚠[22m[39m Unsupported metadata viewport is configured in metadata export in /. Please move it to viewport export instead.
+Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport background: #e6e6e6;background: light-dark(rgba(0,0,0,0.1), rgba(255,255,255,0.25));color: #000000;color: light-dark(#000000, #ffffff);border-radius: 2px  Server   @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  522309ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  522346ms] [LOG] [Fast Refresh] done in 153ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  522354ms] [WARNING] %c%s%c [33m[1m⚠[22m[39m Unsupported metadata viewport is configured in metadata export in /. Please move it to viewport export instead.
+Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport background: #e6e6e6;background: light-dark(rgba(0,0,0,0.1), rgba(255,255,255,0.25));color: #000000;color: light-dark(#000000, #ffffff);border-radius: 2px  Server   @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  522355ms] [WARNING] %c%s%c [33m[1m⚠[22m[39m Unsupported metadata viewport is configured in metadata export in /. Please move it to viewport export instead.
+Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport background: #e6e6e6;background: light-dark(rgba(0,0,0,0.1), rgba(255,255,255,0.25));color: #000000;color: light-dark(#000000, #ffffff);border-radius: 2px  Server   @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  522394ms] [WARNING] %c%s%c [33m[1m⚠[22m[39m Unsupported metadata viewport is configured in metadata export in /. Please move it to viewport export instead.
+Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport background: #e6e6e6;background: light-dark(rgba(0,0,0,0.1), rgba(255,255,255,0.25));color: #000000;color: light-dark(#000000, #ffffff);border-radius: 2px  Server   @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  522465ms] [WARNING] %c%s%c [33m[1m⚠[22m[39m Unsupported metadata viewport is configured in metadata export in /. Please move it to viewport export instead.
+Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport background: #e6e6e6;background: light-dark(rgba(0,0,0,0.1), rgba(255,255,255,0.25));color: #000000;color: light-dark(#000000, #ffffff);border-radius: 2px  Server   @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  522532ms] [WARNING] %c%s%c [33m[1m⚠[22m[39m Unsupported metadata viewport is configured in metadata export in /. Please move it to viewport export instead.
+Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport background: #e6e6e6;background: light-dark(rgba(0,0,0,0.1), rgba(255,255,255,0.25));color: #000000;color: light-dark(#000000, #ffffff);border-radius: 2px  Server   @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  522684ms] [WARNING] %c%s%c [33m[1m⚠[22m[39m Unsupported metadata viewport is configured in metadata export in /. Please move it to viewport export instead.
+Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport background: #e6e6e6;background: light-dark(rgba(0,0,0,0.1), rgba(255,255,255,0.25));color: #000000;color: light-dark(#000000, #ffffff);border-radius: 2px  Server   @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  522685ms] [WARNING] %c%s%c [33m[1m⚠[22m[39m Unsupported metadata viewport is configured in metadata export in /. Please move it to viewport export instead.
+Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport background: #e6e6e6;background: light-dark(rgba(0,0,0,0.1), rgba(255,255,255,0.25));color: #000000;color: light-dark(#000000, #ffffff);border-radius: 2px  Server   @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  522705ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  522729ms] [LOG] [Fast Refresh] done in 138ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  522741ms] [WARNING] %c%s%c [33m[1m⚠[22m[39m Unsupported metadata viewport is configured in metadata export in /. Please move it to viewport export instead.
+Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport background: #e6e6e6;background: light-dark(rgba(0,0,0,0.1), rgba(255,255,255,0.25));color: #000000;color: light-dark(#000000, #ffffff);border-radius: 2px  Server   @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  522778ms] [WARNING] %c%s%c [33m[1m⚠[22m[39m Unsupported metadata viewport is configured in metadata export in /. Please move it to viewport export instead.
+Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport background: #e6e6e6;background: light-dark(rgba(0,0,0,0.1), rgba(255,255,255,0.25));color: #000000;color: light-dark(#000000, #ffffff);border-radius: 2px  Server   @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  522838ms] [WARNING] %c%s%c [33m[1m⚠[22m[39m Unsupported metadata viewport is configured in metadata export in /. Please move it to viewport export instead.
+Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport background: #e6e6e6;background: light-dark(rgba(0,0,0,0.1), rgba(255,255,255,0.25));color: #000000;color: light-dark(#000000, #ffffff);border-radius: 2px  Server   @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  522902ms] [WARNING] %c%s%c [33m[1m⚠[22m[39m Unsupported metadata viewport is configured in metadata export in /. Please move it to viewport export instead.
+Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport background: #e6e6e6;background: light-dark(rgba(0,0,0,0.1), rgba(255,255,255,0.25));color: #000000;color: light-dark(#000000, #ffffff);border-radius: 2px  Server   @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  522985ms] [WARNING] %c%s%c [33m[1m⚠[22m[39m Unsupported metadata viewport is configured in metadata export in /. Please move it to viewport export instead.
+Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport background: #e6e6e6;background: light-dark(rgba(0,0,0,0.1), rgba(255,255,255,0.25));color: #000000;color: light-dark(#000000, #ffffff);border-radius: 2px  Server   @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  523017ms] [WARNING] %c%s%c [33m[1m⚠[22m[39m Unsupported metadata viewport is configured in metadata export in /. Please move it to viewport export instead.
+Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport background: #e6e6e6;background: light-dark(rgba(0,0,0,0.1), rgba(255,255,255,0.25));color: #000000;color: light-dark(#000000, #ffffff);border-radius: 2px  Server   @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  523065ms] [WARNING] %c%s%c [33m[1m⚠[22m[39m Unsupported metadata viewport is configured in metadata export in /. Please move it to viewport export instead.
+Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport background: #e6e6e6;background: light-dark(rgba(0,0,0,0.1), rgba(255,255,255,0.25));color: #000000;color: light-dark(#000000, #ffffff);border-radius: 2px  Server   @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  523139ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  523162ms] [WARNING] %c%s%c [33m[1m⚠[22m[39m Unsupported metadata viewport is configured in metadata export in /. Please move it to viewport export instead.
+Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport background: #e6e6e6;background: light-dark(rgba(0,0,0,0.1), rgba(255,255,255,0.25));color: #000000;color: light-dark(#000000, #ffffff);border-radius: 2px  Server   @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  523165ms] [LOG] [Fast Refresh] done in 152ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  523262ms] [WARNING] %c%s%c [33m[1m⚠[22m[39m Unsupported metadata viewport is configured in metadata export in /. Please move it to viewport export instead.
+Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport background: #e6e6e6;background: light-dark(rgba(0,0,0,0.1), rgba(255,255,255,0.25));color: #000000;color: light-dark(#000000, #ffffff);border-radius: 2px  Server   @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  523289ms] [WARNING] %c%s%c [33m[1m⚠[22m[39m Unsupported metadata viewport is configured in metadata export in /. Please move it to viewport export instead.
+Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport background: #e6e6e6;background: light-dark(rgba(0,0,0,0.1), rgba(255,255,255,0.25));color: #000000;color: light-dark(#000000, #ffffff);border-radius: 2px  Server   @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  523353ms] [WARNING] %c%s%c [33m[1m⚠[22m[39m Unsupported metadata viewport is configured in metadata export in /. Please move it to viewport export instead.
+Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport background: #e6e6e6;background: light-dark(rgba(0,0,0,0.1), rgba(255,255,255,0.25));color: #000000;color: light-dark(#000000, #ffffff);border-radius: 2px  Server   @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  523423ms] [WARNING] %c%s%c [33m[1m⚠[22m[39m Unsupported metadata viewport is configured in metadata export in /. Please move it to viewport export instead.
+Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport background: #e6e6e6;background: light-dark(rgba(0,0,0,0.1), rgba(255,255,255,0.25));color: #000000;color: light-dark(#000000, #ffffff);border-radius: 2px  Server   @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  523476ms] [WARNING] %c%s%c [33m[1m⚠[22m[39m Unsupported metadata viewport is configured in metadata export in /. Please move it to viewport export instead.
+Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport background: #e6e6e6;background: light-dark(rgba(0,0,0,0.1), rgba(255,255,255,0.25));color: #000000;color: light-dark(#000000, #ffffff);border-radius: 2px  Server   @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  523510ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  523556ms] [WARNING] %c%s%c [33m[1m⚠[22m[39m Unsupported metadata viewport is configured in metadata export in /. Please move it to viewport export instead.
+Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport background: #e6e6e6;background: light-dark(rgba(0,0,0,0.1), rgba(255,255,255,0.25));color: #000000;color: light-dark(#000000, #ffffff);border-radius: 2px  Server   @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  523587ms] [LOG] [Fast Refresh] done in 205ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  535429ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  535511ms] [LOG] [Fast Refresh] done in 183ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  540743ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  540755ms] [LOG] [Fast Refresh] done in 124ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  540865ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  540926ms] [LOG] [Fast Refresh] done in 164ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  550383ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  550455ms] [LOG] [Fast Refresh] done in 33ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  550562ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  550811ms] [WARNING] %c%s%c [33m[1m⚠[22m[39m Unsupported metadata viewport is configured in metadata export in /. Please move it to viewport export instead.
+Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport background: #e6e6e6;background: light-dark(rgba(0,0,0,0.1), rgba(255,255,255,0.25));color: #000000;color: light-dark(#000000, #ffffff);border-radius: 2px  Server   @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  550815ms] [LOG] [Fast Refresh] done in 358ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  551608ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  551756ms] [LOG] [Fast Refresh] done in 254ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  571386ms] [LOG] [ImpactGlobe] Hovering: Russia's Africa Corps Prevents Coup in Mali After Rebels Seize Towns @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  571457ms] [LOG] [ImpactGlobe] Hovering: Russia's Africa Corps Prevents Coup in Mali After Rebels Seize Towns @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  571526ms] [LOG] [ImpactGlobe] Hovering: Russia's Africa Corps Prevents Coup in Mali After Rebels Seize Towns @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  571579ms] [LOG] [ImpactGlobe] Hovering: Russia's Africa Corps Prevents Coup in Mali After Rebels Seize Towns @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  571635ms] [LOG] [ImpactGlobe] Hovering: Russia's Africa Corps Prevents Coup in Mali After Rebels Seize Towns @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  571694ms] [LOG] [ImpactGlobe] Hovering: Russia's Africa Corps Prevents Coup in Mali After Rebels Seize Towns @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  571762ms] [LOG] [ImpactGlobe] Hovering: Russia's Africa Corps Prevents Coup in Mali After Rebels Seize Towns @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  571817ms] [LOG] [ImpactGlobe] Hovering: Russia's Africa Corps Prevents Coup in Mali After Rebels Seize Towns @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  571879ms] [LOG] [ImpactGlobe] Hovering: Russia's Africa Corps Prevents Coup in Mali After Rebels Seize Towns @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  573349ms] [LOG] [ImpactGlobe] Hovering: Germany's Merz: US Being Humiliated by Iran as Nuclear Talks Stall @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  580469ms] [LOG] [ImpactGlobe] Hovering: OpenAI Brings Models to Amazon Cloud After Ending Microsoft Exclusivity @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  580666ms] [LOG] [ImpactGlobe] Hovering: King Charles Visits White House on First US State Visit Since Coronation @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  600742ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  600774ms] [LOG] [Fast Refresh] done in 134ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  600899ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  600914ms] [LOG] [Fast Refresh] done in 133ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  625320ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  625730ms] [LOG] [Fast Refresh] done in 513ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  650364ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  650431ms] [LOG] [Fast Refresh] done in 58ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  650536ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  650749ms] [WARNING] %c%s%c [33m[1m⚠[22m[39m Unsupported metadata viewport is configured in metadata export in /. Please move it to viewport export instead.
+Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport background: #e6e6e6;background: light-dark(rgba(0,0,0,0.1), rgba(255,255,255,0.25));color: #000000;color: light-dark(#000000, #ffffff);border-radius: 2px  Server   @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  650750ms] [LOG] [Fast Refresh] done in 317ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  660743ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  660744ms] [LOG] [Fast Refresh] done in 120ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  660940ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  661319ms] [LOG] [Fast Refresh] done in 487ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  720781ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  720940ms] [LOG] [Fast Refresh] done in 270ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  885879ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  886001ms] [LOG] [Fast Refresh] done in 92ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  886115ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  886409ms] [WARNING] %c%s%c [33m[1m⚠[22m[39m Unsupported metadata viewport is configured in metadata export in /. Please move it to viewport export instead.
+Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport background: #e6e6e6;background: light-dark(rgba(0,0,0,0.1), rgba(255,255,255,0.25));color: #000000;color: light-dark(#000000, #ffffff);border-radius: 2px  Server   @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  886414ms] [LOG] [Fast Refresh] done in 412ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  900870ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  900964ms] [LOG] [Fast Refresh] done in 220ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  902967ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  903386ms] [WARNING] %c%s%c [33m[1m⚠[22m[39m Unsupported metadata viewport is configured in metadata export in /. Please move it to viewport export instead.
+Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport background: #e6e6e6;background: light-dark(rgba(0,0,0,0.1), rgba(255,255,255,0.25));color: #000000;color: light-dark(#000000, #ffffff);border-radius: 2px  Server   @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  903390ms] [LOG] [Fast Refresh] done in 40ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  914775ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  914866ms] [LOG] [Fast Refresh] done in 206ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  919614ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  919677ms] [LOG] [Fast Refresh] done in 168ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  960737ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  960810ms] [LOG] [Fast Refresh] done in 177ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  960953ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  961059ms] [LOG] [Fast Refresh] done in 212ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[ 1006967ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[ 1007142ms] [LOG] [Fast Refresh] done in 297ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[ 1020802ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[ 1021162ms] [LOG] [Fast Refresh] done in 463ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[ 1079354ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[ 1079416ms] [LOG] [Fast Refresh] done in 164ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[ 1096322ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[ 1096395ms] [LOG] [Fast Refresh] done in 99ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[ 1096504ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[ 1096749ms] [WARNING] %c%s%c [33m[1m⚠[22m[39m Unsupported metadata viewport is configured in metadata export in /. Please move it to viewport export instead.
+Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport background: #e6e6e6;background: light-dark(rgba(0,0,0,0.1), rgba(255,255,255,0.25));color: #000000;color: light-dark(#000000, #ffffff);border-radius: 2px  Server   @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[ 1096752ms] [LOG] [Fast Refresh] done in 354ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[ 1118049ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[ 1118640ms] [LOG] [Fast Refresh] done in 94ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[ 1118762ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[ 1119061ms] [WARNING] %c%s%c [33m[1m⚠[22m[39m Unsupported metadata viewport is configured in metadata export in /. Please move it to viewport export instead.
+Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport background: #e6e6e6;background: light-dark(rgba(0,0,0,0.1), rgba(255,255,255,0.25));color: #000000;color: light-dark(#000000, #ffffff);border-radius: 2px  Server   @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[ 1119075ms] [LOG] [Fast Refresh] done in 418ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[ 1136260ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[ 1136349ms] [LOG] [Fast Refresh] done in 45ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[ 1136452ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[ 1136652ms] [WARNING] %c%s%c [33m[1m⚠[22m[39m Unsupported metadata viewport is configured in metadata export in /. Please move it to viewport export instead.
+Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport background: #e6e6e6;background: light-dark(rgba(0,0,0,0.1), rgba(255,255,255,0.25));color: #000000;color: light-dark(#000000, #ffffff);border-radius: 2px  Server   @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[ 1136657ms] [LOG] [Fast Refresh] done in 305ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[ 1140743ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[ 1140758ms] [LOG] [Fast Refresh] done in 133ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[ 1140870ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[ 1141005ms] [LOG] [Fast Refresh] done in 246ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[ 1211405ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[ 1211502ms] [LOG] [Fast Refresh] done in 97ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[ 1211635ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[ 1212013ms] [WARNING] %c%s%c [33m[1m⚠[22m[39m Unsupported metadata viewport is configured in metadata export in /. Please move it to viewport export instead.
+Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport background: #e6e6e6;background: light-dark(rgba(0,0,0,0.1), rgba(255,255,255,0.25));color: #000000;color: light-dark(#000000, #ffffff);border-radius: 2px  Server   @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[ 1212014ms] [LOG] [Fast Refresh] done in 499ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[ 1216856ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[ 1217006ms] [LOG] [Fast Refresh] done in 267ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[ 1260861ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[ 1260866ms] [LOG] [Fast Refresh] done in 115ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[ 1294535ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[ 1294680ms] [LOG] [Fast Refresh] done in 265ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[ 1320815ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[ 1321043ms] [LOG] [Fast Refresh] done in 340ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[ 1522985ms] [LOG] [Realtime] Subscription status: CHANNEL_ERROR @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[ 1524635ms] [LOG] [Realtime] Subscription status: SUBSCRIBED @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[ 1620922ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[ 1621577ms] [LOG] [Fast Refresh] done in 757ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[ 1679765ms] [LOG] [App] envLayerData updated: {type: storms, updatedAt: 2026-04-29T02:56:55.140Z, storms: Array(0)} @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[ 1679883ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[ 1679895ms] [LOG] [Fast Refresh] done in 118ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[ 1680568ms] [LOG] [App] envLayerData updated: {type: wildfires, updatedAt: 2026-04-29T03:08:18.331Z, wildfires: Array(50)} @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[ 1681791ms] [LOG] [App] envLayerData updated: {type: earthquakes, updatedAt: 2026-04-29T03:08:00.599Z, earthquakes: Array(48)} @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[ 1683075ms] [LOG] [App] envLayerData updated: {type: earthquakes, updatedAt: 2026-04-29T03:31:12.339Z, earthquakes: Array(48)} @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[ 1683373ms] [LOG] [GlobeRenderer] Applying heatmap for layer: sea_temp @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[ 1683374ms] [WARNING] [GlobeRenderer] Failed to create heatmap texture @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[ 1683390ms] [LOG] [GlobeRenderer] Applying heatmap for layer: sea_temp @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[ 1683392ms] [LOG] [GlobeRenderer] Heatmap texture applied @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[ 1683393ms] [LOG] [App] envLayerData updated: {type: sea_temp, updatedAt: 2026-04-29T03:08:17.668Z, seaTemp: Array(423), meta: Object} @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[ 1683511ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[ 1683535ms] [LOG] [Fast Refresh] done in 132ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[ 1696638ms] [LOG] [GlobeRenderer] Removing heatmap texture @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[ 1696667ms] [LOG] [App] envLayerData updated: {type: earthquakes, updatedAt: 2026-04-29T03:31:12.339Z, earthquakes: Array(48)} @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[ 1697394ms] [LOG] [GlobeRenderer] Applying heatmap for layer: temperature_anomaly @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[ 1697394ms] [WARNING] [GlobeRenderer] Failed to create heatmap texture @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[ 1697410ms] [LOG] [GlobeRenderer] Applying heatmap for layer: temperature_anomaly @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[ 1697414ms] [LOG] [GlobeRenderer] Heatmap texture applied @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[ 1697415ms] [LOG] [App] envLayerData updated: {type: temperature_anomaly, updatedAt: 2026-04-29T03:08:06.870Z, tempAnomalies: Array(1038)} @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[ 1698827ms] [LOG] [GlobeRenderer] Applying heatmap for layer: temperature_anomaly @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[ 1698839ms] [LOG] [GlobeRenderer] Heatmap texture applied @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[ 1698840ms] [LOG] [App] envLayerData updated: {type: temperature_anomaly, updatedAt: 2026-04-29T03:31:27.028Z, tempAnomalies: Array(1038)} @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[ 1702197ms] [LOG] [GlobeRenderer] Applying heatmap for layer: aqi @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[ 1702199ms] [WARNING] [GlobeRenderer] Failed to create heatmap texture @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[ 1702226ms] [LOG] [GlobeRenderer] Applying heatmap for layer: aqi @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[ 1702229ms] [LOG] [GlobeRenderer] Heatmap texture applied @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[ 1702231ms] [LOG] [App] envLayerData updated: {type: aqi, updatedAt: 2026-04-29T03:08:11.117Z, aqi: Array(760), meta: Object} @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[ 1702913ms] [LOG] [GlobeRenderer] Applying heatmap for layer: aqi @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[ 1702918ms] [LOG] [GlobeRenderer] Heatmap texture applied @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[ 1702919ms] [LOG] [App] envLayerData updated: {type: aqi, updatedAt: 2026-04-29T03:31:31.842Z, aqi: Array(760), meta: Object} @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[ 1702934ms] [LOG] [GlobeRenderer] Applying heatmap for layer: wind @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[ 1702935ms] [WARNING] [GlobeRenderer] Failed to create heatmap texture @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[ 1702950ms] [LOG] [GlobeRenderer] Applying heatmap for layer: wind @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[ 1702960ms] [LOG] [GlobeRenderer] Heatmap texture applied @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[ 1702961ms] [LOG] [App] envLayerData updated: {type: wind, updatedAt: 2026-04-29T03:31:27.028Z, wind: Array(2692)} @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[ 1704818ms] [LOG] [GlobeRenderer] Removing heatmap texture @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[ 1705939ms] [LOG] [GlobeRenderer] Applying heatmap for layer: wind @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[ 1705968ms] [LOG] [GlobeRenderer] Heatmap texture applied @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[ 1707472ms] [LOG] [GlobeRenderer] Applying heatmap for layer: aqi @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[ 1707475ms] [WARNING] [GlobeRenderer] Failed to create heatmap texture @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[ 1707500ms] [LOG] [GlobeRenderer] Applying heatmap for layer: aqi @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[ 1707503ms] [LOG] [GlobeRenderer] Heatmap texture applied @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[ 1707504ms] [LOG] [App] envLayerData updated: {type: aqi, updatedAt: 2026-04-29T03:31:31.842Z, aqi: Array(760), meta: Object} @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[ 1708337ms] [LOG] [GlobeRenderer] Applying heatmap for layer: temperature_anomaly @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[ 1708339ms] [WARNING] [GlobeRenderer] Failed to create heatmap texture @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[ 1708359ms] [LOG] [GlobeRenderer] Applying heatmap for layer: temperature_anomaly @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[ 1708363ms] [LOG] [GlobeRenderer] Heatmap texture applied @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[ 1708364ms] [LOG] [App] envLayerData updated: {type: temperature_anomaly, updatedAt: 2026-04-29T03:31:35.586Z, tempAnomalies: Array(1038)} @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[ 1708841ms] [LOG] [GlobeRenderer] Removing heatmap texture @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[ 1708874ms] [LOG] [App] envLayerData updated: {type: earthquakes, updatedAt: 2026-04-29T03:31:12.339Z, earthquakes: Array(48)} @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[ 1708978ms] [LOG] [App] envLayerData updated: {type: earthquakes, updatedAt: 2026-04-29T03:31:27.575Z, earthquakes: Array(48)} @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[ 1709416ms] [LOG] [App] envLayerData updated: {type: wildfires, updatedAt: 2026-04-29T03:08:18.331Z, wildfires: Array(50)} @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[ 1710425ms] [LOG] [App] envLayerData updated: {type: storms, updatedAt: 2026-04-29T03:31:11.872Z, storms: Array(0)} @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[ 1710848ms] [LOG] [GlobeRenderer] Applying heatmap for layer: sea_temp @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[ 1710851ms] [WARNING] [GlobeRenderer] Failed to create heatmap texture @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[ 1710880ms] [LOG] [GlobeRenderer] Applying heatmap for layer: sea_temp @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[ 1710883ms] [LOG] [GlobeRenderer] Heatmap texture applied @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[ 1710884ms] [LOG] [App] envLayerData updated: {type: sea_temp, updatedAt: 2026-04-29T03:08:17.668Z, seaTemp: Array(423), meta: Object} @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[ 1710946ms] [LOG] [GlobeRenderer] Applying heatmap for layer: sea_temp @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[ 1710948ms] [LOG] [GlobeRenderer] Heatmap texture applied @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[ 1710950ms] [LOG] [App] envLayerData updated: {type: sea_temp, updatedAt: 2026-04-29T03:31:13.112Z, seaTemp: Array(423), meta: Object} @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[ 1735960ms] [LOG] [GlobeRenderer] Removing heatmap texture @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431

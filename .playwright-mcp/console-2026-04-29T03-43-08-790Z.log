@@ -1,0 +1,695 @@
+[     518ms] [INFO] %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[     546ms] [LOG] [HMR] connected @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[     552ms] [WARNING] %c%s%c [33m[1m⚠[22m[39m Unsupported metadata viewport is configured in metadata export in /. Please move it to viewport export instead.
+Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport background: #e6e6e6;background: light-dark(rgba(0,0,0,0.1), rgba(255,255,255,0.25));color: #000000;color: light-dark(#000000, #ffffff);border-radius: 2px  Server   @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[     629ms] [LOG] [App] envLayerData updated: null @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[     631ms] [LOG] [App] No events from Supabase, using mock data for development @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[     928ms] [WARNING] %c%s%c [33m[1m⚠[22m[39m Unsupported metadata viewport is configured in metadata export in /. Please move it to viewport export instead.
+Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport background: #e6e6e6;background: light-dark(rgba(0,0,0,0.1), rgba(255,255,255,0.25));color: #000000;color: light-dark(#000000, #ffffff);border-radius: 2px  Server   @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[    1037ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[    1098ms] [LOG] [Fast Refresh] done in 161ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[    1210ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[    1352ms] [LOG] [Fast Refresh] done in 245ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[    1836ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[    1840ms] [WARNING] %c%s%c [33m[1m⚠[22m[39m Unsupported metadata viewport is configured in metadata export in /. Please move it to viewport export instead.
+Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport background: #e6e6e6;background: light-dark(rgba(0,0,0,0.1), rgba(255,255,255,0.25));color: #000000;color: light-dark(#000000, #ffffff);border-radius: 2px  Server   @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[    1841ms] [LOG] [Fast Refresh] done in 480ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[    1847ms] [LOG] [Realtime] Loaded 0 initial events @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[    1861ms] [LOG] [App] No events from Supabase, using mock data for development @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[    2680ms] [LOG] [Realtime] Subscription status: SUBSCRIBED @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   23638ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   24517ms] [LOG] [Fast Refresh] done in 995ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   24920ms] [LOG] [App] No events from Supabase, using mock data for development @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   25046ms] [LOG] [App] No events from Supabase, using mock data for development @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   25149ms] [LOG] [App] No events from Supabase, using mock data for development @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   25252ms] [LOG] [App] No events from Supabase, using mock data for development @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   25342ms] [LOG] [App] No events from Supabase, using mock data for development @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   25449ms] [LOG] [App] No events from Supabase, using mock data for development @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   25555ms] [LOG] [App] No events from Supabase, using mock data for development @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   25574ms] [LOG] [ImpactGlobe] Hovering: US-China Trade Talks Resume in Geneva Amid Tariff Standoff @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   25631ms] [LOG] [App] No events from Supabase, using mock data for development @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   25653ms] [LOG] [ImpactGlobe] Hovering: US-China Trade Talks Resume in Geneva Amid Tariff Standoff @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   25747ms] [LOG] [App] No events from Supabase, using mock data for development @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   25840ms] [LOG] [App] No events from Supabase, using mock data for development @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   25952ms] [LOG] [App] No events from Supabase, using mock data for development @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   26055ms] [LOG] [App] No events from Supabase, using mock data for development @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   26163ms] [LOG] [App] No events from Supabase, using mock data for development @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   26264ms] [LOG] [App] No events from Supabase, using mock data for development @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   26365ms] [LOG] [App] No events from Supabase, using mock data for development @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   26454ms] [LOG] [App] No events from Supabase, using mock data for development @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   26569ms] [LOG] [App] No events from Supabase, using mock data for development @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   26651ms] [LOG] [App] No events from Supabase, using mock data for development @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   26734ms] [LOG] [App] No events from Supabase, using mock data for development @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   26835ms] [LOG] [App] No events from Supabase, using mock data for development @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   26937ms] [LOG] [App] No events from Supabase, using mock data for development @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   27049ms] [LOG] [App] No events from Supabase, using mock data for development @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   27152ms] [LOG] [App] No events from Supabase, using mock data for development @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   27257ms] [LOG] [App] No events from Supabase, using mock data for development @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   27360ms] [LOG] [App] No events from Supabase, using mock data for development @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   27445ms] [LOG] [App] No events from Supabase, using mock data for development @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   27548ms] [LOG] [App] No events from Supabase, using mock data for development @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   27657ms] [LOG] [App] No events from Supabase, using mock data for development @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   27740ms] [LOG] [App] No events from Supabase, using mock data for development @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   27853ms] [LOG] [App] No events from Supabase, using mock data for development @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   27937ms] [LOG] [App] No events from Supabase, using mock data for development @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   28057ms] [LOG] [App] No events from Supabase, using mock data for development @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   28108ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   28143ms] [LOG] [App] No events from Supabase, using mock data for development @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   28248ms] [LOG] [App] No events from Supabase, using mock data for development @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   28354ms] [LOG] [App] No events from Supabase, using mock data for development @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   28446ms] [LOG] [App] No events from Supabase, using mock data for development @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   28496ms] [LOG] [Fast Refresh] done in 510ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   28556ms] [LOG] [App] No events from Supabase, using mock data for development @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   28640ms] [LOG] [App] No events from Supabase, using mock data for development @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   28739ms] [LOG] [App] No events from Supabase, using mock data for development @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   28799ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   28835ms] [LOG] [App] No events from Supabase, using mock data for development @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   28942ms] [LOG] [App] No events from Supabase, using mock data for development @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   29050ms] [LOG] [App] No events from Supabase, using mock data for development @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   29118ms] [LOG] [Fast Refresh] done in 428ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   29168ms] [LOG] [App] No events from Supabase, using mock data for development @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   29252ms] [LOG] [App] No events from Supabase, using mock data for development @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   29308ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   29308ms] [LOG] [Fast Refresh] done in 175ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   29349ms] [LOG] [App] No events from Supabase, using mock data for development @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   29415ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   29449ms] [LOG] [App] No events from Supabase, using mock data for development @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   29498ms] [LOG] [Fast Refresh] done in 186ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   29558ms] [LOG] [App] No events from Supabase, using mock data for development @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   29608ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   29638ms] [LOG] [App] No events from Supabase, using mock data for development @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   29678ms] [LOG] [Fast Refresh] done in 173ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   29737ms] [LOG] [App] No events from Supabase, using mock data for development @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   29792ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   29836ms] [LOG] [App] No events from Supabase, using mock data for development @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   29939ms] [LOG] [App] No events from Supabase, using mock data for development @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   30055ms] [LOG] [App] No events from Supabase, using mock data for development @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   30109ms] [LOG] [Fast Refresh] done in 424ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   30157ms] [LOG] [App] No events from Supabase, using mock data for development @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   30224ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   30248ms] [LOG] [App] No events from Supabase, using mock data for development @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   30355ms] [LOG] [App] No events from Supabase, using mock data for development @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   30444ms] [LOG] [App] No events from Supabase, using mock data for development @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   30474ms] [LOG] [Fast Refresh] done in 358ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   30548ms] [LOG] [App] No events from Supabase, using mock data for development @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   30644ms] [LOG] [App] No events from Supabase, using mock data for development @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   30738ms] [LOG] [App] No events from Supabase, using mock data for development @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   30846ms] [LOG] [App] No events from Supabase, using mock data for development @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   30942ms] [LOG] [App] No events from Supabase, using mock data for development @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   31034ms] [LOG] [App] No events from Supabase, using mock data for development @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   31155ms] [LOG] [App] No events from Supabase, using mock data for development @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   31212ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   31249ms] [LOG] [App] No events from Supabase, using mock data for development @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   31349ms] [LOG] [App] No events from Supabase, using mock data for development @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   31403ms] [LOG] [Fast Refresh] done in 298ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   31450ms] [LOG] [App] No events from Supabase, using mock data for development @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   31512ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   31545ms] [LOG] [App] No events from Supabase, using mock data for development @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   31609ms] [LOG] [Fast Refresh] done in 200ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   31650ms] [LOG] [App] No events from Supabase, using mock data for development @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   31728ms] [LOG] [App] No events from Supabase, using mock data for development @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   31841ms] [LOG] [App] No events from Supabase, using mock data for development @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   31936ms] [LOG] [App] No events from Supabase, using mock data for development @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   32035ms] [LOG] [App] No events from Supabase, using mock data for development @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   32151ms] [LOG] [App] No events from Supabase, using mock data for development @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   32204ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   32250ms] [LOG] [App] No events from Supabase, using mock data for development @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   32345ms] [LOG] [App] No events from Supabase, using mock data for development @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   32446ms] [LOG] [App] No events from Supabase, using mock data for development @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   32501ms] [LOG] [Fast Refresh] done in 424ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   32559ms] [LOG] [App] No events from Supabase, using mock data for development @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   32613ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   32646ms] [LOG] [App] No events from Supabase, using mock data for development @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   32703ms] [LOG] [Fast Refresh] done in 194ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   32750ms] [LOG] [App] No events from Supabase, using mock data for development @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   32843ms] [LOG] [App] No events from Supabase, using mock data for development @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   32937ms] [LOG] [App] No events from Supabase, using mock data for development @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   32990ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   33039ms] [LOG] [App] No events from Supabase, using mock data for development @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   33074ms] [LOG] [Fast Refresh] done in 186ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   33139ms] [LOG] [App] No events from Supabase, using mock data for development @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   33243ms] [LOG] [App] No events from Supabase, using mock data for development @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   33343ms] [LOG] [App] No events from Supabase, using mock data for development @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   33450ms] [LOG] [App] No events from Supabase, using mock data for development @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   33512ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   33552ms] [LOG] [App] No events from Supabase, using mock data for development @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   33652ms] [LOG] [App] No events from Supabase, using mock data for development @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   33700ms] [LOG] [Fast Refresh] done in 296ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   33769ms] [LOG] [App] No events from Supabase, using mock data for development @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   33837ms] [LOG] [App] No events from Supabase, using mock data for development @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   33941ms] [LOG] [App] No events from Supabase, using mock data for development @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   33994ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   34030ms] [LOG] [App] No events from Supabase, using mock data for development @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   34136ms] [LOG] [App] No events from Supabase, using mock data for development @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   34246ms] [LOG] [App] No events from Supabase, using mock data for development @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   34344ms] [LOG] [App] No events from Supabase, using mock data for development @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   34367ms] [LOG] [Fast Refresh] done in 492ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   34451ms] [LOG] [App] No events from Supabase, using mock data for development @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   34545ms] [LOG] [App] No events from Supabase, using mock data for development @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   34619ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   34651ms] [LOG] [App] No events from Supabase, using mock data for development @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   34695ms] [LOG] [Fast Refresh] done in 181ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   34747ms] [LOG] [App] No events from Supabase, using mock data for development @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   34807ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   34847ms] [LOG] [App] No events from Supabase, using mock data for development @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   34907ms] [LOG] [Fast Refresh] done in 206ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   34935ms] [LOG] [App] No events from Supabase, using mock data for development @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   35018ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   35043ms] [LOG] [App] No events from Supabase, using mock data for development @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   35076ms] [LOG] [Fast Refresh] done in 164ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   35149ms] [LOG] [App] No events from Supabase, using mock data for development @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   35259ms] [LOG] [App] No events from Supabase, using mock data for development @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   35338ms] [LOG] [App] No events from Supabase, using mock data for development @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   35449ms] [LOG] [App] No events from Supabase, using mock data for development @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   35503ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   35535ms] [LOG] [Fast Refresh] done in 138ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   35553ms] [LOG] [App] No events from Supabase, using mock data for development @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   35644ms] [LOG] [App] No events from Supabase, using mock data for development @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   35696ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   35751ms] [LOG] [App] No events from Supabase, using mock data for development @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   35850ms] [LOG] [App] No events from Supabase, using mock data for development @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   35939ms] [LOG] [App] No events from Supabase, using mock data for development @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   35980ms] [LOG] [Fast Refresh] done in 405ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   36043ms] [LOG] [App] No events from Supabase, using mock data for development @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   36140ms] [LOG] [App] No events from Supabase, using mock data for development @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   36235ms] [LOG] [App] No events from Supabase, using mock data for development @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   36369ms] [LOG] [App] No events from Supabase, using mock data for development @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   36412ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   36450ms] [LOG] [App] No events from Supabase, using mock data for development @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   36556ms] [LOG] [App] No events from Supabase, using mock data for development @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   36645ms] [LOG] [App] No events from Supabase, using mock data for development @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   36700ms] [LOG] [Fast Refresh] done in 431ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   36709ms] [LOG] [ImpactGlobe] Hovering: Russia's Africa Corps Prevents Coup in Mali After Rebels Seize Towns @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   36739ms] [LOG] [App] No events from Supabase, using mock data for development @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   36812ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   36845ms] [LOG] [App] No events from Supabase, using mock data for development @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   36948ms] [LOG] [App] No events from Supabase, using mock data for development @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   37039ms] [LOG] [App] No events from Supabase, using mock data for development @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   37145ms] [LOG] [App] No events from Supabase, using mock data for development @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   37232ms] [LOG] [App] No events from Supabase, using mock data for development @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   37338ms] [LOG] [App] No events from Supabase, using mock data for development @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   37414ms] [LOG] [Fast Refresh] done in 709ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   37442ms] [LOG] [App] No events from Supabase, using mock data for development @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   37543ms] [LOG] [App] No events from Supabase, using mock data for development @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   37574ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   37648ms] [LOG] [App] No events from Supabase, using mock data for development @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   37692ms] [LOG] [Fast Refresh] done in 268ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   37745ms] [LOG] [App] No events from Supabase, using mock data for development @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   37811ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   37851ms] [LOG] [App] No events from Supabase, using mock data for development @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   37909ms] [LOG] [ImpactGlobe] Hovering: ECB Signals June Rate Cut as Eurozone Inflation Falls to 2.2% @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   37944ms] [LOG] [App] No events from Supabase, using mock data for development @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   37997ms] [LOG] [Fast Refresh] done in 297ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   38005ms] [LOG] [ImpactGlobe] Hovering: ECB Signals June Rate Cut as Eurozone Inflation Falls to 2.2% @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   38048ms] [LOG] [App] No events from Supabase, using mock data for development @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   38088ms] [LOG] [ImpactGlobe] Hovering: ECB Signals June Rate Cut as Eurozone Inflation Falls to 2.2% @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   38104ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   38110ms] [LOG] [ImpactGlobe] Hovering: ECB Signals June Rate Cut as Eurozone Inflation Falls to 2.2% @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   38129ms] [LOG] [App] No events from Supabase, using mock data for development @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   38173ms] [LOG] [Fast Refresh] done in 172ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   38184ms] [LOG] [ImpactGlobe] Hovering: ECB Signals June Rate Cut as Eurozone Inflation Falls to 2.2% @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   38205ms] [LOG] [ImpactGlobe] Hovering: ECB Signals June Rate Cut as Eurozone Inflation Falls to 2.2% @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   38239ms] [LOG] [App] No events from Supabase, using mock data for development @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   38271ms] [LOG] [ImpactGlobe] Hovering: ECB Signals June Rate Cut as Eurozone Inflation Falls to 2.2% @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   38283ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   38298ms] [LOG] [ImpactGlobe] Hovering: ECB Signals June Rate Cut as Eurozone Inflation Falls to 2.2% @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   38334ms] [LOG] [App] No events from Supabase, using mock data for development @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   38391ms] [LOG] [ImpactGlobe] Hovering: ECB Signals June Rate Cut as Eurozone Inflation Falls to 2.2% @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   38421ms] [LOG] [ImpactGlobe] Hovering: ECB Signals June Rate Cut as Eurozone Inflation Falls to 2.2% @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   38448ms] [LOG] [App] No events from Supabase, using mock data for development @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   38492ms] [LOG] [Fast Refresh] done in 315ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   38499ms] [LOG] [ImpactGlobe] Hovering: ECB Signals June Rate Cut as Eurozone Inflation Falls to 2.2% @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   38548ms] [LOG] [App] No events from Supabase, using mock data for development @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   38600ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   38600ms] [LOG] [Fast Refresh] done in 103ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   38611ms] [LOG] [ImpactGlobe] Hovering: ECB Signals June Rate Cut as Eurozone Inflation Falls to 2.2% @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   38642ms] [LOG] [App] No events from Supabase, using mock data for development @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   38706ms] [LOG] [ImpactGlobe] Hovering: ECB Signals June Rate Cut as Eurozone Inflation Falls to 2.2% @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   38712ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   38742ms] [LOG] [App] No events from Supabase, using mock data for development @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   38854ms] [LOG] [App] No events from Supabase, using mock data for development @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   38903ms] [LOG] [Fast Refresh] done in 301ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   38944ms] [LOG] [App] No events from Supabase, using mock data for development @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   39010ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   39043ms] [LOG] [App] No events from Supabase, using mock data for development @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   39091ms] [LOG] [Fast Refresh] done in 188ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   39151ms] [LOG] [App] No events from Supabase, using mock data for development @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   39229ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   39238ms] [LOG] [App] No events from Supabase, using mock data for development @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   39280ms] [LOG] [Fast Refresh] done in 168ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   39333ms] [LOG] [App] No events from Supabase, using mock data for development @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   39383ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   39447ms] [LOG] [App] No events from Supabase, using mock data for development @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   39546ms] [LOG] [App] No events from Supabase, using mock data for development @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   39650ms] [LOG] [App] No events from Supabase, using mock data for development @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   39698ms] [LOG] [Fast Refresh] done in 417ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   39743ms] [LOG] [App] No events from Supabase, using mock data for development @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   39809ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   39843ms] [LOG] [App] No events from Supabase, using mock data for development @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   39885ms] [LOG] [Fast Refresh] done in 181ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   39944ms] [LOG] [App] No events from Supabase, using mock data for development @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   40049ms] [LOG] [App] No events from Supabase, using mock data for development @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   40143ms] [LOG] [App] No events from Supabase, using mock data for development @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   40245ms] [LOG] [App] No events from Supabase, using mock data for development @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   40287ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   40343ms] [LOG] [App] No events from Supabase, using mock data for development @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   40382ms] [LOG] [Fast Refresh] done in 196ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   40439ms] [LOG] [App] No events from Supabase, using mock data for development @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   40542ms] [LOG] [App] No events from Supabase, using mock data for development @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   40650ms] [LOG] [App] No events from Supabase, using mock data for development @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   40748ms] [LOG] [App] No events from Supabase, using mock data for development @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   40858ms] [LOG] [App] No events from Supabase, using mock data for development @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   40952ms] [LOG] [App] No events from Supabase, using mock data for development @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   41045ms] [LOG] [App] No events from Supabase, using mock data for development @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   41132ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   41142ms] [LOG] [App] No events from Supabase, using mock data for development @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   41184ms] [LOG] [Fast Refresh] done in 165ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   41242ms] [LOG] [App] No events from Supabase, using mock data for development @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   41338ms] [LOG] [App] No events from Supabase, using mock data for development @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   41384ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   41436ms] [LOG] [App] No events from Supabase, using mock data for development @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   41470ms] [LOG] [Fast Refresh] done in 192ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   41552ms] [LOG] [App] No events from Supabase, using mock data for development @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   41603ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   41640ms] [LOG] [App] No events from Supabase, using mock data for development @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   41684ms] [LOG] [Fast Refresh] done in 209ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   41746ms] [LOG] [App] No events from Supabase, using mock data for development @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   41856ms] [LOG] [App] No events from Supabase, using mock data for development @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   41944ms] [LOG] [App] No events from Supabase, using mock data for development @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   42020ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   42039ms] [LOG] [App] No events from Supabase, using mock data for development @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   42082ms] [LOG] [Fast Refresh] done in 182ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   42143ms] [LOG] [App] No events from Supabase, using mock data for development @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   42243ms] [LOG] [App] No events from Supabase, using mock data for development @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   42343ms] [LOG] [App] No events from Supabase, using mock data for development @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   42443ms] [LOG] [App] No events from Supabase, using mock data for development @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   42505ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   42554ms] [LOG] [App] No events from Supabase, using mock data for development @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   42642ms] [LOG] [App] No events from Supabase, using mock data for development @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   42755ms] [LOG] [App] No events from Supabase, using mock data for development @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   42806ms] [LOG] [Fast Refresh] done in 403ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   42844ms] [LOG] [App] No events from Supabase, using mock data for development @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   42919ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   42959ms] [LOG] [App] No events from Supabase, using mock data for development @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   43054ms] [LOG] [App] No events from Supabase, using mock data for development @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   43075ms] [LOG] [Fast Refresh] done in 264ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   43142ms] [LOG] [App] No events from Supabase, using mock data for development @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   43232ms] [LOG] [App] No events from Supabase, using mock data for development @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   43317ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   43317ms] [LOG] [Fast Refresh] done in 110ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   43339ms] [LOG] [App] No events from Supabase, using mock data for development @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   43432ms] [LOG] [App] No events from Supabase, using mock data for development @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   43541ms] [LOG] [App] No events from Supabase, using mock data for development @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   43645ms] [LOG] [App] No events from Supabase, using mock data for development @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   43750ms] [LOG] [App] No events from Supabase, using mock data for development @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   43838ms] [LOG] [App] No events from Supabase, using mock data for development @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   43948ms] [LOG] [App] No events from Supabase, using mock data for development @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   44039ms] [LOG] [App] No events from Supabase, using mock data for development @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   44146ms] [LOG] [App] No events from Supabase, using mock data for development @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   44227ms] [LOG] [App] No events from Supabase, using mock data for development @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   44337ms] [LOG] [App] No events from Supabase, using mock data for development @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   44429ms] [LOG] [App] No events from Supabase, using mock data for development @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   44541ms] [LOG] [App] No events from Supabase, using mock data for development @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   44647ms] [LOG] [App] No events from Supabase, using mock data for development @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   44751ms] [LOG] [App] No events from Supabase, using mock data for development @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   44847ms] [LOG] [App] No events from Supabase, using mock data for development @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   44943ms] [LOG] [App] No events from Supabase, using mock data for development @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   45050ms] [LOG] [App] No events from Supabase, using mock data for development @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   45152ms] [LOG] [App] No events from Supabase, using mock data for development @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   45235ms] [LOG] [App] No events from Supabase, using mock data for development @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   45331ms] [LOG] [App] No events from Supabase, using mock data for development @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   45382ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   45431ms] [LOG] [App] No events from Supabase, using mock data for development @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   45540ms] [LOG] [App] No events from Supabase, using mock data for development @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   45651ms] [LOG] [App] No events from Supabase, using mock data for development @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   45718ms] [LOG] [Fast Refresh] done in 448ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   45745ms] [LOG] [App] No events from Supabase, using mock data for development @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   45848ms] [LOG] [App] No events from Supabase, using mock data for development @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   45907ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   45950ms] [LOG] [App] No events from Supabase, using mock data for development @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   46042ms] [LOG] [App] No events from Supabase, using mock data for development @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   46149ms] [LOG] [App] No events from Supabase, using mock data for development @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   46250ms] [LOG] [App] No events from Supabase, using mock data for development @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   46328ms] [LOG] [App] No events from Supabase, using mock data for development @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   46434ms] [LOG] [App] No events from Supabase, using mock data for development @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   46552ms] [LOG] [App] No events from Supabase, using mock data for development @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   46637ms] [LOG] [App] No events from Supabase, using mock data for development @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   46746ms] [LOG] [App] No events from Supabase, using mock data for development @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   46800ms] [LOG] [Fast Refresh] done in 999ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   46853ms] [LOG] [App] No events from Supabase, using mock data for development @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   46904ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   46944ms] [LOG] [App] No events from Supabase, using mock data for development @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   47049ms] [LOG] [App] No events from Supabase, using mock data for development @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   47142ms] [LOG] [App] No events from Supabase, using mock data for development @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   47250ms] [LOG] [App] No events from Supabase, using mock data for development @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   47332ms] [LOG] [App] No events from Supabase, using mock data for development @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   47435ms] [LOG] [App] No events from Supabase, using mock data for development @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   47540ms] [LOG] [App] No events from Supabase, using mock data for development @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   47623ms] [LOG] [Fast Refresh] done in 820ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   47635ms] [LOG] [App] No events from Supabase, using mock data for development @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   47745ms] [LOG] [App] No events from Supabase, using mock data for development @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   47844ms] [LOG] [App] No events from Supabase, using mock data for development @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   47948ms] [LOG] [App] No events from Supabase, using mock data for development @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   48051ms] [LOG] [App] No events from Supabase, using mock data for development @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   48142ms] [LOG] [App] No events from Supabase, using mock data for development @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   48258ms] [LOG] [App] No events from Supabase, using mock data for development @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   48348ms] [LOG] [App] No events from Supabase, using mock data for development @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   48439ms] [LOG] [App] No events from Supabase, using mock data for development @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   48539ms] [LOG] [App] No events from Supabase, using mock data for development @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   48595ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   48639ms] [LOG] [App] No events from Supabase, using mock data for development @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   48744ms] [LOG] [App] No events from Supabase, using mock data for development @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   48849ms] [LOG] [App] No events from Supabase, using mock data for development @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   48945ms] [LOG] [App] No events from Supabase, using mock data for development @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   51158ms] [LOG] [Fast Refresh] done in 2684ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   51267ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   51499ms] [LOG] [ImpactGlobe] Hovering: Germany's Merz: US Being Humiliated by Iran as Nuclear Talks Stall @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   51548ms] [LOG] [ImpactGlobe] Hovering: Germany's Merz: US Being Humiliated by Iran as Nuclear Talks Stall @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   53570ms] [LOG] [Fast Refresh] done in 2411ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   53689ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   67474ms] [LOG] [Fast Refresh] done in 13889ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   73563ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   78083ms] [WARNING] %c%s%c [33m[1m⚠[22m[39m Unsupported metadata viewport is configured in metadata export in /. Please move it to viewport export instead.
+Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport background: #e6e6e6;background: light-dark(rgba(0,0,0,0.1), rgba(255,255,255,0.25));color: #000000;color: light-dark(#000000, #ffffff);border-radius: 2px  Server   @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   78100ms] [LOG] [Fast Refresh] done in 4641ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   78217ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   79519ms] [LOG] [App] No events from Supabase, using mock data for development @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   79645ms] [LOG] [App] No events from Supabase, using mock data for development @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   79742ms] [LOG] [App] No events from Supabase, using mock data for development @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   79847ms] [LOG] [App] No events from Supabase, using mock data for development @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   79899ms] [LOG] [Fast Refresh] done in 1796ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   79954ms] [LOG] [App] No events from Supabase, using mock data for development @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   80046ms] [LOG] [App] No events from Supabase, using mock data for development @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   80149ms] [LOG] [App] No events from Supabase, using mock data for development @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   80246ms] [LOG] [App] No events from Supabase, using mock data for development @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   80302ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   80349ms] [LOG] [App] No events from Supabase, using mock data for development @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   80436ms] [LOG] [App] No events from Supabase, using mock data for development @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   80482ms] [LOG] [Fast Refresh] done in 284ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   80538ms] [LOG] [App] No events from Supabase, using mock data for development @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   80589ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   80635ms] [LOG] [App] No events from Supabase, using mock data for development @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   80676ms] [LOG] [Fast Refresh] done in 189ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   80746ms] [LOG] [App] No events from Supabase, using mock data for development @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   80820ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   80852ms] [LOG] [App] No events from Supabase, using mock data for development @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   81003ms] [LOG] [App] No events from Supabase, using mock data for development @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   81117ms] [LOG] [App] No events from Supabase, using mock data for development @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   81214ms] [LOG] [App] No events from Supabase, using mock data for development @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   81251ms] [LOG] [Fast Refresh] done in 567ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   81317ms] [LOG] [App] No events from Supabase, using mock data for development @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   81421ms] [LOG] [App] No events from Supabase, using mock data for development @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   81490ms] [LOG] [App] No events from Supabase, using mock data for development @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   81576ms] [LOG] [App] No events from Supabase, using mock data for development @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   81653ms] [LOG] [App] No events from Supabase, using mock data for development @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   81729ms] [LOG] [App] No events from Supabase, using mock data for development @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   81861ms] [LOG] [App] No events from Supabase, using mock data for development @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   81971ms] [LOG] [App] No events from Supabase, using mock data for development @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   82099ms] [LOG] [App] No events from Supabase, using mock data for development @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   82197ms] [LOG] [App] No events from Supabase, using mock data for development @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   82285ms] [LOG] [App] No events from Supabase, using mock data for development @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   82399ms] [LOG] [App] No events from Supabase, using mock data for development @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   82479ms] [LOG] [App] No events from Supabase, using mock data for development @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   82549ms] [LOG] [App] No events from Supabase, using mock data for development @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   82667ms] [LOG] [App] No events from Supabase, using mock data for development @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   82725ms] [LOG] [App] No events from Supabase, using mock data for development @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   82850ms] [LOG] [App] No events from Supabase, using mock data for development @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   82969ms] [LOG] [App] No events from Supabase, using mock data for development @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   83067ms] [LOG] [App] No events from Supabase, using mock data for development @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   83140ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   83159ms] [LOG] [App] No events from Supabase, using mock data for development @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   83255ms] [LOG] [App] No events from Supabase, using mock data for development @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   83357ms] [LOG] [App] No events from Supabase, using mock data for development @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   83451ms] [LOG] [App] No events from Supabase, using mock data for development @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   83534ms] [LOG] [App] No events from Supabase, using mock data for development @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   83637ms] [LOG] [App] No events from Supabase, using mock data for development @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   83738ms] [LOG] [App] No events from Supabase, using mock data for development @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   83838ms] [LOG] [App] No events from Supabase, using mock data for development @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   83951ms] [LOG] [App] No events from Supabase, using mock data for development @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   84065ms] [LOG] [App] No events from Supabase, using mock data for development @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   84159ms] [LOG] [App] No events from Supabase, using mock data for development @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   84262ms] [LOG] [App] No events from Supabase, using mock data for development @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   84338ms] [LOG] [Fast Refresh] done in 1333ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   84367ms] [LOG] [App] No events from Supabase, using mock data for development @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   84489ms] [LOG] [App] No events from Supabase, using mock data for development @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   84557ms] [LOG] [App] No events from Supabase, using mock data for development @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   84632ms] [LOG] [App] No events from Supabase, using mock data for development @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   84747ms] [LOG] [App] No events from Supabase, using mock data for development @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   84854ms] [LOG] [App] No events from Supabase, using mock data for development @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   84962ms] [LOG] [App] No events from Supabase, using mock data for development @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   85052ms] [LOG] [App] No events from Supabase, using mock data for development @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   85149ms] [LOG] [App] No events from Supabase, using mock data for development @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   85249ms] [LOG] [App] No events from Supabase, using mock data for development @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   85354ms] [LOG] [App] No events from Supabase, using mock data for development @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   85462ms] [LOG] [App] No events from Supabase, using mock data for development @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   85542ms] [LOG] [App] No events from Supabase, using mock data for development @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   85639ms] [LOG] [App] No events from Supabase, using mock data for development @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   85757ms] [LOG] [App] No events from Supabase, using mock data for development @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   85854ms] [LOG] [App] No events from Supabase, using mock data for development @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   85968ms] [LOG] [App] No events from Supabase, using mock data for development @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   86063ms] [LOG] [App] No events from Supabase, using mock data for development @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   86170ms] [LOG] [App] No events from Supabase, using mock data for development @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   86280ms] [LOG] [App] No events from Supabase, using mock data for development @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   86379ms] [LOG] [App] No events from Supabase, using mock data for development @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   86468ms] [LOG] [App] No events from Supabase, using mock data for development @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   86540ms] [LOG] [App] No events from Supabase, using mock data for development @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   86635ms] [LOG] [App] No events from Supabase, using mock data for development @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   86745ms] [LOG] [App] No events from Supabase, using mock data for development @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   86810ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   86833ms] [LOG] [App] No events from Supabase, using mock data for development @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   86958ms] [LOG] [App] No events from Supabase, using mock data for development @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   87057ms] [LOG] [App] No events from Supabase, using mock data for development @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   87155ms] [LOG] [App] No events from Supabase, using mock data for development @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   87272ms] [LOG] [App] No events from Supabase, using mock data for development @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   87366ms] [LOG] [App] No events from Supabase, using mock data for development @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   87464ms] [LOG] [App] No events from Supabase, using mock data for development @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   87551ms] [LOG] [App] No events from Supabase, using mock data for development @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   87629ms] [LOG] [App] No events from Supabase, using mock data for development @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   87741ms] [LOG] [App] No events from Supabase, using mock data for development @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   87848ms] [LOG] [App] No events from Supabase, using mock data for development @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   87944ms] [LOG] [App] No events from Supabase, using mock data for development @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   88045ms] [LOG] [App] No events from Supabase, using mock data for development @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   88156ms] [LOG] [App] No events from Supabase, using mock data for development @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   88251ms] [LOG] [App] No events from Supabase, using mock data for development @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   88366ms] [LOG] [App] No events from Supabase, using mock data for development @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   88468ms] [LOG] [App] No events from Supabase, using mock data for development @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   88571ms] [LOG] [App] No events from Supabase, using mock data for development @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   88630ms] [LOG] [App] No events from Supabase, using mock data for development @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   88745ms] [LOG] [App] No events from Supabase, using mock data for development @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   88833ms] [LOG] [App] No events from Supabase, using mock data for development @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   88963ms] [LOG] [App] No events from Supabase, using mock data for development @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   89066ms] [LOG] [App] No events from Supabase, using mock data for development @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   89173ms] [LOG] [App] No events from Supabase, using mock data for development @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   89295ms] [LOG] [App] No events from Supabase, using mock data for development @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   89396ms] [LOG] [App] No events from Supabase, using mock data for development @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   89495ms] [LOG] [App] No events from Supabase, using mock data for development @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   89606ms] [LOG] [App] No events from Supabase, using mock data for development @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   89674ms] [LOG] [App] No events from Supabase, using mock data for development @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   89748ms] [LOG] [App] No events from Supabase, using mock data for development @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   89851ms] [LOG] [App] No events from Supabase, using mock data for development @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   89897ms] [LOG] [Fast Refresh] done in 3198ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   89961ms] [LOG] [App] No events from Supabase, using mock data for development @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   90038ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   90065ms] [LOG] [App] No events from Supabase, using mock data for development @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   90163ms] [LOG] [App] No events from Supabase, using mock data for development @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   90253ms] [LOG] [App] No events from Supabase, using mock data for development @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   90357ms] [LOG] [App] No events from Supabase, using mock data for development @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   90446ms] [LOG] [App] No events from Supabase, using mock data for development @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   90551ms] [LOG] [App] No events from Supabase, using mock data for development @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   90635ms] [LOG] [App] No events from Supabase, using mock data for development @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   90736ms] [LOG] [App] No events from Supabase, using mock data for development @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   90844ms] [LOG] [App] No events from Supabase, using mock data for development @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   90943ms] [LOG] [App] No events from Supabase, using mock data for development @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   91057ms] [LOG] [App] No events from Supabase, using mock data for development @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   91155ms] [LOG] [App] No events from Supabase, using mock data for development @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   91262ms] [LOG] [App] No events from Supabase, using mock data for development @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   91386ms] [LOG] [App] No events from Supabase, using mock data for development @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   91462ms] [LOG] [Fast Refresh] done in 1549ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   91491ms] [LOG] [App] No events from Supabase, using mock data for development @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   91599ms] [LOG] [App] No events from Supabase, using mock data for development @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   91683ms] [LOG] [App] No events from Supabase, using mock data for development @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   91747ms] [LOG] [App] No events from Supabase, using mock data for development @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   91832ms] [LOG] [App] No events from Supabase, using mock data for development @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   91958ms] [LOG] [App] No events from Supabase, using mock data for development @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   92062ms] [LOG] [App] No events from Supabase, using mock data for development @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   92168ms] [LOG] [App] No events from Supabase, using mock data for development @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   92282ms] [LOG] [App] No events from Supabase, using mock data for development @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   92366ms] [LOG] [App] No events from Supabase, using mock data for development @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   92470ms] [LOG] [App] No events from Supabase, using mock data for development @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   92559ms] [LOG] [App] No events from Supabase, using mock data for development @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   92627ms] [LOG] [App] No events from Supabase, using mock data for development @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   92734ms] [LOG] [App] No events from Supabase, using mock data for development @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   92841ms] [LOG] [App] No events from Supabase, using mock data for development @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   92944ms] [LOG] [App] No events from Supabase, using mock data for development @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   93064ms] [LOG] [App] No events from Supabase, using mock data for development @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   93190ms] [LOG] [App] No events from Supabase, using mock data for development @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   93292ms] [LOG] [App] No events from Supabase, using mock data for development @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   93401ms] [LOG] [App] No events from Supabase, using mock data for development @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   93506ms] [LOG] [App] No events from Supabase, using mock data for development @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   93610ms] [LOG] [App] No events from Supabase, using mock data for development @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   93690ms] [LOG] [App] No events from Supabase, using mock data for development @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   93763ms] [LOG] [App] No events from Supabase, using mock data for development @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   93830ms] [LOG] [App] No events from Supabase, using mock data for development @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   93931ms] [LOG] [App] No events from Supabase, using mock data for development @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   94041ms] [LOG] [App] No events from Supabase, using mock data for development @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   94146ms] [LOG] [App] No events from Supabase, using mock data for development @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   94281ms] [LOG] [App] No events from Supabase, using mock data for development @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   94376ms] [LOG] [App] No events from Supabase, using mock data for development @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   94484ms] [LOG] [App] No events from Supabase, using mock data for development @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   94585ms] [LOG] [App] No events from Supabase, using mock data for development @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   94684ms] [LOG] [App] No events from Supabase, using mock data for development @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   94755ms] [LOG] [App] No events from Supabase, using mock data for development @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   94832ms] [LOG] [App] No events from Supabase, using mock data for development @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   94939ms] [LOG] [App] No events from Supabase, using mock data for development @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   95049ms] [LOG] [App] No events from Supabase, using mock data for development @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   95152ms] [LOG] [App] No events from Supabase, using mock data for development @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   95268ms] [LOG] [App] No events from Supabase, using mock data for development @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   95367ms] [LOG] [App] No events from Supabase, using mock data for development @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   95469ms] [LOG] [App] No events from Supabase, using mock data for development @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   95566ms] [LOG] [App] No events from Supabase, using mock data for development @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   95671ms] [LOG] [App] No events from Supabase, using mock data for development @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   95743ms] [LOG] [App] No events from Supabase, using mock data for development @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   95832ms] [LOG] [App] No events from Supabase, using mock data for development @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   95926ms] [LOG] [App] No events from Supabase, using mock data for development @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   96034ms] [LOG] [App] No events from Supabase, using mock data for development @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   96153ms] [LOG] [App] No events from Supabase, using mock data for development @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   96267ms] [LOG] [App] No events from Supabase, using mock data for development @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   96375ms] [LOG] [App] No events from Supabase, using mock data for development @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   96481ms] [LOG] [App] No events from Supabase, using mock data for development @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   96586ms] [LOG] [App] No events from Supabase, using mock data for development @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   96683ms] [LOG] [App] No events from Supabase, using mock data for development @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   96773ms] [LOG] [App] No events from Supabase, using mock data for development @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   96843ms] [LOG] [App] No events from Supabase, using mock data for development @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   96928ms] [LOG] [App] No events from Supabase, using mock data for development @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   97048ms] [LOG] [App] No events from Supabase, using mock data for development @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   97166ms] [LOG] [App] No events from Supabase, using mock data for development @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   97280ms] [LOG] [App] No events from Supabase, using mock data for development @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   97376ms] [LOG] [App] No events from Supabase, using mock data for development @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   97483ms] [LOG] [App] No events from Supabase, using mock data for development @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   97594ms] [LOG] [App] No events from Supabase, using mock data for development @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   97703ms] [LOG] [App] No events from Supabase, using mock data for development @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   97788ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   97800ms] [LOG] [App] No events from Supabase, using mock data for development @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   97885ms] [LOG] [App] No events from Supabase, using mock data for development @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   97959ms] [LOG] [App] No events from Supabase, using mock data for development @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   98027ms] [LOG] [App] No events from Supabase, using mock data for development @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   98149ms] [LOG] [App] No events from Supabase, using mock data for development @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   98250ms] [LOG] [App] No events from Supabase, using mock data for development @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   98371ms] [LOG] [App] No events from Supabase, using mock data for development @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   98471ms] [LOG] [App] No events from Supabase, using mock data for development @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   98571ms] [LOG] [App] No events from Supabase, using mock data for development @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   98672ms] [LOG] [App] No events from Supabase, using mock data for development @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   98776ms] [LOG] [App] No events from Supabase, using mock data for development @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   98854ms] [LOG] [App] No events from Supabase, using mock data for development @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   98931ms] [LOG] [App] No events from Supabase, using mock data for development @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   99041ms] [LOG] [App] No events from Supabase, using mock data for development @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   99154ms] [LOG] [App] No events from Supabase, using mock data for development @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   99247ms] [LOG] [App] No events from Supabase, using mock data for development @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   99359ms] [LOG] [App] No events from Supabase, using mock data for development @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   99457ms] [LOG] [App] No events from Supabase, using mock data for development @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   99560ms] [LOG] [App] No events from Supabase, using mock data for development @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   99673ms] [LOG] [App] No events from Supabase, using mock data for development @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   99797ms] [LOG] [App] No events from Supabase, using mock data for development @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   99861ms] [LOG] [App] No events from Supabase, using mock data for development @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   99938ms] [LOG] [App] No events from Supabase, using mock data for development @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  100032ms] [LOG] [App] No events from Supabase, using mock data for development @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  100137ms] [LOG] [App] No events from Supabase, using mock data for development @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  100250ms] [LOG] [App] No events from Supabase, using mock data for development @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  100374ms] [LOG] [App] No events from Supabase, using mock data for development @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  100473ms] [LOG] [App] No events from Supabase, using mock data for development @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  100578ms] [LOG] [App] No events from Supabase, using mock data for development @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  100693ms] [LOG] [App] No events from Supabase, using mock data for development @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  100788ms] [LOG] [App] No events from Supabase, using mock data for development @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  100872ms] [LOG] [App] No events from Supabase, using mock data for development @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  100938ms] [LOG] [App] No events from Supabase, using mock data for development @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  101049ms] [LOG] [App] No events from Supabase, using mock data for development @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  101147ms] [LOG] [App] No events from Supabase, using mock data for development @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  101257ms] [LOG] [App] No events from Supabase, using mock data for development @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  101386ms] [LOG] [App] No events from Supabase, using mock data for development @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  101466ms] [LOG] [App] No events from Supabase, using mock data for development @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  101582ms] [LOG] [App] No events from Supabase, using mock data for development @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  101683ms] [LOG] [App] No events from Supabase, using mock data for development @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  101787ms] [LOG] [App] No events from Supabase, using mock data for development @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  101870ms] [LOG] [App] No events from Supabase, using mock data for development @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  101928ms] [LOG] [App] No events from Supabase, using mock data for development @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  102046ms] [LOG] [App] No events from Supabase, using mock data for development @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  102141ms] [LOG] [App] No events from Supabase, using mock data for development @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  102265ms] [LOG] [App] No events from Supabase, using mock data for development @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  102384ms] [LOG] [App] No events from Supabase, using mock data for development @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  102474ms] [LOG] [App] No events from Supabase, using mock data for development @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  102571ms] [LOG] [App] No events from Supabase, using mock data for development @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  102683ms] [LOG] [App] No events from Supabase, using mock data for development @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  102768ms] [LOG] [App] No events from Supabase, using mock data for development @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  102859ms] [LOG] [App] No events from Supabase, using mock data for development @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  102954ms] [LOG] [App] No events from Supabase, using mock data for development @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  103031ms] [LOG] [App] No events from Supabase, using mock data for development @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  103158ms] [LOG] [App] No events from Supabase, using mock data for development @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  103253ms] [LOG] [App] No events from Supabase, using mock data for development @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  103373ms] [LOG] [App] No events from Supabase, using mock data for development @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  103474ms] [LOG] [App] No events from Supabase, using mock data for development @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  103565ms] [LOG] [App] No events from Supabase, using mock data for development @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  104393ms] [LOG] [Fast Refresh] done in 6862ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  104505ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  106636ms] [LOG] [Fast Refresh] done in 2239ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  113147ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  113815ms] [LOG] [Fast Refresh] done in 774ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  116759ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  118388ms] [LOG] [Fast Refresh] done in 1742ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  121860ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  122551ms] [LOG] [Fast Refresh] done in 792ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  123741ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  124595ms] [LOG] [Fast Refresh] done in 955ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  124697ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  125940ms] [LOG] [Fast Refresh] done in 1344ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  132158ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  134546ms] [LOG] [Fast Refresh] done in 2507ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  136355ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  138226ms] [LOG] [Fast Refresh] done in 1979ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  142475ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  143879ms] [LOG] [Fast Refresh] done in 1506ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  144758ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  147998ms] [LOG] [Fast Refresh] done in 3346ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  153081ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  154515ms] [LOG] [Fast Refresh] done in 1545ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  154628ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  155696ms] [LOG] [Fast Refresh] done in 1176ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  161393ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  163618ms] [LOG] [Fast Refresh] done in 2331ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  172149ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  173868ms] [LOG] [Fast Refresh] done in 1828ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  176232ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  176931ms] [LOG] [Fast Refresh] done in 810ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  179105ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  181058ms] [LOG] [Fast Refresh] done in 2055ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  181162ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  182371ms] [LOG] [Fast Refresh] done in 1310ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  187612ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  189440ms] [LOG] [Fast Refresh] done in 1931ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  194695ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  195319ms] [LOG] [Fast Refresh] done in 728ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  196990ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  199424ms] [LOG] [Fast Refresh] done in 2537ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  201006ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  204914ms] [LOG] [Fast Refresh] done in 4008ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  226433ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  226853ms] [LOG] [Fast Refresh] done in 522ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  229923ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  231902ms] [LOG] [Fast Refresh] done in 2081ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  245373ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  247287ms] [LOG] [Fast Refresh] done in 2016ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  252890ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  253878ms] [LOG] [Fast Refresh] done in 1088ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  254710ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  256891ms] [LOG] [Fast Refresh] done in 2281ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  263446ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  264682ms] [LOG] [Fast Refresh] done in 1368ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  264814ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  267318ms] [LOG] [Fast Refresh] done in 2608ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  270895ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  272278ms] [LOG] [Fast Refresh] done in 1488ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  290938ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  296647ms] [LOG] [Fast Refresh] done in 5813ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  296772ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  300536ms] [LOG] [Fast Refresh] done in 3874ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  313332ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  316135ms] [LOG] [Fast Refresh] done in 2905ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431

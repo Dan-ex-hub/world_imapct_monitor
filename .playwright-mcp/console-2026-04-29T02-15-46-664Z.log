@@ -1,0 +1,452 @@
+[     266ms] [INFO] %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[     306ms] [LOG] [HMR] connected @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[     312ms] [WARNING] %c%s%c [33m[1m⚠[22m[39m Unsupported metadata viewport is configured in metadata export in /. Please move it to viewport export instead.
+Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport background: #e6e6e6;background: light-dark(rgba(0,0,0,0.1), rgba(255,255,255,0.25));color: #000000;color: light-dark(#000000, #ffffff);border-radius: 2px  Server   @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[     426ms] [LOG] [App] envLayerData updated: null @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[     427ms] [LOG] [App] No events from Supabase, using mock data for development @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[     521ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[     609ms] [LOG] [Fast Refresh] done in 192ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[     612ms] [WARNING] %c%s%c [33m[1m⚠[22m[39m Unsupported metadata viewport is configured in metadata export in /. Please move it to viewport export instead.
+Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport background: #e6e6e6;background: light-dark(rgba(0,0,0,0.1), rgba(255,255,255,0.25));color: #000000;color: light-dark(#000000, #ffffff);border-radius: 2px  Server   @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[     943ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[     945ms] [LOG] [Fast Refresh] done in 329ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[    1058ms] [WARNING] %c%s%c [33m[1m⚠[22m[39m Unsupported metadata viewport is configured in metadata export in /. Please move it to viewport export instead.
+Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport background: #e6e6e6;background: light-dark(rgba(0,0,0,0.1), rgba(255,255,255,0.25));color: #000000;color: light-dark(#000000, #ffffff);border-radius: 2px  Server   @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[    1287ms] [LOG] [Realtime] Subscription status: SUBSCRIBED @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[    1303ms] [LOG] [Realtime] Loaded 0 initial events @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[    1323ms] [LOG] [App] No events from Supabase, using mock data for development @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   24663ms] [LOG] [GlobeRenderer] Applying heatmap for layer: aqi @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   24664ms] [WARNING] [GlobeRenderer] Failed to create heatmap texture @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   24665ms] [LOG] [App] envLayerData updated: {type: aqi, updatedAt: 2026-04-29T02:14:09.162Z, aqi: Array(0), meta: Object} @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   24790ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   24838ms] [LOG] [Fast Refresh] done in 155ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   39811ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   39828ms] [LOG] [Fast Refresh] done in 119ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   53408ms] [LOG] [GlobeRenderer] Applying heatmap for layer: sea_temp @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   53409ms] [WARNING] [GlobeRenderer] Failed to create heatmap texture @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   53465ms] [LOG] [GlobeRenderer] Applying heatmap for layer: sea_temp @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   53466ms] [WARNING] [GlobeRenderer] Failed to create heatmap texture @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   53466ms] [LOG] [App] envLayerData updated: {type: sea_temp, updatedAt: 2026-04-29T02:14:10.038Z} @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   53594ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   53815ms] [LOG] [Fast Refresh] done in 324ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   54161ms] [LOG] [App] envLayerData updated: {type: wildfires, updatedAt: 2026-04-29T02:08:21.284Z, wildfires: Array(50)} @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   55067ms] [LOG] [GlobeRenderer] Applying heatmap for layer: temperature_anomaly @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   55067ms] [WARNING] [GlobeRenderer] Failed to create heatmap texture @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   55115ms] [LOG] [GlobeRenderer] Applying heatmap for layer: temperature_anomaly @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   55120ms] [LOG] [GlobeRenderer] Heatmap texture applied @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   55122ms] [LOG] [App] envLayerData updated: {type: temperature_anomaly, updatedAt: 2026-04-29T02:14:50.453Z, tempAnomalies: Array(1038)} @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   56944ms] [LOG] [GlobeRenderer] Removing heatmap texture @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   56973ms] [LOG] [App] envLayerData updated: {type: earthquakes, updatedAt: 2026-04-29T02:16:42.617Z, earthquakes: Array(45)} @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   57925ms] [LOG] [GlobeRenderer] Applying heatmap for layer: aqi @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   57926ms] [WARNING] [GlobeRenderer] Failed to create heatmap texture @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   57941ms] [LOG] [GlobeRenderer] Applying heatmap for layer: aqi @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   57941ms] [WARNING] [GlobeRenderer] Failed to create heatmap texture @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   57942ms] [LOG] [App] envLayerData updated: {type: aqi, updatedAt: 2026-04-29T02:14:09.162Z, aqi: Array(0), meta: Object} @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   57989ms] [LOG] [GlobeRenderer] Applying heatmap for layer: aqi @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   57989ms] [WARNING] [GlobeRenderer] Failed to create heatmap texture @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   57990ms] [LOG] [App] envLayerData updated: {type: aqi, updatedAt: 2026-04-29T02:16:11.487Z, aqi: Array(0), meta: Object} @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   64288ms] [LOG] [GlobeRenderer] Applying heatmap for layer: sea_temp @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   64291ms] [WARNING] [GlobeRenderer] Failed to create heatmap texture @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   64312ms] [LOG] [GlobeRenderer] Applying heatmap for layer: sea_temp @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   64313ms] [WARNING] [GlobeRenderer] Failed to create heatmap texture @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   64314ms] [LOG] [App] envLayerData updated: {type: sea_temp, updatedAt: 2026-04-29T02:14:10.038Z} @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   64932ms] [LOG] [GlobeRenderer] Applying heatmap for layer: sea_temp @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   64933ms] [WARNING] [GlobeRenderer] Failed to create heatmap texture @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   64934ms] [LOG] [App] envLayerData updated: {type: sea_temp, updatedAt: 2026-04-29T02:16:51.022Z, seaTemp: Array(0), meta: Object} @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   92104ms] [ERROR] Access to fetch at 'https://api.openaq.org/v2/latest?limit=10&parameter=pm25&order_by=lastUpdated&sort=desc' from origin 'http://localhost:3000' has been blocked by CORS policy: No 'Access-Control-Allow-Origin' header is present on the requested resource. @ http://localhost:3000/:0
+[   92104ms] [ERROR] Failed to load resource: net::ERR_FAILED @ https://api.openaq.org/v2/latest?limit=10&parameter=pm25&order_by=lastUpdated&sort=desc:0
+[  280333ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  280474ms] [LOG] [Fast Refresh] done in 126ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  280590ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  280912ms] [WARNING] %c%s%c [33m[1m⚠[22m[39m Unsupported metadata viewport is configured in metadata export in /. Please move it to viewport export instead.
+Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport background: #e6e6e6;background: light-dark(rgba(0,0,0,0.1), rgba(255,255,255,0.25));color: #000000;color: light-dark(#000000, #ffffff);border-radius: 2px  Server   @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  280914ms] [LOG] [Fast Refresh] done in 431ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  298066ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  298259ms] [LOG] [Fast Refresh] done in 256ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  298363ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  298401ms] [LOG] [Fast Refresh] done in 139ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  298445ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  298739ms] [WARNING] %c%s%c [33m[1m⚠[22m[39m Unsupported metadata viewport is configured in metadata export in /. Please move it to viewport export instead.
+Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport background: #e6e6e6;background: light-dark(rgba(0,0,0,0.1), rgba(255,255,255,0.25));color: #000000;color: light-dark(#000000, #ffffff);border-radius: 2px  Server   @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  298741ms] [LOG] [Fast Refresh] done in 315ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  298779ms] [WARNING] %c%s%c [33m[1m⚠[22m[39m Unsupported metadata viewport is configured in metadata export in /. Please move it to viewport export instead.
+Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport background: #e6e6e6;background: light-dark(rgba(0,0,0,0.1), rgba(255,255,255,0.25));color: #000000;color: light-dark(#000000, #ffffff);border-radius: 2px  Server   @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  298972ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  299059ms] [WARNING] %c%s%c [33m[1m⚠[22m[39m Unsupported metadata viewport is configured in metadata export in /. Please move it to viewport export instead.
+Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport background: #e6e6e6;background: light-dark(rgba(0,0,0,0.1), rgba(255,255,255,0.25));color: #000000;color: light-dark(#000000, #ffffff);border-radius: 2px  Server   @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  299062ms] [WARNING] %c%s%c [33m[1m⚠[22m[39m Unsupported metadata viewport is configured in metadata export in /. Please move it to viewport export instead.
+Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport background: #e6e6e6;background: light-dark(rgba(0,0,0,0.1), rgba(255,255,255,0.25));color: #000000;color: light-dark(#000000, #ffffff);border-radius: 2px  Server   @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  299072ms] [WARNING] %c%s%c [33m[1m⚠[22m[39m Unsupported metadata viewport is configured in metadata export in /. Please move it to viewport export instead.
+Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport background: #e6e6e6;background: light-dark(rgba(0,0,0,0.1), rgba(255,255,255,0.25));color: #000000;color: light-dark(#000000, #ffffff);border-radius: 2px  Server   @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  299129ms] [LOG] [Fast Refresh] done in 258ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  299138ms] [WARNING] %c%s%c [33m[1m⚠[22m[39m Unsupported metadata viewport is configured in metadata export in /. Please move it to viewport export instead.
+Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport background: #e6e6e6;background: light-dark(rgba(0,0,0,0.1), rgba(255,255,255,0.25));color: #000000;color: light-dark(#000000, #ffffff);border-radius: 2px  Server   @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  299235ms] [WARNING] %c%s%c [33m[1m⚠[22m[39m Unsupported metadata viewport is configured in metadata export in /. Please move it to viewport export instead.
+Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport background: #e6e6e6;background: light-dark(rgba(0,0,0,0.1), rgba(255,255,255,0.25));color: #000000;color: light-dark(#000000, #ffffff);border-radius: 2px  Server   @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  299388ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  299389ms] [WARNING] %c%s%c [33m[1m⚠[22m[39m Unsupported metadata viewport is configured in metadata export in /. Please move it to viewport export instead.
+Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport background: #e6e6e6;background: light-dark(rgba(0,0,0,0.1), rgba(255,255,255,0.25));color: #000000;color: light-dark(#000000, #ffffff);border-radius: 2px  Server   @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  299412ms] [LOG] [Fast Refresh] done in 132ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  299538ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  299697ms] [WARNING] %c%s%c [33m[1m⚠[22m[39m Unsupported metadata viewport is configured in metadata export in /. Please move it to viewport export instead.
+Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport background: #e6e6e6;background: light-dark(rgba(0,0,0,0.1), rgba(255,255,255,0.25));color: #000000;color: light-dark(#000000, #ffffff);border-radius: 2px  Server   @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  299699ms] [WARNING] %c%s%c [33m[1m⚠[22m[39m Unsupported metadata viewport is configured in metadata export in /. Please move it to viewport export instead.
+Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport background: #e6e6e6;background: light-dark(rgba(0,0,0,0.1), rgba(255,255,255,0.25));color: #000000;color: light-dark(#000000, #ffffff);border-radius: 2px  Server   @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  299701ms] [WARNING] %c%s%c [33m[1m⚠[22m[39m Unsupported metadata viewport is configured in metadata export in /. Please move it to viewport export instead.
+Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport background: #e6e6e6;background: light-dark(rgba(0,0,0,0.1), rgba(255,255,255,0.25));color: #000000;color: light-dark(#000000, #ffffff);border-radius: 2px  Server   @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  299791ms] [LOG] [Fast Refresh] done in 365ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  299808ms] [WARNING] %c%s%c [33m[1m⚠[22m[39m Unsupported metadata viewport is configured in metadata export in /. Please move it to viewport export instead.
+Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport background: #e6e6e6;background: light-dark(rgba(0,0,0,0.1), rgba(255,255,255,0.25));color: #000000;color: light-dark(#000000, #ffffff);border-radius: 2px  Server   @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  299886ms] [WARNING] %c%s%c [33m[1m⚠[22m[39m Unsupported metadata viewport is configured in metadata export in /. Please move it to viewport export instead.
+Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport background: #e6e6e6;background: light-dark(rgba(0,0,0,0.1), rgba(255,255,255,0.25));color: #000000;color: light-dark(#000000, #ffffff);border-radius: 2px  Server   @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  299974ms] [WARNING] %c%s%c [33m[1m⚠[22m[39m Unsupported metadata viewport is configured in metadata export in /. Please move it to viewport export instead.
+Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport background: #e6e6e6;background: light-dark(rgba(0,0,0,0.1), rgba(255,255,255,0.25));color: #000000;color: light-dark(#000000, #ffffff);border-radius: 2px  Server   @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  300120ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  300211ms] [WARNING] %c%s%c [33m[1m⚠[22m[39m Unsupported metadata viewport is configured in metadata export in /. Please move it to viewport export instead.
+Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport background: #e6e6e6;background: light-dark(rgba(0,0,0,0.1), rgba(255,255,255,0.25));color: #000000;color: light-dark(#000000, #ffffff);border-radius: 2px  Server   @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  300213ms] [WARNING] %c%s%c [33m[1m⚠[22m[39m Unsupported metadata viewport is configured in metadata export in /. Please move it to viewport export instead.
+Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport background: #e6e6e6;background: light-dark(rgba(0,0,0,0.1), rgba(255,255,255,0.25));color: #000000;color: light-dark(#000000, #ffffff);border-radius: 2px  Server   @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  300215ms] [WARNING] %c%s%c [33m[1m⚠[22m[39m Unsupported metadata viewport is configured in metadata export in /. Please move it to viewport export instead.
+Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport background: #e6e6e6;background: light-dark(rgba(0,0,0,0.1), rgba(255,255,255,0.25));color: #000000;color: light-dark(#000000, #ffffff);border-radius: 2px  Server   @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  300225ms] [LOG] [Fast Refresh] done in 205ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  300296ms] [WARNING] %c%s%c [33m[1m⚠[22m[39m Unsupported metadata viewport is configured in metadata export in /. Please move it to viewport export instead.
+Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport background: #e6e6e6;background: light-dark(rgba(0,0,0,0.1), rgba(255,255,255,0.25));color: #000000;color: light-dark(#000000, #ffffff);border-radius: 2px  Server   @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  300450ms] [WARNING] %c%s%c [33m[1m⚠[22m[39m Unsupported metadata viewport is configured in metadata export in /. Please move it to viewport export instead.
+Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport background: #e6e6e6;background: light-dark(rgba(0,0,0,0.1), rgba(255,255,255,0.25));color: #000000;color: light-dark(#000000, #ffffff);border-radius: 2px  Server   @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  300567ms] [WARNING] %c%s%c [33m[1m⚠[22m[39m Unsupported metadata viewport is configured in metadata export in /. Please move it to viewport export instead.
+Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport background: #e6e6e6;background: light-dark(rgba(0,0,0,0.1), rgba(255,255,255,0.25));color: #000000;color: light-dark(#000000, #ffffff);border-radius: 2px  Server   @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  300701ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  300743ms] [LOG] [Fast Refresh] done in 148ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  300852ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  300907ms] [WARNING] %c%s%c [33m[1m⚠[22m[39m Unsupported metadata viewport is configured in metadata export in /. Please move it to viewport export instead.
+Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport background: #e6e6e6;background: light-dark(rgba(0,0,0,0.1), rgba(255,255,255,0.25));color: #000000;color: light-dark(#000000, #ffffff);border-radius: 2px  Server   @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  300909ms] [WARNING] %c%s%c [33m[1m⚠[22m[39m Unsupported metadata viewport is configured in metadata export in /. Please move it to viewport export instead.
+Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport background: #e6e6e6;background: light-dark(rgba(0,0,0,0.1), rgba(255,255,255,0.25));color: #000000;color: light-dark(#000000, #ffffff);border-radius: 2px  Server   @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  300987ms] [LOG] [Fast Refresh] done in 239ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  301001ms] [WARNING] %c%s%c [33m[1m⚠[22m[39m Unsupported metadata viewport is configured in metadata export in /. Please move it to viewport export instead.
+Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport background: #e6e6e6;background: light-dark(rgba(0,0,0,0.1), rgba(255,255,255,0.25));color: #000000;color: light-dark(#000000, #ffffff);border-radius: 2px  Server   @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  301066ms] [WARNING] %c%s%c [33m[1m⚠[22m[39m Unsupported metadata viewport is configured in metadata export in /. Please move it to viewport export instead.
+Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport background: #e6e6e6;background: light-dark(rgba(0,0,0,0.1), rgba(255,255,255,0.25));color: #000000;color: light-dark(#000000, #ffffff);border-radius: 2px  Server   @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  301148ms] [WARNING] %c%s%c [33m[1m⚠[22m[39m Unsupported metadata viewport is configured in metadata export in /. Please move it to viewport export instead.
+Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport background: #e6e6e6;background: light-dark(rgba(0,0,0,0.1), rgba(255,255,255,0.25));color: #000000;color: light-dark(#000000, #ffffff);border-radius: 2px  Server   @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  301256ms] [WARNING] %c%s%c [33m[1m⚠[22m[39m Unsupported metadata viewport is configured in metadata export in /. Please move it to viewport export instead.
+Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport background: #e6e6e6;background: light-dark(rgba(0,0,0,0.1), rgba(255,255,255,0.25));color: #000000;color: light-dark(#000000, #ffffff);border-radius: 2px  Server   @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  301389ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  301427ms] [WARNING] %c%s%c [33m[1m⚠[22m[39m Unsupported metadata viewport is configured in metadata export in /. Please move it to viewport export instead.
+Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport background: #e6e6e6;background: light-dark(rgba(0,0,0,0.1), rgba(255,255,255,0.25));color: #000000;color: light-dark(#000000, #ffffff);border-radius: 2px  Server   @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  301434ms] [WARNING] %c%s%c [33m[1m⚠[22m[39m Unsupported metadata viewport is configured in metadata export in /. Please move it to viewport export instead.
+Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport background: #e6e6e6;background: light-dark(rgba(0,0,0,0.1), rgba(255,255,255,0.25));color: #000000;color: light-dark(#000000, #ffffff);border-radius: 2px  Server   @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  301484ms] [LOG] [Fast Refresh] done in 195ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  301496ms] [WARNING] %c%s%c [33m[1m⚠[22m[39m Unsupported metadata viewport is configured in metadata export in /. Please move it to viewport export instead.
+Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport background: #e6e6e6;background: light-dark(rgba(0,0,0,0.1), rgba(255,255,255,0.25));color: #000000;color: light-dark(#000000, #ffffff);border-radius: 2px  Server   @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  301556ms] [WARNING] %c%s%c [33m[1m⚠[22m[39m Unsupported metadata viewport is configured in metadata export in /. Please move it to viewport export instead.
+Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport background: #e6e6e6;background: light-dark(rgba(0,0,0,0.1), rgba(255,255,255,0.25));color: #000000;color: light-dark(#000000, #ffffff);border-radius: 2px  Server   @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  301624ms] [WARNING] %c%s%c [33m[1m⚠[22m[39m Unsupported metadata viewport is configured in metadata export in /. Please move it to viewport export instead.
+Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport background: #e6e6e6;background: light-dark(rgba(0,0,0,0.1), rgba(255,255,255,0.25));color: #000000;color: light-dark(#000000, #ffffff);border-radius: 2px  Server   @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  301743ms] [WARNING] %c%s%c [33m[1m⚠[22m[39m Unsupported metadata viewport is configured in metadata export in /. Please move it to viewport export instead.
+Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport background: #e6e6e6;background: light-dark(rgba(0,0,0,0.1), rgba(255,255,255,0.25));color: #000000;color: light-dark(#000000, #ffffff);border-radius: 2px  Server   @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  301860ms] [WARNING] %c%s%c [33m[1m⚠[22m[39m Unsupported metadata viewport is configured in metadata export in /. Please move it to viewport export instead.
+Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport background: #e6e6e6;background: light-dark(rgba(0,0,0,0.1), rgba(255,255,255,0.25));color: #000000;color: light-dark(#000000, #ffffff);border-radius: 2px  Server   @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  301889ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  302020ms] [LOG] [Fast Refresh] done in 239ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  302038ms] [WARNING] %c%s%c [33m[1m⚠[22m[39m Unsupported metadata viewport is configured in metadata export in /. Please move it to viewport export instead.
+Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport background: #e6e6e6;background: light-dark(rgba(0,0,0,0.1), rgba(255,255,255,0.25));color: #000000;color: light-dark(#000000, #ffffff);border-radius: 2px  Server   @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  302044ms] [WARNING] %c%s%c [33m[1m⚠[22m[39m Unsupported metadata viewport is configured in metadata export in /. Please move it to viewport export instead.
+Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport background: #e6e6e6;background: light-dark(rgba(0,0,0,0.1), rgba(255,255,255,0.25));color: #000000;color: light-dark(#000000, #ffffff);border-radius: 2px  Server   @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  302097ms] [WARNING] %c%s%c [33m[1m⚠[22m[39m Unsupported metadata viewport is configured in metadata export in /. Please move it to viewport export instead.
+Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport background: #e6e6e6;background: light-dark(rgba(0,0,0,0.1), rgba(255,255,255,0.25));color: #000000;color: light-dark(#000000, #ffffff);border-radius: 2px  Server   @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  302200ms] [WARNING] %c%s%c [33m[1m⚠[22m[39m Unsupported metadata viewport is configured in metadata export in /. Please move it to viewport export instead.
+Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport background: #e6e6e6;background: light-dark(rgba(0,0,0,0.1), rgba(255,255,255,0.25));color: #000000;color: light-dark(#000000, #ffffff);border-radius: 2px  Server   @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  302334ms] [WARNING] %c%s%c [33m[1m⚠[22m[39m Unsupported metadata viewport is configured in metadata export in /. Please move it to viewport export instead.
+Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport background: #e6e6e6;background: light-dark(rgba(0,0,0,0.1), rgba(255,255,255,0.25));color: #000000;color: light-dark(#000000, #ffffff);border-radius: 2px  Server   @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  302400ms] [WARNING] %c%s%c [33m[1m⚠[22m[39m Unsupported metadata viewport is configured in metadata export in /. Please move it to viewport export instead.
+Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport background: #e6e6e6;background: light-dark(rgba(0,0,0,0.1), rgba(255,255,255,0.25));color: #000000;color: light-dark(#000000, #ffffff);border-radius: 2px  Server   @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  302439ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  302483ms] [LOG] [Fast Refresh] done in 147ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  302499ms] [WARNING] %c%s%c [33m[1m⚠[22m[39m Unsupported metadata viewport is configured in metadata export in /. Please move it to viewport export instead.
+Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport background: #e6e6e6;background: light-dark(rgba(0,0,0,0.1), rgba(255,255,255,0.25));color: #000000;color: light-dark(#000000, #ffffff);border-radius: 2px  Server   @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  302580ms] [WARNING] %c%s%c [33m[1m⚠[22m[39m Unsupported metadata viewport is configured in metadata export in /. Please move it to viewport export instead.
+Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport background: #e6e6e6;background: light-dark(rgba(0,0,0,0.1), rgba(255,255,255,0.25));color: #000000;color: light-dark(#000000, #ffffff);border-radius: 2px  Server   @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  302646ms] [WARNING] %c%s%c [33m[1m⚠[22m[39m Unsupported metadata viewport is configured in metadata export in /. Please move it to viewport export instead.
+Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport background: #e6e6e6;background: light-dark(rgba(0,0,0,0.1), rgba(255,255,255,0.25));color: #000000;color: light-dark(#000000, #ffffff);border-radius: 2px  Server   @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  302768ms] [WARNING] %c%s%c [33m[1m⚠[22m[39m Unsupported metadata viewport is configured in metadata export in /. Please move it to viewport export instead.
+Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport background: #e6e6e6;background: light-dark(rgba(0,0,0,0.1), rgba(255,255,255,0.25));color: #000000;color: light-dark(#000000, #ffffff);border-radius: 2px  Server   @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  302872ms] [WARNING] %c%s%c [33m[1m⚠[22m[39m Unsupported metadata viewport is configured in metadata export in /. Please move it to viewport export instead.
+Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport background: #e6e6e6;background: light-dark(rgba(0,0,0,0.1), rgba(255,255,255,0.25));color: #000000;color: light-dark(#000000, #ffffff);border-radius: 2px  Server   @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  302963ms] [WARNING] %c%s%c [33m[1m⚠[22m[39m Unsupported metadata viewport is configured in metadata export in /. Please move it to viewport export instead.
+Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport background: #e6e6e6;background: light-dark(rgba(0,0,0,0.1), rgba(255,255,255,0.25));color: #000000;color: light-dark(#000000, #ffffff);border-radius: 2px  Server   @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  303018ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  303060ms] [LOG] [Fast Refresh] done in 143ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  303074ms] [WARNING] %c%s%c [33m[1m⚠[22m[39m Unsupported metadata viewport is configured in metadata export in /. Please move it to viewport export instead.
+Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport background: #e6e6e6;background: light-dark(rgba(0,0,0,0.1), rgba(255,255,255,0.25));color: #000000;color: light-dark(#000000, #ffffff);border-radius: 2px  Server   @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  303111ms] [WARNING] %c%s%c [33m[1m⚠[22m[39m Unsupported metadata viewport is configured in metadata export in /. Please move it to viewport export instead.
+Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport background: #e6e6e6;background: light-dark(rgba(0,0,0,0.1), rgba(255,255,255,0.25));color: #000000;color: light-dark(#000000, #ffffff);border-radius: 2px  Server   @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  303174ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  303189ms] [WARNING] %c%s%c [33m[1m⚠[22m[39m Unsupported metadata viewport is configured in metadata export in /. Please move it to viewport export instead.
+Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport background: #e6e6e6;background: light-dark(rgba(0,0,0,0.1), rgba(255,255,255,0.25));color: #000000;color: light-dark(#000000, #ffffff);border-radius: 2px  Server   @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  303204ms] [LOG] [Fast Refresh] done in 132ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  303294ms] [WARNING] %c%s%c [33m[1m⚠[22m[39m Unsupported metadata viewport is configured in metadata export in /. Please move it to viewport export instead.
+Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport background: #e6e6e6;background: light-dark(rgba(0,0,0,0.1), rgba(255,255,255,0.25));color: #000000;color: light-dark(#000000, #ffffff);border-radius: 2px  Server   @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  303418ms] [WARNING] %c%s%c [33m[1m⚠[22m[39m Unsupported metadata viewport is configured in metadata export in /. Please move it to viewport export instead.
+Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport background: #e6e6e6;background: light-dark(rgba(0,0,0,0.1), rgba(255,255,255,0.25));color: #000000;color: light-dark(#000000, #ffffff);border-radius: 2px  Server   @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  303555ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  303582ms] [WARNING] %c%s%c [33m[1m⚠[22m[39m Unsupported metadata viewport is configured in metadata export in /. Please move it to viewport export instead.
+Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport background: #e6e6e6;background: light-dark(rgba(0,0,0,0.1), rgba(255,255,255,0.25));color: #000000;color: light-dark(#000000, #ffffff);border-radius: 2px  Server   @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  303592ms] [WARNING] %c%s%c [33m[1m⚠[22m[39m Unsupported metadata viewport is configured in metadata export in /. Please move it to viewport export instead.
+Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport background: #e6e6e6;background: light-dark(rgba(0,0,0,0.1), rgba(255,255,255,0.25));color: #000000;color: light-dark(#000000, #ffffff);border-radius: 2px  Server   @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  303601ms] [LOG] [Fast Refresh] done in 163ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  303684ms] [WARNING] %c%s%c [33m[1m⚠[22m[39m Unsupported metadata viewport is configured in metadata export in /. Please move it to viewport export instead.
+Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport background: #e6e6e6;background: light-dark(rgba(0,0,0,0.1), rgba(255,255,255,0.25));color: #000000;color: light-dark(#000000, #ffffff);border-radius: 2px  Server   @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  303787ms] [WARNING] %c%s%c [33m[1m⚠[22m[39m Unsupported metadata viewport is configured in metadata export in /. Please move it to viewport export instead.
+Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport background: #e6e6e6;background: light-dark(rgba(0,0,0,0.1), rgba(255,255,255,0.25));color: #000000;color: light-dark(#000000, #ffffff);border-radius: 2px  Server   @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  303939ms] [WARNING] %c%s%c [33m[1m⚠[22m[39m Unsupported metadata viewport is configured in metadata export in /. Please move it to viewport export instead.
+Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport background: #e6e6e6;background: light-dark(rgba(0,0,0,0.1), rgba(255,255,255,0.25));color: #000000;color: light-dark(#000000, #ffffff);border-radius: 2px  Server   @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  304008ms] [WARNING] %c%s%c [33m[1m⚠[22m[39m Unsupported metadata viewport is configured in metadata export in /. Please move it to viewport export instead.
+Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport background: #e6e6e6;background: light-dark(rgba(0,0,0,0.1), rgba(255,255,255,0.25));color: #000000;color: light-dark(#000000, #ffffff);border-radius: 2px  Server   @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  304089ms] [WARNING] %c%s%c [33m[1m⚠[22m[39m Unsupported metadata viewport is configured in metadata export in /. Please move it to viewport export instead.
+Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport background: #e6e6e6;background: light-dark(rgba(0,0,0,0.1), rgba(255,255,255,0.25));color: #000000;color: light-dark(#000000, #ffffff);border-radius: 2px  Server   @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  304142ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  304171ms] [LOG] [Fast Refresh] done in 137ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  304181ms] [WARNING] %c%s%c [33m[1m⚠[22m[39m Unsupported metadata viewport is configured in metadata export in /. Please move it to viewport export instead.
+Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport background: #e6e6e6;background: light-dark(rgba(0,0,0,0.1), rgba(255,255,255,0.25));color: #000000;color: light-dark(#000000, #ffffff);border-radius: 2px  Server   @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  304283ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  304299ms] [WARNING] %c%s%c [33m[1m⚠[22m[39m Unsupported metadata viewport is configured in metadata export in /. Please move it to viewport export instead.
+Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport background: #e6e6e6;background: light-dark(rgba(0,0,0,0.1), rgba(255,255,255,0.25));color: #000000;color: light-dark(#000000, #ffffff);border-radius: 2px  Server   @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  304301ms] [LOG] [Fast Refresh] done in 121ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  304383ms] [WARNING] %c%s%c [33m[1m⚠[22m[39m Unsupported metadata viewport is configured in metadata export in /. Please move it to viewport export instead.
+Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport background: #e6e6e6;background: light-dark(rgba(0,0,0,0.1), rgba(255,255,255,0.25));color: #000000;color: light-dark(#000000, #ffffff);border-radius: 2px  Server   @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  304489ms] [WARNING] %c%s%c [33m[1m⚠[22m[39m Unsupported metadata viewport is configured in metadata export in /. Please move it to viewport export instead.
+Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport background: #e6e6e6;background: light-dark(rgba(0,0,0,0.1), rgba(255,255,255,0.25));color: #000000;color: light-dark(#000000, #ffffff);border-radius: 2px  Server   @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  304576ms] [WARNING] %c%s%c [33m[1m⚠[22m[39m Unsupported metadata viewport is configured in metadata export in /. Please move it to viewport export instead.
+Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport background: #e6e6e6;background: light-dark(rgba(0,0,0,0.1), rgba(255,255,255,0.25));color: #000000;color: light-dark(#000000, #ffffff);border-radius: 2px  Server   @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  331918ms] [LOG] [App] envLayerData updated: {type: storms, updatedAt: 2026-04-29T02:09:29.663Z, storms: Array(0)} @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  332042ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  332249ms] [LOG] [Fast Refresh] done in 310ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  332781ms] [LOG] [App] envLayerData updated: {type: wildfires, updatedAt: 2026-04-29T02:08:21.284Z, wildfires: Array(50)} @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  335694ms] [LOG] [App] envLayerData updated: {type: storms, updatedAt: 2026-04-29T02:09:29.663Z, storms: Array(0)} @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  335762ms] [LOG] [App] envLayerData updated: {type: storms, updatedAt: 2026-04-29T02:21:21.507Z, storms: Array(0)} @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  339307ms] [LOG] [GlobeRenderer] Applying heatmap for layer: sea_temp @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  339308ms] [WARNING] [GlobeRenderer] Failed to create heatmap texture @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  339336ms] [LOG] [GlobeRenderer] Applying heatmap for layer: sea_temp @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  339336ms] [WARNING] [GlobeRenderer] Failed to create heatmap texture @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  339337ms] [LOG] [App] envLayerData updated: {type: sea_temp, updatedAt: 2026-04-29T02:16:51.022Z, seaTemp: Array(0), meta: Object} @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  339449ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  339452ms] [LOG] [Fast Refresh] done in 108ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  341133ms] [LOG] [App] envLayerData updated: {type: earthquakes, updatedAt: 2026-04-29T02:16:42.617Z, earthquakes: Array(45)} @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  344500ms] [LOG] [ImpactGlobe] Hovering: M4.4 Earthquake @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  344547ms] [LOG] [ImpactGlobe] Hovering: M4.4 Earthquake @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  344601ms] [LOG] [ImpactGlobe] Hovering: M4.4 Earthquake @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  345382ms] [LOG] [ImpactGlobe] Hovering: M4.8 Earthquake @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  345437ms] [LOG] [ImpactGlobe] Hovering: M4.8 Earthquake @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  345481ms] [LOG] [ImpactGlobe] Hovering: M4.8 Earthquake @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  345573ms] [LOG] [ImpactGlobe] Hovering: M4.9 Earthquake @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  345631ms] [LOG] [ImpactGlobe] Hovering: M4.9 Earthquake @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  345682ms] [LOG] [ImpactGlobe] Hovering: M4.9 Earthquake @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  345730ms] [LOG] [ImpactGlobe] Hovering: M4.9 Earthquake @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  345785ms] [LOG] [ImpactGlobe] Hovering: M5.2 Earthquake @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  345833ms] [LOG] [ImpactGlobe] Hovering: M5.2 Earthquake @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  345874ms] [LOG] [ImpactGlobe] Hovering: M5.2 Earthquake @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  345925ms] [LOG] [ImpactGlobe] Hovering: M5.2 Earthquake @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  345972ms] [LOG] [ImpactGlobe] Hovering: M5.2 Earthquake @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  346028ms] [LOG] [ImpactGlobe] Hovering: M5.2 Earthquake @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  346083ms] [LOG] [ImpactGlobe] Hovering: M5.2 Earthquake @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  346131ms] [LOG] [ImpactGlobe] Hovering: M5.2 Earthquake @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  346186ms] [LOG] [ImpactGlobe] Event clicked: M5.2 Earthquake @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  346211ms] [LOG] [ImpactGlobe] Hovering: M5.2 Earthquake @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  346293ms] [ERROR] Failed to load resource: the server responded with a status of 401 (Unauthorized) @ http://localhost:3000/api/watchlist:0
+[  346305ms] [LOG] [ImpactGlobe] Hovering: M5.2 Earthquake @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  346336ms] [ERROR] Failed to load resource: the server responded with a status of 401 (Unauthorized) @ http://localhost:3000/api/watchlist:0
+[  346379ms] [LOG] [ImpactGlobe] Hovering: M5.2 Earthquake @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  346435ms] [LOG] [ImpactGlobe] Hovering: M5.2 Earthquake @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  346500ms] [LOG] [ImpactGlobe] Hovering: M5.2 Earthquake @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  346576ms] [LOG] [ImpactGlobe] Hovering: M5.2 Earthquake @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  352955ms] [LOG] [ImpactGlobe] Hovering: M4.5 Earthquake @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  353012ms] [LOG] [ImpactGlobe] Hovering: M4.5 Earthquake @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  353060ms] [LOG] [ImpactGlobe] Hovering: M4.9 Earthquake @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  353120ms] [LOG] [ImpactGlobe] Hovering: M4.9 Earthquake @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  353174ms] [LOG] [ImpactGlobe] Hovering: M4.9 Earthquake @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  353223ms] [LOG] [ImpactGlobe] Hovering: M4.9 Earthquake @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  353277ms] [LOG] [ImpactGlobe] Hovering: M4.9 Earthquake @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  353367ms] [LOG] [ImpactGlobe] Hovering: M4.9 Earthquake @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  353412ms] [LOG] [ImpactGlobe] Hovering: M4.9 Earthquake @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  353425ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  353443ms] [LOG] [Fast Refresh] done in 129ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  353465ms] [LOG] [ImpactGlobe] Hovering: M4.9 Earthquake @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  353520ms] [LOG] [ImpactGlobe] Hovering: M4.9 Earthquake @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  353566ms] [LOG] [ImpactGlobe] Hovering: M4.9 Earthquake @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  353610ms] [LOG] [ImpactGlobe] Event clicked: M4.9 Earthquake @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  353625ms] [LOG] [ImpactGlobe] Hovering: M4.9 Earthquake @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  353655ms] [ERROR] Failed to load resource: the server responded with a status of 401 (Unauthorized) @ http://localhost:3000/api/watchlist:0
+[  353682ms] [LOG] [ImpactGlobe] Hovering: M4.9 Earthquake @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  353695ms] [ERROR] Failed to load resource: the server responded with a status of 401 (Unauthorized) @ http://localhost:3000/api/watchlist:0
+[  353732ms] [LOG] [ImpactGlobe] Hovering: M4.9 Earthquake @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  353747ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  353788ms] [LOG] [ImpactGlobe] Hovering: M4.9 Earthquake @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  353823ms] [LOG] [Fast Refresh] done in 181ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  353855ms] [LOG] [ImpactGlobe] Hovering: M4.9 Earthquake @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  353927ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  353933ms] [LOG] [ImpactGlobe] Hovering: M4.9 Earthquake @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  353949ms] [LOG] [Fast Refresh] done in 124ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  353982ms] [LOG] [ImpactGlobe] Hovering: M4.9 Earthquake @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  354030ms] [LOG] [ImpactGlobe] Hovering: M4.9 Earthquake @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  354094ms] [LOG] [ImpactGlobe] Hovering: M4.9 Earthquake @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  354141ms] [LOG] [ImpactGlobe] Hovering: M4.9 Earthquake @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  357390ms] [LOG] [ImpactGlobe] Hovering: M4.5 Earthquake @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  357436ms] [LOG] [ImpactGlobe] Hovering: M4.5 Earthquake @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  357558ms] [LOG] [ImpactGlobe] Hovering: M4.9 Earthquake @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  357592ms] [LOG] [ImpactGlobe] Hovering: M4.9 Earthquake @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  357629ms] [LOG] [ImpactGlobe] Hovering: M4.9 Earthquake @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  357668ms] [LOG] [ImpactGlobe] Hovering: M4.9 Earthquake @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  357699ms] [LOG] [ImpactGlobe] Hovering: M4.9 Earthquake @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  357746ms] [LOG] [ImpactGlobe] Hovering: M4.9 Earthquake @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  357795ms] [LOG] [ImpactGlobe] Hovering: M4.9 Earthquake @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  357830ms] [LOG] [ImpactGlobe] Hovering: M4.9 Earthquake @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  357869ms] [LOG] [ImpactGlobe] Hovering: M4.9 Earthquake @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  357920ms] [LOG] [ImpactGlobe] Hovering: M4.9 Earthquake @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  357964ms] [LOG] [ImpactGlobe] Hovering: M4.9 Earthquake @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  358005ms] [LOG] [ImpactGlobe] Hovering: M4.9 Earthquake @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  358036ms] [LOG] [ImpactGlobe] Hovering: M4.9 Earthquake @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  358074ms] [LOG] [ImpactGlobe] Hovering: M4.9 Earthquake @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  358111ms] [LOG] [ImpactGlobe] Hovering: M4.9 Earthquake @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  358140ms] [LOG] [ImpactGlobe] Hovering: M4.9 Earthquake @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  358178ms] [LOG] [ImpactGlobe] Hovering: M4.9 Earthquake @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  358214ms] [LOG] [ImpactGlobe] Hovering: M4.9 Earthquake @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  358250ms] [LOG] [ImpactGlobe] Hovering: M4.9 Earthquake @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  358275ms] [LOG] [ImpactGlobe] Hovering: M4.9 Earthquake @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  358313ms] [LOG] [ImpactGlobe] Hovering: M4.9 Earthquake @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  358349ms] [LOG] [ImpactGlobe] Hovering: M4.9 Earthquake @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  358401ms] [LOG] [ImpactGlobe] Hovering: M4.9 Earthquake @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  358438ms] [LOG] [ImpactGlobe] Hovering: M4.9 Earthquake @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  358469ms] [LOG] [ImpactGlobe] Hovering: M4.9 Earthquake @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  358496ms] [LOG] [ImpactGlobe] Hovering: M4.9 Earthquake @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  358522ms] [LOG] [ImpactGlobe] Hovering: M4.9 Earthquake @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  358534ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  358570ms] [LOG] [ImpactGlobe] Hovering: M4.9 Earthquake @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  358591ms] [LOG] [Fast Refresh] done in 164ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  358619ms] [LOG] [ImpactGlobe] Hovering: M4.9 Earthquake @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  358661ms] [LOG] [ImpactGlobe] Hovering: M4.9 Earthquake @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  358699ms] [LOG] [ImpactGlobe] Hovering: M4.9 Earthquake @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  358733ms] [LOG] [ImpactGlobe] Hovering: M4.9 Earthquake @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  358770ms] [LOG] [ImpactGlobe] Hovering: M4.9 Earthquake @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  358809ms] [LOG] [ImpactGlobe] Hovering: M4.9 Earthquake @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  358844ms] [LOG] [ImpactGlobe] Hovering: M4.9 Earthquake @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  358882ms] [LOG] [ImpactGlobe] Hovering: M4.9 Earthquake @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  358924ms] [LOG] [ImpactGlobe] Hovering: M4.9 Earthquake @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  358957ms] [LOG] [ImpactGlobe] Hovering: M4.9 Earthquake @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  358989ms] [LOG] [ImpactGlobe] Hovering: M4.9 Earthquake @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  359031ms] [LOG] [ImpactGlobe] Hovering: M4.9 Earthquake @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  359065ms] [LOG] [ImpactGlobe] Hovering: M4.9 Earthquake @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  359108ms] [LOG] [ImpactGlobe] Hovering: M4.9 Earthquake @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  359154ms] [LOG] [ImpactGlobe] Hovering: M4.9 Earthquake @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  359197ms] [LOG] [ImpactGlobe] Hovering: M4.9 Earthquake @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  359240ms] [LOG] [ImpactGlobe] Hovering: M4.9 Earthquake @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  359280ms] [LOG] [ImpactGlobe] Hovering: M4.9 Earthquake @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  359322ms] [LOG] [ImpactGlobe] Hovering: M4.9 Earthquake @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  359356ms] [LOG] [ImpactGlobe] Hovering: M4.9 Earthquake @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  359393ms] [LOG] [ImpactGlobe] Hovering: M4.9 Earthquake @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  359436ms] [LOG] [ImpactGlobe] Hovering: M4.9 Earthquake @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  359463ms] [LOG] [ImpactGlobe] Hovering: M4.9 Earthquake @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  359499ms] [LOG] [ImpactGlobe] Hovering: M4.9 Earthquake @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  359530ms] [LOG] [ImpactGlobe] Hovering: M4.9 Earthquake @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  359584ms] [LOG] [ImpactGlobe] Hovering: M4.9 Earthquake @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  359620ms] [LOG] [ImpactGlobe] Hovering: M4.9 Earthquake @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  359663ms] [LOG] [ImpactGlobe] Hovering: M4.9 Earthquake @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  359706ms] [LOG] [ImpactGlobe] Hovering: M4.9 Earthquake @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  359743ms] [LOG] [ImpactGlobe] Hovering: M4.9 Earthquake @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  359768ms] [LOG] [ImpactGlobe] Event clicked: M4.9 Earthquake @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  359796ms] [LOG] [ImpactGlobe] Hovering: M4.9 Earthquake @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  359827ms] [ERROR] Failed to load resource: the server responded with a status of 401 (Unauthorized) @ http://localhost:3000/api/watchlist:0
+[  359872ms] [LOG] [ImpactGlobe] Hovering: M4.9 Earthquake @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  359910ms] [ERROR] Failed to load resource: the server responded with a status of 401 (Unauthorized) @ http://localhost:3000/api/watchlist:0
+[  359913ms] [LOG] [ImpactGlobe] Hovering: M4.9 Earthquake @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  359950ms] [LOG] [ImpactGlobe] Hovering: M4.9 Earthquake @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  360000ms] [LOG] [ImpactGlobe] Hovering: M4.9 Earthquake @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  360056ms] [LOG] [ImpactGlobe] Hovering: M4.9 Earthquake @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  360094ms] [LOG] [ImpactGlobe] Hovering: M4.9 Earthquake @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  360124ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  360145ms] [LOG] [ImpactGlobe] Hovering: M4.9 Earthquake @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  360180ms] [LOG] [ImpactGlobe] Hovering: M4.9 Earthquake @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  360237ms] [LOG] [ImpactGlobe] Hovering: M4.9 Earthquake @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  360286ms] [LOG] [Fast Refresh] done in 263ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  360291ms] [LOG] [ImpactGlobe] Hovering: M4.9 Earthquake @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  360340ms] [LOG] [ImpactGlobe] Hovering: M4.9 Earthquake @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  361649ms] [LOG] [ImpactGlobe] Hovering: M3.23 Earthquake @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  361693ms] [LOG] [ImpactGlobe] Hovering: M3.17 Earthquake @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  361729ms] [LOG] [ImpactGlobe] Hovering: M3.16 Earthquake @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  361769ms] [LOG] [ImpactGlobe] Hovering: M3.16 Earthquake @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  361811ms] [LOG] [ImpactGlobe] Hovering: M3.16 Earthquake @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  361850ms] [LOG] [ImpactGlobe] Hovering: M3.16 Earthquake @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  361886ms] [LOG] [ImpactGlobe] Hovering: M3.16 Earthquake @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  361925ms] [LOG] [ImpactGlobe] Hovering: M3.16 Earthquake @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  361966ms] [LOG] [ImpactGlobe] Hovering: M2.76 Earthquake @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  362007ms] [LOG] [ImpactGlobe] Hovering: M3.23 Earthquake @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  364437ms] [LOG] [ImpactGlobe] Hovering: M4.7 Earthquake @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  365033ms] [LOG] [ImpactGlobe] Hovering: M4.7 Earthquake @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  365072ms] [LOG] [ImpactGlobe] Hovering: M4.1 Earthquake @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  365154ms] [LOG] [ImpactGlobe] Hovering: M4.9 Earthquake @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  365194ms] [LOG] [ImpactGlobe] Hovering: M4.9 Earthquake @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  365238ms] [LOG] [ImpactGlobe] Hovering: M4.4 Earthquake @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  368929ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  369402ms] [LOG] [Fast Refresh] done in 597ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  369553ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  369555ms] [LOG] [Fast Refresh] done in 120ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  372724ms] [LOG] [ImpactGlobe] Hovering: M2.93 Earthquake @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  372761ms] [LOG] [ImpactGlobe] Hovering: M2.93 Earthquake @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  373375ms] [LOG] [ImpactGlobe] Hovering: M4.8 Earthquake @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  373891ms] [LOG] [ImpactGlobe] Hovering: M2.93 Earthquake @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  375814ms] [LOG] [ImpactGlobe] Hovering: M4.9 Earthquake @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  383356ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  383529ms] [LOG] [Fast Refresh] done in 278ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  429617ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  429874ms] [WARNING] %c%s%c [33m[1m⚠[22m[39m Unsupported metadata viewport is configured in metadata export in /. Please move it to viewport export instead.
+Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport background: #e6e6e6;background: light-dark(rgba(0,0,0,0.1), rgba(255,255,255,0.25));color: #000000;color: light-dark(#000000, #ffffff);border-radius: 2px  Server   @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  429889ms] [LOG] [Fast Refresh] done in 46ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  439419ms] [LOG] [ImpactGlobe] Hovering: M3.4 Earthquake @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  440924ms] [LOG] [GlobeRenderer] Applying heatmap for layer: aqi @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  440925ms] [WARNING] [GlobeRenderer] Failed to create heatmap texture @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  440943ms] [LOG] [GlobeRenderer] Applying heatmap for layer: aqi @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  440944ms] [WARNING] [GlobeRenderer] Failed to create heatmap texture @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  440944ms] [LOG] [App] envLayerData updated: {type: aqi, updatedAt: 2026-04-29T02:16:11.487Z, aqi: Array(0), meta: Object} @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  440984ms] [LOG] [GlobeRenderer] Applying heatmap for layer: aqi @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  440986ms] [WARNING] [GlobeRenderer] Failed to create heatmap texture @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  440987ms] [LOG] [App] envLayerData updated: {type: aqi, updatedAt: 2026-04-29T02:22:10.161Z, aqi: Array(0), meta: Object} @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  441099ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  441422ms] [LOG] [Fast Refresh] done in 431ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  442479ms] [LOG] [GlobeRenderer] Applying heatmap for layer: wind @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  442480ms] [WARNING] [GlobeRenderer] Failed to create heatmap texture @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  442499ms] [LOG] [GlobeRenderer] Applying heatmap for layer: wind @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  442512ms] [LOG] [GlobeRenderer] Heatmap texture applied @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  442514ms] [LOG] [App] envLayerData updated: {type: wind, updatedAt: 2026-04-29T02:14:50.453Z, wind: Array(2692)} @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  443420ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  443525ms] [LOG] [Fast Refresh] done in 123ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  443635ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  443945ms] [WARNING] %c%s%c [33m[1m⚠[22m[39m Unsupported metadata viewport is configured in metadata export in /. Please move it to viewport export instead.
+Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport background: #e6e6e6;background: light-dark(rgba(0,0,0,0.1), rgba(255,255,255,0.25));color: #000000;color: light-dark(#000000, #ffffff);border-radius: 2px  Server   @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  443946ms] [LOG] [Fast Refresh] done in 420ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  444545ms] [LOG] [GlobeRenderer] Applying heatmap for layer: wind @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  444559ms] [LOG] [GlobeRenderer] Heatmap texture applied @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  444562ms] [LOG] [App] envLayerData updated: {type: wind, updatedAt: 2026-04-29T02:23:09.235Z, wind: Array(2692)} @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  447293ms] [LOG] [GlobeRenderer] Applying heatmap for layer: temperature_anomaly @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  447294ms] [WARNING] [GlobeRenderer] Failed to create heatmap texture @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  447314ms] [LOG] [GlobeRenderer] Applying heatmap for layer: temperature_anomaly @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  447319ms] [LOG] [GlobeRenderer] Heatmap texture applied @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  447320ms] [LOG] [App] envLayerData updated: {type: temperature_anomaly, updatedAt: 2026-04-29T02:23:09.235Z, tempAnomalies: Array(1038)} @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  452121ms] [LOG] [GlobeRenderer] Removing heatmap texture @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  452142ms] [LOG] [App] envLayerData updated: {type: storms, updatedAt: 2026-04-29T02:21:21.507Z, storms: Array(0)} @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  452191ms] [LOG] [App] envLayerData updated: {type: storms, updatedAt: 2026-04-29T02:21:23.245Z, storms: Array(0)} @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  452310ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  452486ms] [LOG] [Fast Refresh] done in 283ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  456277ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  456357ms] [LOG] [Fast Refresh] done in 78ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  456462ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  456585ms] [WARNING] %c%s%c [33m[1m⚠[22m[39m Unsupported metadata viewport is configured in metadata export in /. Please move it to viewport export instead.
+Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport background: #e6e6e6;background: light-dark(rgba(0,0,0,0.1), rgba(255,255,255,0.25));color: #000000;color: light-dark(#000000, #ffffff);border-radius: 2px  Server   @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  456591ms] [LOG] [Fast Refresh] done in 234ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  468019ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  468110ms] [LOG] [Fast Refresh] done in 73ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  468212ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  468340ms] [WARNING] %c%s%c [33m[1m⚠[22m[39m Unsupported metadata viewport is configured in metadata export in /. Please move it to viewport export instead.
+Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport background: #e6e6e6;background: light-dark(rgba(0,0,0,0.1), rgba(255,255,255,0.25));color: #000000;color: light-dark(#000000, #ffffff);border-radius: 2px  Server   @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  468341ms] [LOG] [Fast Refresh] done in 230ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  534061ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  534322ms] [LOG] [Fast Refresh] done in 363ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431

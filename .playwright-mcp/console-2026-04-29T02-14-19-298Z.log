@@ -1,0 +1,63 @@
+[     142ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[     500ms] [LOG] [Fast Refresh] done in 460ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[     628ms] [INFO] %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[     645ms] [LOG] [HMR] connected @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[     655ms] [WARNING] %c%s%c [33m[1m⚠[22m[39m Unsupported metadata viewport is configured in metadata export in /. Please move it to viewport export instead.
+Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport background: #e6e6e6;background: light-dark(rgba(0,0,0,0.1), rgba(255,255,255,0.25));color: #000000;color: light-dark(#000000, #ffffff);border-radius: 2px  Server   @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[     722ms] [LOG] [useEnvLayer] Data received: {layerType: none, hasData: false, data: undefined} @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[     723ms] [LOG] [App] envLayerData updated: null @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[     724ms] [LOG] [App] No events from Supabase, using mock data for development @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[     870ms] [WARNING] %c%s%c [33m[1m⚠[22m[39m Unsupported metadata viewport is configured in metadata export in /. Please move it to viewport export instead.
+Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport background: #e6e6e6;background: light-dark(rgba(0,0,0,0.1), rgba(255,255,255,0.25));color: #000000;color: light-dark(#000000, #ffffff);border-radius: 2px  Server   @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[    1352ms] [WARNING] %c%s%c [33m[1m⚠[22m[39m Unsupported metadata viewport is configured in metadata export in /. Please move it to viewport export instead.
+Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport background: #e6e6e6;background: light-dark(rgba(0,0,0,0.1), rgba(255,255,255,0.25));color: #000000;color: light-dark(#000000, #ffffff);border-radius: 2px  Server   @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[    1390ms] [LOG] [Realtime] Subscription status: SUBSCRIBED @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[    1533ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[    1540ms] [LOG] [Fast Refresh] done in 149ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[    1794ms] [LOG] [Realtime] Loaded 0 initial events @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[    1820ms] [LOG] [App] No events from Supabase, using mock data for development @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[    6737ms] [LOG] [ImpactGlobe] Hovering: US-China Trade Talks Resume in Geneva Amid Tariff Standoff @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[    6779ms] [LOG] [ImpactGlobe] Hovering: US-China Trade Talks Resume in Geneva Amid Tariff Standoff @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[    6823ms] [LOG] [ImpactGlobe] Hovering: US-China Trade Talks Resume in Geneva Amid Tariff Standoff @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[    6853ms] [LOG] [ImpactGlobe] Hovering: US-China Trade Talks Resume in Geneva Amid Tariff Standoff @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[    6892ms] [LOG] [ImpactGlobe] Hovering: US-China Trade Talks Resume in Geneva Amid Tariff Standoff @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[    6903ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[    6947ms] [LOG] [ImpactGlobe] Hovering: US-China Trade Talks Resume in Geneva Amid Tariff Standoff @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[    6979ms] [LOG] [ImpactGlobe] Hovering: US-China Trade Talks Resume in Geneva Amid Tariff Standoff @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[    7022ms] [LOG] [ImpactGlobe] Hovering: US-China Trade Talks Resume in Geneva Amid Tariff Standoff @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[    7062ms] [LOG] [ImpactGlobe] Hovering: US-China Trade Talks Resume in Geneva Amid Tariff Standoff @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[    7087ms] [LOG] [Fast Refresh] done in 292ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[    7106ms] [LOG] [ImpactGlobe] Hovering: US-China Trade Talks Resume in Geneva Amid Tariff Standoff @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[    7145ms] [LOG] [ImpactGlobe] Hovering: US-China Trade Talks Resume in Geneva Amid Tariff Standoff @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[    7177ms] [LOG] [ImpactGlobe] Hovering: US-China Trade Talks Resume in Geneva Amid Tariff Standoff @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[    7200ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[    7205ms] [LOG] [ImpactGlobe] Hovering: US-China Trade Talks Resume in Geneva Amid Tariff Standoff @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[    7234ms] [LOG] [ImpactGlobe] Hovering: US-China Trade Talks Resume in Geneva Amid Tariff Standoff @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[    7266ms] [LOG] [ImpactGlobe] Event clicked: US-China Trade Talks Resume in Geneva Amid Tariff Standoff @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[    7298ms] [LOG] [ImpactGlobe] Hovering: US-China Trade Talks Resume in Geneva Amid Tariff Standoff @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[    7333ms] [LOG] [ImpactGlobe] Hovering: US-China Trade Talks Resume in Geneva Amid Tariff Standoff @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[    7405ms] [LOG] [ImpactGlobe] Hovering: US-China Trade Talks Resume in Geneva Amid Tariff Standoff @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[    7444ms] [LOG] [ImpactGlobe] Hovering: US-China Trade Talks Resume in Geneva Amid Tariff Standoff @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[    7483ms] [LOG] [ImpactGlobe] Hovering: US-China Trade Talks Resume in Geneva Amid Tariff Standoff @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[    7514ms] [LOG] [ImpactGlobe] Hovering: US-China Trade Talks Resume in Geneva Amid Tariff Standoff @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[    7563ms] [LOG] [ImpactGlobe] Hovering: US-China Trade Talks Resume in Geneva Amid Tariff Standoff @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[    7654ms] [LOG] [ImpactGlobe] Hovering: US-China Trade Talks Resume in Geneva Amid Tariff Standoff @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[    7686ms] [LOG] [Fast Refresh] done in 586ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[    7697ms] [LOG] [ImpactGlobe] Hovering: Jamie Dimon Warns of Bond Market Crisis as US Debt Hits $37 Trillion @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[    7752ms] [LOG] [ImpactGlobe] Hovering: Jamie Dimon Warns of Bond Market Crisis as US Debt Hits $37 Trillion @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[    7789ms] [LOG] [ImpactGlobe] Hovering: Jamie Dimon Warns of Bond Market Crisis as US Debt Hits $37 Trillion @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[    7802ms] [ERROR] Failed to load resource: the server responded with a status of 401 (Unauthorized) @ http://localhost:3000/api/watchlist:0
+[    7828ms] [ERROR] Failed to load resource: the server responded with a status of 401 (Unauthorized) @ http://localhost:3000/api/watchlist:0
+[    9722ms] [LOG] [ImpactGlobe] Hovering: Germany's Merz: US Being Humiliated by Iran as Nuclear Talks Stall @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   14262ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   14601ms] [LOG] [Fast Refresh] done in 437ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   14782ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   14979ms] [WARNING] %c%s%c [33m[1m⚠[22m[39m Unsupported metadata viewport is configured in metadata export in /. Please move it to viewport export instead.
+Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport background: #e6e6e6;background: light-dark(rgba(0,0,0,0.1), rgba(255,255,255,0.25));color: #000000;color: light-dark(#000000, #ffffff);border-radius: 2px  Server   @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   14980ms] [LOG] [Fast Refresh] done in 299ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   15080ms] [WARNING] %c%s%c [33m[1m⚠[22m[39m Unsupported metadata viewport is configured in metadata export in /. Please move it to viewport export instead.
+Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport background: #e6e6e6;background: light-dark(rgba(0,0,0,0.1), rgba(255,255,255,0.25));color: #000000;color: light-dark(#000000, #ffffff);border-radius: 2px  Server   @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   15179ms] [WARNING] %c%s%c [33m[1m⚠[22m[39m Unsupported metadata viewport is configured in metadata export in /. Please move it to viewport export instead.
+Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport background: #e6e6e6;background: light-dark(rgba(0,0,0,0.1), rgba(255,255,255,0.25));color: #000000;color: light-dark(#000000, #ffffff);border-radius: 2px  Server   @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   29298ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   29298ms] [LOG] [Fast Refresh] done in 102ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431

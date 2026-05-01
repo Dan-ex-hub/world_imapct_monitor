@@ -1,7 +1,0 @@
-- generic [active] [ref=e1]:
-  - button "Open Next.js Dev Tools" [ref=e44] [cursor=pointer]:
-    - img [ref=e45]
-  - alert [ref=e48]
-  - generic [ref=e50]:
-    - heading "Sign In to ImpactGlobe" [level=1] [ref=e51]
-    - paragraph [ref=e52]: Coming soon

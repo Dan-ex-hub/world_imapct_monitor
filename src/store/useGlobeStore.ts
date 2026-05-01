@@ -1,4 +1,4 @@
-import { create } from 'zustand'
+import { create } from "zustand";
 import type {
   GlobeEvent,
   ForexPair,
@@ -8,128 +8,100 @@ import type {
   EnvLayerType,
   EnvLayerData,
   ScreenPosition,
-  User,
-} from './types'
+} from "./types";
+
+export type HoveredEnvPoint =
+  | { type: "wind"; lat: number; lon: number; speed: number; direction: number }
+  | { type: "temperature"; lat: number; lon: number; tempC: number }
+  | {
+      type: "aqi";
+      lat: number;
+      lon: number;
+      aqi: number;
+      pm25: number;
+      category: string;
+    }
+  | { type: "sea_temp"; lat: number; lon: number; tempC: number };
 
 interface GlobeState {
   // Events
-  events: GlobeEvent[]
-  selectedEvent: GlobeEvent | null
-  hoveredEventId: string | null
-  tooltipPosition: ScreenPosition | null
+  events: GlobeEvent[];
+  selectedEvent: GlobeEvent | null;
+  hoveredEventId: string | null;
+  tooltipPosition: ScreenPosition | null;
 
   // Forex
-  forexPairs: ForexPair[]
+  forexPairs: ForexPair[];
 
   // Environmental layers
-  activeEnvLayer: EnvLayerType
-  envLayerData: EnvLayerData | null
+  activeEnvLayer: EnvLayerType;
+  envLayerData: EnvLayerData | null;
+  hoveredEnvPoint: HoveredEnvPoint | null;
+  hoveredEnvScreenPos: { x: number; y: number } | null;
 
   // Filters
-  filters: Filters
-
-  // Playback
-  isPlaybackMode: boolean
-  playbackTimestamp: string | null
-  playbackTime: Date
-  playbackSpeed: 1 | 2 | 5 | 10
-  isPlaybackPlaying: boolean
-
-  // Connection
-  isConnected: boolean
-
-  // User
-  user: User | null
+  filters: Filters;
 
   // Actions — Events
-  setEvents: (events: GlobeEvent[]) => void
-  addEvent: (event: GlobeEvent) => void
-  removeEvent: (id: string) => void
-  setSelectedEvent: (event: GlobeEvent | null) => void
-  setHoveredEvent: (id: string | null, position?: ScreenPosition) => void
+  setEvents: (events: GlobeEvent[]) => void;
+  addEvent: (event: GlobeEvent) => void;
+  setSelectedEvent: (event: GlobeEvent | null) => void;
+  setHoveredEvent: (id: string | null, position?: ScreenPosition) => void;
 
   // Actions — Forex
-  setForexPairs: (pairs: ForexPair[]) => void
+  setForexPairs: (pairs: ForexPair[]) => void;
 
   // Actions — Environmental layers
-  setActiveEnvLayer: (layer: EnvLayerType) => void
-  setEnvLayerData: (data: EnvLayerData) => void
+  setActiveEnvLayer: (layer: EnvLayerType) => void;
+  setEnvLayerData: (data: EnvLayerData) => void;
+  setHoveredEnvPoint: (
+    point: HoveredEnvPoint | null,
+    pos?: { x: number; y: number },
+  ) => void;
 
   // Actions — Filters
-  setFilters: (filters: Partial<Filters>) => void
-  toggleCategory: (category: EventCategory) => void
-  toggleImpactLevel: (level: ImpactLevel) => void
-
-  // Actions — Playback
-  setPlaybackMode: (enabled: boolean) => void
-  setPlaybackTimestamp: (ts: string | null) => void
-  enterPlayback: () => void
-  exitPlayback: () => void
-  setPlaybackTime: (time: Date | ((prev: Date) => Date)) => void
-  setPlaybackSpeed: (speed: 1 | 2 | 5 | 10) => void
-  togglePlayback: () => void
-
-  // Actions — Connection
-  setConnected: (connected: boolean) => void
-
-  // Actions — User
-  setUser: (user: User | null) => void
+  setFilters: (filters: Partial<Filters>) => void;
+  toggleCategory: (category: EventCategory) => void;
+  toggleImpactLevel: (level: ImpactLevel) => void;
 }
 
 const defaultFilters: Filters = {
   categories: [],
   impactLevels: [],
-  timeRange: '24h',
-  searchQuery: '',
-}
+  timeRange: "48h",
+  searchQuery: "",
+};
 
 export const useGlobeStore = create<GlobeState>((set) => ({
-  // Initial state
   events: [],
   selectedEvent: null,
   hoveredEventId: null,
   tooltipPosition: null,
   forexPairs: [],
-  activeEnvLayer: 'none',
+  activeEnvLayer: "none",
   envLayerData: null,
+  hoveredEnvPoint: null,
+  hoveredEnvScreenPos: null,
   filters: defaultFilters,
-  isPlaybackMode: false,
-  playbackTimestamp: null,
-  playbackTime: new Date(),
-  playbackSpeed: 1,
-  isPlaybackPlaying: false,
-  isConnected: false,
-  user: null,
 
-  // Events
   setEvents: (events) => set({ events }),
   addEvent: (event) =>
     set((state) => ({
       events: [event, ...state.events.filter((e) => e.id !== event.id)],
     })),
-  removeEvent: (id) =>
-    set((state) => ({
-      events: state.events.filter((e) => e.id !== id),
-    })),
   setSelectedEvent: (event) => set({ selectedEvent: event }),
   setHoveredEvent: (id, position) =>
-    set({
-      hoveredEventId: id,
-      tooltipPosition: position ?? null,
-    }),
+    set({ hoveredEventId: id, tooltipPosition: position ?? null }),
 
-  // Forex
   setForexPairs: (pairs) => set({ forexPairs: pairs }),
 
-  // Environmental layers
   setActiveEnvLayer: (layer) => set({ activeEnvLayer: layer }),
   setEnvLayerData: (data) => set({ envLayerData: data }),
+  setHoveredEnvPoint: (point, pos) =>
+    set({ hoveredEnvPoint: point, hoveredEnvScreenPos: pos ?? null }),
 
-  // Filters
   setFilters: (newFilters) =>
-    set((state) => ({
-      filters: { ...state.filters, ...newFilters },
-    })),
+    set((state) => ({ filters: { ...state.filters, ...newFilters } })),
   toggleCategory: (category) =>
     set((state) => ({
       filters: {
@@ -148,25 +120,4 @@ export const useGlobeStore = create<GlobeState>((set) => ({
           : [...state.filters.impactLevels, level],
       },
     })),
-
-  // Playback
-  setPlaybackMode: (enabled) => set({ isPlaybackMode: enabled }),
-  setPlaybackTimestamp: (ts) => set({ playbackTimestamp: ts }),
-  enterPlayback: () => set({ isPlaybackMode: true }),
-  exitPlayback: () => set({ isPlaybackMode: false, isPlaybackPlaying: false }),
-  setPlaybackTime: (time) =>
-    set((state) => ({
-      playbackTime: typeof time === 'function' ? time(state.playbackTime) : time,
-    })),
-  setPlaybackSpeed: (speed) => set({ playbackSpeed: speed }),
-  togglePlayback: () =>
-    set((state) => ({
-      isPlaybackPlaying: !state.isPlaybackPlaying,
-    })),
-
-  // Connection
-  setConnected: (connected) => set({ isConnected: connected }),
-
-  // User
-  setUser: (user) => set({ user }),
-}))
+}));

@@ -1,4 +1,4 @@
-import { createClient } from '@/lib/supabase/server'
+import { createClient, createAdminClient } from '@/lib/supabase/server'
 import type { ForexPair } from '@/store/types'
 
 /**
@@ -34,7 +34,34 @@ export async function getCachedForexPairs(): Promise<ForexPair[]> {
 }
 
 /**
- * Update forex pair in cache
+ * Get a single cached forex pair from database
+ */
+export async function getForexPairFromCache(pair: string): Promise<ForexPair | null> {
+  const supabase = await createClient()
+
+  const { data, error } = await supabase
+    .from('forex_cache')
+    .select('*')
+    .eq('pair', pair)
+    .single()
+
+  if (error || !data) {
+    return null
+  }
+
+  return {
+    pair: data.pair,
+    currentPrice: Number(data.current_price),
+    change24h: Number(data.change_24h),
+    changePercent24h: Number(data.change_percent_24h),
+    sparklineData: Array.isArray(data.sparkline_data) ? data.sparkline_data : [],
+    drivingEventId: data.driving_event_id || undefined,
+    lastUpdated: data.last_updated,
+  }
+}
+
+/**
+ * Update forex pair in cache (uses admin client to bypass RLS)
  */
 export async function updateForexPairCache(
   pair: string,
@@ -46,7 +73,7 @@ export async function updateForexPairCache(
     drivingEventId?: string
   }
 ): Promise<void> {
-  const supabase = await createClient()
+  const supabase = createAdminClient()
 
   const { error } = await supabase
     .from('forex_cache')
@@ -67,7 +94,7 @@ export async function updateForexPairCache(
 }
 
 /**
- * Update multiple forex pairs in cache (batch)
+ * Update multiple forex pairs in cache (batch) (uses admin client to bypass RLS)
  */
 export async function updateForexPairsCacheBatch(
   pairs: Array<{
@@ -79,7 +106,7 @@ export async function updateForexPairsCacheBatch(
     drivingEventId?: string
   }>
 ): Promise<void> {
-  const supabase = await createClient()
+  const supabase = createAdminClient()
 
   const rows = pairs.map((p) => ({
     pair: p.pair,

@@ -1,0 +1,206 @@
+- generic [ref=e1]:
+  - generic [ref=e2]:
+    - banner [ref=e3]:
+      - generic [ref=e4]:
+        - link "ImpactGlobe" [ref=e5] [cursor=pointer]:
+          - /url: /
+          - heading "ImpactGlobe" [level=1] [ref=e6]
+        - generic [ref=e9]: Live
+      - generic [ref=e11]:
+        - generic [ref=e12]:
+          - img [ref=e13]
+          - textbox "Search events..." [ref=e16]
+        - generic [ref=e17]:
+          - button "1H" [ref=e18]
+          - button "6H" [ref=e19]
+          - button "24H" [ref=e20]
+          - button "48H" [ref=e21]
+        - button "Filters" [ref=e22]:
+          - generic [ref=e23]: Filters
+        - button "Export CSV" [ref=e24]:
+          - img [ref=e25]
+          - text: Export CSV
+        - button "Playback" [ref=e28]:
+          - img [ref=e29]
+          - text: Playback
+      - generic [ref=e32]:
+        - generic [ref=e35]: 8 EVENTS TRACKED
+        - generic [ref=e36]:
+          - link "Log In" [ref=e37] [cursor=pointer]:
+            - /url: /login
+          - link "Sign Up" [ref=e38] [cursor=pointer]:
+            - /url: /signup
+    - main [ref=e39]:
+      - generic [ref=e221]:
+        - generic [ref=e222]:
+          - generic [ref=e223]:
+            - img [ref=e369]
+            - heading "Air Quality Index" [level=2] [ref=e372]
+          - generic [ref=e229]:
+            - generic [ref=e230]: "Source: OpenAQ"
+            - generic [ref=e231]: Updated 1 minute ago
+        - generic [ref=e374]:
+          - generic [ref=e375]: 📊
+          - paragraph [ref=e376]: No AQI data available
+      - generic [ref=e59]:
+        - generic [ref=e60]:
+          - button "🌐 None" [ref=e61]:
+            - generic [ref=e62]: 🌐
+            - generic [ref=e63]: None
+          - button "💨 Wind" [ref=e64]:
+            - generic [ref=e65]: 💨
+            - generic [ref=e66]: Wind
+          - button "😷 AQI" [active] [ref=e67]:
+            - generic [ref=e68]: 😷
+            - generic [ref=e69]: AQI
+          - button "🌡️ Temp" [ref=e70]:
+            - generic [ref=e71]: 🌡️
+            - generic [ref=e72]: Temp
+          - button "⚡ Quakes" [ref=e73]:
+            - generic [ref=e74]: ⚡
+            - generic [ref=e75]: Quakes
+          - button "🔥 Fire" [ref=e76]:
+            - generic [ref=e77]: 🔥
+            - generic [ref=e78]: Fire
+          - button "🌀 Storms" [ref=e79]:
+            - generic [ref=e80]: 🌀
+            - generic [ref=e81]: Storms
+          - button "🌊 Sea Temp" [ref=e82]:
+            - generic [ref=e83]: 🌊
+            - generic [ref=e84]: Sea Temp
+        - generic [ref=e255]:
+          - generic [ref=e256]: Legend
+          - generic [ref=e257]:
+            - generic [ref=e258]: Good
+            - generic [ref=e259]: Moderate
+            - generic [ref=e260]: Unhealthy
+            - generic [ref=e261]: Very Unhealthy
+            - generic [ref=e377]: Hazardous
+      - button "Replay Last 48 Hours" [ref=e86]:
+        - img [ref=e87]
+        - text: Replay Last 48 Hours
+      - generic [ref=e262]:
+        - generic [ref=e263]:
+          - generic [ref=e268]: Live
+          - generic [ref=e269]: 8 events tracked
+          - generic [ref=e270]: Hover to pause
+        - generic [ref=e272]:
+          - button "Critical Taiwan Strait Tensions Escalate After Military Drills • Taiwan 30m ago" [ref=e273] [cursor=pointer]:
+            - generic [ref=e274]: Critical
+            - generic [ref=e275]: Taiwan Strait Tensions Escalate After Military Drills
+            - generic [ref=e276]: •
+            - generic [ref=e277]: Taiwan
+            - generic [ref=e278]: 30m ago
+          - button "High 7.2 Magnitude Earthquake Strikes Central Turkey • Turkey 45m ago" [ref=e279] [cursor=pointer]:
+            - generic [ref=e280]: High
+            - generic [ref=e281]: 7.2 Magnitude Earthquake Strikes Central Turkey
+            - generic [ref=e282]: •
+            - generic [ref=e283]: Turkey
+            - generic [ref=e284]: 45m ago
+          - button "High Japan GDP Contracts 0.5% in Q1 — Recession Fears Mount • Japan 1h ago" [ref=e285] [cursor=pointer]:
+            - generic [ref=e286]: High
+            - generic [ref=e287]: Japan GDP Contracts 0.5% in Q1 — Recession Fears Mount
+            - generic [ref=e288]: •
+            - generic [ref=e289]: Japan
+            - generic [ref=e290]: 1h ago
+          - button "Critical Federal Reserve Holds Rates Steady at 5.25-5.50% • United States 2h ago" [ref=e291] [cursor=pointer]:
+            - generic [ref=e292]: Critical
+            - generic [ref=e293]: Federal Reserve Holds Rates Steady at 5.25-5.50%
+            - generic [ref=e294]: •
+            - generic [ref=e295]: United States
+            - generic [ref=e296]: 2h ago
+          - button "High EU Imposes New Sanctions on Russian Energy Exports • Germany 5h ago" [ref=e297] [cursor=pointer]:
+            - generic [ref=e298]: High
+            - generic [ref=e299]: EU Imposes New Sanctions on Russian Energy Exports
+            - generic [ref=e300]: •
+            - generic [ref=e301]: Germany
+            - generic [ref=e302]: 5h ago
+          - button "Medium Brazil Central Bank Cuts Selic Rate by 50bps to 10.25% • Brazil 8h ago" [ref=e303] [cursor=pointer]:
+            - generic [ref=e304]: Medium
+            - generic [ref=e305]: Brazil Central Bank Cuts Selic Rate by 50bps to 10.25%
+            - generic [ref=e306]: •
+            - generic [ref=e307]: Brazil
+            - generic [ref=e308]: 8h ago
+          - button "Medium Nigeria Oil Output Drops to 18-Month Low After Pipeline Attack • Nigeria 12h ago" [ref=e309] [cursor=pointer]:
+            - generic [ref=e310]: Medium
+            - generic [ref=e311]: Nigeria Oil Output Drops to 18-Month Low After Pipeline Attack
+            - generic [ref=e312]: •
+            - generic [ref=e313]: Nigeria
+            - generic [ref=e314]: 12h ago
+          - 'button "Low UK General Election Results: Labour Wins Historic Majority • United Kingdom 18h ago" [ref=e315] [cursor=pointer]':
+            - generic [ref=e316]: Low
+            - generic [ref=e317]: "UK General Election Results: Labour Wins Historic Majority"
+            - generic [ref=e318]: •
+            - generic [ref=e319]: United Kingdom
+            - generic [ref=e320]: 18h ago
+          - button "Critical Taiwan Strait Tensions Escalate After Military Drills • Taiwan 30m ago" [ref=e321] [cursor=pointer]:
+            - generic [ref=e322]: Critical
+            - generic [ref=e323]: Taiwan Strait Tensions Escalate After Military Drills
+            - generic [ref=e324]: •
+            - generic [ref=e325]: Taiwan
+            - generic [ref=e326]: 30m ago
+          - button "High 7.2 Magnitude Earthquake Strikes Central Turkey • Turkey 45m ago" [ref=e327] [cursor=pointer]:
+            - generic [ref=e328]: High
+            - generic [ref=e329]: 7.2 Magnitude Earthquake Strikes Central Turkey
+            - generic [ref=e330]: •
+            - generic [ref=e331]: Turkey
+            - generic [ref=e332]: 45m ago
+          - button "High Japan GDP Contracts 0.5% in Q1 — Recession Fears Mount • Japan 1h ago" [ref=e333] [cursor=pointer]:
+            - generic [ref=e334]: High
+            - generic [ref=e335]: Japan GDP Contracts 0.5% in Q1 — Recession Fears Mount
+            - generic [ref=e336]: •
+            - generic [ref=e337]: Japan
+            - generic [ref=e338]: 1h ago
+          - button "Critical Federal Reserve Holds Rates Steady at 5.25-5.50% • United States 2h ago" [ref=e339] [cursor=pointer]:
+            - generic [ref=e340]: Critical
+            - generic [ref=e341]: Federal Reserve Holds Rates Steady at 5.25-5.50%
+            - generic [ref=e342]: •
+            - generic [ref=e343]: United States
+            - generic [ref=e344]: 2h ago
+          - button "High EU Imposes New Sanctions on Russian Energy Exports • Germany 5h ago" [ref=e345] [cursor=pointer]:
+            - generic [ref=e346]: High
+            - generic [ref=e347]: EU Imposes New Sanctions on Russian Energy Exports
+            - generic [ref=e348]: •
+            - generic [ref=e349]: Germany
+            - generic [ref=e350]: 5h ago
+          - button "Medium Brazil Central Bank Cuts Selic Rate by 50bps to 10.25% • Brazil 8h ago" [ref=e351] [cursor=pointer]:
+            - generic [ref=e352]: Medium
+            - generic [ref=e353]: Brazil Central Bank Cuts Selic Rate by 50bps to 10.25%
+            - generic [ref=e354]: •
+            - generic [ref=e355]: Brazil
+            - generic [ref=e356]: 8h ago
+          - button "Medium Nigeria Oil Output Drops to 18-Month Low After Pipeline Attack • Nigeria 12h ago" [ref=e357] [cursor=pointer]:
+            - generic [ref=e358]: Medium
+            - generic [ref=e359]: Nigeria Oil Output Drops to 18-Month Low After Pipeline Attack
+            - generic [ref=e360]: •
+            - generic [ref=e361]: Nigeria
+            - generic [ref=e362]: 12h ago
+          - 'button "Low UK General Election Results: Labour Wins Historic Majority • United Kingdom 18h ago" [ref=e363] [cursor=pointer]':
+            - generic [ref=e364]: Low
+            - generic [ref=e365]: "UK General Election Results: Labour Wins Historic Majority"
+            - generic [ref=e366]: •
+            - generic [ref=e367]: United Kingdom
+            - generic [ref=e368]: 18h ago
+    - contentinfo [ref=e197]:
+      - generic [ref=e199]:
+        - generic [ref=e200]:
+          - generic [ref=e201]: "Data sources:"
+          - link "Open-Meteo" [ref=e202] [cursor=pointer]:
+            - /url: https://open-meteo.com
+          - link "OpenAQ" [ref=e203] [cursor=pointer]:
+            - /url: https://openaq.org
+          - link "USGS" [ref=e204] [cursor=pointer]:
+            - /url: https://earthquake.usgs.gov
+          - link "NASA EONET" [ref=e205] [cursor=pointer]:
+            - /url: https://eonet.gsfc.nasa.gov
+          - link "NOAA" [ref=e206] [cursor=pointer]:
+            - /url: https://www.weather.gov
+        - generic [ref=e207]:
+          - link "Privacy" [ref=e208] [cursor=pointer]:
+            - /url: /privacy
+          - link "Terms" [ref=e209] [cursor=pointer]:
+            - /url: /terms
+          - generic [ref=e210]: © 2026 ImpactGlobe
+  - button "Open Next.js Dev Tools" [ref=e216] [cursor=pointer]:
+    - img [ref=e217]
+  - alert [ref=e220]

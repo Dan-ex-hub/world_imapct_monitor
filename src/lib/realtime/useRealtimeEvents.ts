@@ -1,104 +1,58 @@
-'use client'
+"use client";
 
-import { useEffect } from 'react'
-import { createClient } from '@/lib/supabase/client'
-import { useGlobeStore } from '@/store/useGlobeStore'
-import type { GlobeEvent } from '@/store/types'
-import type { Database } from '@/types/database.types'
+import { useEffect } from "react";
+import { createClient } from "@/lib/supabase/client";
+import { useGlobeStore } from "@/store/useGlobeStore";
+import type { GlobeEvent } from "@/store/types";
 
-type EventRow = Database['public']['Tables']['events']['Row']
-
-/**
- * Hook to subscribe to realtime event updates from Supabase
- * Automatically updates the Zustand store when events are inserted, updated, or deleted
- */
 export function useRealtimeEvents() {
-  const setEvents = useGlobeStore((s) => s.setEvents)
-  const addEvent = useGlobeStore((s) => s.addEvent)
-  const removeEvent = useGlobeStore((s) => s.removeEvent)
+  const setEvents = useGlobeStore((s) => s.setEvents);
+  const addEvent = useGlobeStore((s) => s.addEvent);
 
   useEffect(() => {
-    const supabase = createClient()
+    const supabase = createClient();
 
     // Fetch initial events
-    const fetchInitialEvents = async () => {
+    const fetchInitial = async () => {
       const { data, error } = await supabase
-        .from('events')
-        .select('*')
-        .gte('expires_at', new Date().toISOString())
-        .order('published_at', { ascending: false })
+        .from("events")
+        .select("*")
+        .gte("expires_at", new Date().toISOString())
+        .order("published_at", { ascending: false });
 
       if (error) {
-        console.error('[Realtime] Failed to fetch initial events:', error)
-        return
+        console.error("[Realtime] fetch error:", error);
+        return;
       }
-
       if (data) {
-        const events = data.map(mapEventRowToGlobeEvent)
-        setEvents(events)
-        console.log(`[Realtime] Loaded ${events.length} initial events`)
+        setEvents(data.map(mapRow));
       }
-    }
+    };
 
-    fetchInitialEvents()
+    fetchInitial();
 
-    // Subscribe to realtime changes
+    // Subscribe to INSERT / UPDATE
     const channel = supabase
-      .channel('events-channel')
+      .channel("events-channel")
       .on(
-        'postgres_changes',
-        {
-          event: 'INSERT',
-          schema: 'public',
-          table: 'events',
-        },
-        (payload) => {
-          console.log('[Realtime] New event inserted:', payload.new)
-          const event = mapEventRowToGlobeEvent(payload.new as EventRow)
-          addEvent(event)
-        }
+        "postgres_changes",
+        { event: "INSERT", schema: "public", table: "events" },
+        (p) => addEvent(mapRow(p.new as any)),
       )
       .on(
-        'postgres_changes',
-        {
-          event: 'UPDATE',
-          schema: 'public',
-          table: 'events',
-        },
-        (payload) => {
-          console.log('[Realtime] Event updated:', payload.new)
-          const event = mapEventRowToGlobeEvent(payload.new as EventRow)
-          addEvent(event) // addEvent replaces if ID exists
-        }
+        "postgres_changes",
+        { event: "UPDATE", schema: "public", table: "events" },
+        (p) => addEvent(mapRow(p.new as any)),
       )
-      .on(
-        'postgres_changes',
-        {
-          event: 'DELETE',
-          schema: 'public',
-          table: 'events',
-        },
-        (payload) => {
-          console.log('[Realtime] Event deleted:', payload.old)
-          removeEvent((payload.old as EventRow).id)
-        }
-      )
-      .subscribe((status) => {
-        console.log('[Realtime] Subscription status:', status)
-      })
+      .subscribe();
 
-    // Cleanup on unmount
     return () => {
-      console.log('[Realtime] Unsubscribing from events channel')
-      supabase.removeChannel(channel)
-    }
-  }, [setEvents, addEvent, removeEvent])
+      supabase.removeChannel(channel);
+    };
+  }, [setEvents, addEvent]);
 }
 
-/**
- * Map database row to GlobeEvent type
- */
-function mapEventRowToGlobeEvent(row: EventRow): GlobeEvent {
+function mapRow(row: any): GlobeEvent {
   return {
     id: row.id,
     headline: row.headline,
@@ -109,12 +63,12 @@ function mapEventRowToGlobeEvent(row: EventRow): GlobeEvent {
     category: row.category,
     summary: row.summary,
     sentiment: row.sentiment,
-    forexImpacts: (row.forex_impacts as any) || [],
+    forexImpacts: row.forex_impacts || [],
     confidenceScore: Number(row.confidence_score),
     isMarketMoving: row.is_market_moving,
     publishedAt: row.published_at,
     expiresAt: row.expires_at,
     sourceUrl: row.source_url || undefined,
     createdBy: row.created_by,
-  }
+  };
 }

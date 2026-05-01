@@ -1,116 +1,101 @@
 import { NextResponse } from 'next/server'
-import { createClient } from '@/lib/supabase/server'
-import { getGlobalAQI } from '@/lib/env/openaq'
-import type { EnvLayerData } from '@/store/types'
-import { isRateLimited, RATE_LIMITS } from '@/lib/utils/ratelimit'
+import { createAdminClient } from '@/lib/supabase/server'
+import { getAQIForZone } from '@/lib/env/openaq'
+import { getZoneForType, getCurrentZoneForType, GLOBE_ZONES } from '@/lib/env/zones'
+import type { EnvLayerData, AQIPoint } from '@/store/types'
 
 /**
  * GET /api/env/aqi
- * Fetch air quality index data from OpenAQ
- * Caches in env_data_cache table for 30 minutes
+ * Returns global AQI data from Open-Meteo Air Quality API (free, no key).
+ *
+ * Strategy:
+ * - On first load (empty cache): fetch ALL 4 zones immediately
+ * - On subsequent loads: use staggered rotation (offset 2) to refresh one zone at a time
+ * - Each zone cached 6 hours → ~4 API calls/day per zone ✅
  */
-export async function GET(request: Request) {
-  // Rate limiting
-  const identifier = `env-aqi-${request.headers.get('x-forwarded-for') || 'unknown'}`
-  if (isRateLimited(identifier, RATE_LIMITS.ENV_API)) {
-    return NextResponse.json(
-      { error: 'Rate limit exceeded. Please try again later.' },
-      { status: 429 }
-    )
-  }
-
+export async function GET() {
   try {
-    const supabase = await createClient()
+    const supabase = createAdminClient()
+    const now = new Date()
+    const sixHoursAgo = new Date(now.getTime() - 21_600_000)
 
-    // Check cache first
-    const { data: cached } = await supabase
-      .from('env_data_cache')
-      .select('*')
-      .eq('layer_type', 'aqi')
-      .gt('expires_at', new Date().toISOString())
-      .single()
+    // Load all cached zones
+    const { data: allCachedZones } = await supabase
+      .from('env_data_cache').select('*').like('layer_type', 'aqi_zone_%')
 
-    if (cached?.data) {
-      return NextResponse.json(cached.data, {
-        headers: {
-          'Cache-Control': 'public, s-maxage=1800, stale-while-revalidate=3600',
-        },
-      })
+    const cachedZoneIds = new Set(allCachedZones?.map((c: any) => c.layer_type) ?? [])
+    const cacheIsEmpty = cachedZoneIds.size === 0
+
+    if (cacheIsEmpty) {
+      // First load — fetch ALL zones sequentially so the globe is fully covered immediately
+      console.log('[AQI] Cache empty — fetching all 4 zones...')
+      for (const zone of GLOBE_ZONES) {
+        const key = `aqi_zone_${zone.id}`
+        try {
+          const points = await getAQIForZone(zone)
+          if (points.length > 0) {
+            await supabase.from('env_data_cache').upsert({
+              layer_type: key,
+              data: { points, zone: zone.id },
+              fetched_at: now.toISOString(),
+              expires_at: new Date(now.getTime() + 172_800_000).toISOString(),
+            })
+            console.log(`[AQI] Cached ${points.length} pts for ${zone.name}`)
+          }
+        } catch (err) {
+          console.error(`[AQI] Failed zone ${zone.name}:`, err)
+        }
+      }
+    } else {
+      // Subsequent loads — refresh one stale zone per request (staggered rotation)
+      const aqiZone = getZoneForType('aqi') ?? getCurrentZoneForType('aqi')
+      const aqiZoneKey = `aqi_zone_${aqiZone.id}`
+      const zoneCache = allCachedZones?.find((c: any) => c.layer_type === aqiZoneKey)
+      const needsRefresh = !zoneCache || new Date(zoneCache.fetched_at) < sixHoursAgo
+
+      if (needsRefresh) {
+        try {
+          const points = await getAQIForZone(aqiZone)
+          if (points.length > 0) {
+            await supabase.from('env_data_cache').upsert({
+              layer_type: aqiZoneKey,
+              data: { points, zone: aqiZone.id },
+              fetched_at: now.toISOString(),
+              expires_at: new Date(now.getTime() + 172_800_000).toISOString(),
+            })
+            console.log(`[AQI] Refreshed ${points.length} pts for ${aqiZone.name}`)
+          }
+        } catch (err) {
+          console.error(`[AQI] Failed to refresh ${aqiZone.name}:`, err)
+        }
+      }
     }
 
-    // Fetch fresh data
-    console.log('Fetching AQI data from OpenAQ...')
-    const aqiPoints = await getGlobalAQI()
+    // Merge all cached zones
+    const { data: freshZones } = await supabase
+      .from('env_data_cache').select('*').like('layer_type', 'aqi_zone_%')
 
-    const now = new Date()
-    const layerData: EnvLayerData = {
+    const allAqiPoints: AQIPoint[] = []
+    freshZones?.forEach((z: any) => {
+      const d = z.data as { points: AQIPoint[] }
+      if (d?.points) allAqiPoints.push(...d.points)
+    })
+
+    const coverage = Math.round((freshZones?.length ?? 0) / GLOBE_ZONES.length * 100)
+    console.log(`[AQI] Returning ${allAqiPoints.length} pts (${coverage}% coverage)`)
+
+    const aqiData: EnvLayerData = {
       type: 'aqi',
       updatedAt: now.toISOString(),
-      aqi: aqiPoints,
-    }
-
-    // Cache for 30 minutes
-    await supabase.from('env_data_cache').upsert({
-      layer_type: 'aqi',
-      data: layerData,
-      fetched_at: now.toISOString(),
-      expires_at: new Date(now.getTime() + 1800_000).toISOString(),
-    })
-
-    // Also store in aqi_history for sparklines
-    if (aqiPoints.length > 0) {
-      const historyRecords = aqiPoints.slice(0, 100).map((point) => ({
-        city: point.city,
-        country: point.country,
-        lat: point.lat,
-        lon: point.lon,
-        aqi: point.aqi,
-        pm25: point.pm25,
-        recorded_at: now.toISOString(),
-      }))
-
-      await supabase.from('aqi_history').insert(historyRecords)
-    }
-
-    return NextResponse.json(layerData, {
-      headers: {
-        'Cache-Control': 'public, s-maxage=1800, stale-while-revalidate=3600',
-      },
-    })
-  } catch (error) {
-    console.error('AQI API error:', error)
-    
-    // Try to return stale data if upstream API is down
-    const supabase = await createClient()
-    const { data: staleData } = await supabase
-      .from('env_data_cache')
-      .select('*')
-      .eq('layer_type', 'aqi')
-      .order('fetched_at', { ascending: false })
-      .limit(1)
-      .single()
-
-    if (staleData?.data) {
-      console.log('Returning stale AQI data due to upstream error')
-      return NextResponse.json(
-        {
-          ...staleData.data,
-          warning: 'Using cached data due to upstream service unavailability',
-        },
-        {
-          headers: {
-            'Cache-Control': 'public, s-maxage=300, stale-while-revalidate=600',
-          },
-        }
-      )
+      aqi: allAqiPoints,
     }
 
     return NextResponse.json(
-      {
-        error: 'Failed to fetch AQI data',
-        details: error instanceof Error ? error.message : 'Unknown error',
-      },
-      { status: 500 }
+      { ...aqiData, meta: { coverage: `${coverage}%`, zonesLoaded: freshZones?.length ?? 0, totalZones: GLOBE_ZONES.length } },
+      { headers: { 'Cache-Control': 'public, s-maxage=60, stale-while-revalidate=300' } }
     )
+  } catch (error) {
+    console.error('[AQI] Error:', error)
+    return NextResponse.json({ error: 'Failed to fetch AQI data' }, { status: 500 })
   }
 }

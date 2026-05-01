@@ -1,0 +1,18 @@
+[      84ms] [WARNING] <link rel=preload> has an invalid `href` value @ https://faphouse2.com/videos/game-night-fuck-R6y1mn?utm_source=pbweb&utm_medium=referral&utm_campaign=pbw:44
+[    1345ms] [WARNING] [GSI_LOGGER]: Your client application uses one of the Google One Tap prompt UI status methods that may stop functioning when FedCM becomes mandatory. Refer to the migration guide to update your code accordingly and opt-in to FedCM to test your changes. Learn more: https://developers.google.com/identity/gsi/web/guides/fedcm-migration?s=dc#display_moment and https://developers.google.com/identity/gsi/web/guides/fedcm-migration?s=dc#skipped_moment @ https://accounts.google.com/gsi/client:84
+[    1354ms] [ERROR] Not signed in with the identity provider. @ https://faphouse2.com/videos/game-night-fuck-R6y1mn?utm_source=pbweb&utm_medium=referral&utm_campaign=pbw:0
+[    2755ms] [ERROR] Failed to load resource: net::ERR_CERT_COMMON_NAME_INVALID @ https://collector.faphouse2.com/?log=xplayer_ui:0
+[    3432ms] [ERROR] [GSI_LOGGER]: FedCM get() rejects with AbortError: signal is aborted without reason @ https://accounts.google.com/gsi/client:85
+[    3772ms] [ERROR] Failed to load resource: net::ERR_CERT_COMMON_NAME_INVALID @ https://collector.faphouse2.com/?log=cdn:0
+[    3777ms] [ERROR] Failed to load resource: net::ERR_CERT_COMMON_NAME_INVALID @ https://collector.faphouse2.com/?log=xplayer_ui:0
+[    3801ms] [ERROR] Failed to load resource: net::ERR_CERT_COMMON_NAME_INVALID @ https://collector.faphouse2.com/?log=xplayer_ui:0
+[    4783ms] [ERROR] Failed to load resource: net::ERR_CERT_COMMON_NAME_INVALID @ https://collector.faphouse2.com/?log=cdn:0
+[    4789ms] [ERROR] Failed to load resource: net::ERR_CERT_COMMON_NAME_INVALID @ https://collector.faphouse2.com/?log=xplayer_ui:0
+[    4840ms] [ERROR] Failed to load resource: net::ERR_CERT_COMMON_NAME_INVALID @ https://collector.faphouse2.com/?log=xplayer_ui:0
+[    4886ms] [ERROR] Failed to load resource: net::ERR_CERT_COMMON_NAME_INVALID @ https://collector.faphouse2.com/?log=cdn:0
+[   15215ms] [ERROR] Failed to load resource: net::ERR_CERT_COMMON_NAME_INVALID @ https://collector.faphouse2.com/?log=cdn:0
+[   25309ms] [ERROR] Failed to load resource: net::ERR_CERT_COMMON_NAME_INVALID @ https://collector.faphouse2.com/?log=cdn:0
+[   27085ms] [WARNING] Blocked aria-hidden on an element because its descendant retained focus. The focus must not be hidden from assistive technology users. Avoid using aria-hidden on a focused element or its ancestor. Consider using the inert attribute instead, which will also prevent focus. For more details, see the aria-hidden section of the WAI-ARIA specification at https://w3c.github.io/aria/#aria-hidden.
+Element with focus: <video#xplayer__video>
+Ancestor with aria-hidden: <video#xplayer__video> @ https://faphouse2.com/videos/game-night-fuck-R6y1mn?utm_source=pbweb&utm_medium=referral&utm_campaign=pbw:0
+[   27996ms] [ERROR] Failed to load resource: net::ERR_CERT_COMMON_NAME_INVALID @ https://collector.faphouse2.com/?log=xplayer_ui:0

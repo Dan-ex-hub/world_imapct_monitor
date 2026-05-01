@@ -40,7 +40,7 @@ export function useEnvLayer(layerType: EnvLayerType) {
   const path = layerTypeToPath(layerType)
   const endpoint = layerType === 'none' || !path ? null : `/api/env/${path}`
 
-  const { data, isLoading, error } = useSWR<EnvLayerData | { wind: EnvLayerData; temperature_anomaly: EnvLayerData }>(
+  const { data, isLoading, error } = useSWR<any>(
     endpoint,
     fetcher,
     {
@@ -51,12 +51,12 @@ export function useEnvLayer(layerType: EnvLayerType) {
 
   useEffect(() => {
     if (data) {
-      // Handle weather endpoint which returns both wind and temp data
+      // Weather endpoint returns both wind and temp
       if ('wind' in data && 'temperature_anomaly' in data) {
         if (layerType === 'wind') {
-          setEnvLayerData(data.wind)
+          setEnvLayerData((data as any).wind)
         } else if (layerType === 'temperature_anomaly') {
-          setEnvLayerData(data.temperature_anomaly)
+          setEnvLayerData((data as any).temperature_anomaly)
         }
       } else {
         setEnvLayerData(data as EnvLayerData)
