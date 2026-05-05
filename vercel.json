@@ -2,48 +2,39 @@
   "crons": [
     {
       "path": "/api/forex/refresh",
-      "schedule": "0 0 * * *",
-      "comment": "Every 24 hours. Forex refresh."
+      "schedule": "0 0 * * *"
     },
     {
       "path": "/api/rss/poll",
-      "schedule": "0 0 * * *",
-      "comment": "Every 24 hours. Polls RSS feeds and analyzes with AI (News layer)."
+      "schedule": "0 0 * * *"
     },
     {
       "path": "/api/env/earthquakes",
-      "schedule": "0 0 * * *",
-      "comment": "Every 24 hours. USGS earthquake feed."
+      "schedule": "0 0 * * *"
     },
     {
       "path": "/api/env/wildfires",
-      "schedule": "0 0 * * *",
-      "comment": "Every 24 hours. NASA EONET wildfires."
+      "schedule": "0 0 * * *"
     },
     {
       "path": "/api/env/storms",
-      "schedule": "0 0 * * *",
-      "comment": "Every 24 hours. NASA EONET storms and hurricanes."
+      "schedule": "0 0 * * *"
     },
     {
       "path": "/api/env/aqi",
-      "schedule": "0 0 * * *",
-      "comment": "Every 24 hours. Open-Meteo Air Quality heatmap."
+      "schedule": "0 0 * * *"
     },
     {
       "path": "/api/env/weather",
-      "schedule": "0 0 * * *",
-      "comment": "Every 24 hours. Open-Meteo wind and temperature heatmap."
+      "schedule": "0 0 * * *"
     },
     {
       "path": "/api/env/sea-temp",
-      "schedule": "0 0 * * *",
-      "comment": "Every 24 hours. Open-Meteo Marine sea surface temperature heatmap."
+      "schedule": "0 0 * * *"
     },
     {
       "path": "/api/cron/cleanup",
-      "schedule": "0 0 * * *",
-      "comment": "Every 24 hours. Purges all data older than 3 days (72 hours)."
+      "schedule": "0 0 * * *"
     }
   ]
 }
