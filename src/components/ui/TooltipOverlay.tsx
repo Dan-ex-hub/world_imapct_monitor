@@ -5,6 +5,7 @@ import { ImpactBadge } from "./ImpactBadge";
 import { CategoryBadge } from "./CategoryBadge";
 import { formatDistanceToNow } from "date-fns";
 import type { HoveredEnvPoint } from "@/store/useGlobeStore";
+import { gradientColor, AQI_STOPS, AQI_MAX } from "@/components/globe/heatmap.utils";
 
 // ── Wind direction label ─────────────────────────────────────────────────────
 function windDir(deg: number): string {
@@ -14,12 +15,8 @@ function windDir(deg: number): string {
 
 // ── AQI colour ───────────────────────────────────────────────────────────────
 function aqiColor(aqi: number): string {
-  if (aqi <= 50) return "#00e400";
-  if (aqi <= 100) return "#ffff00";
-  if (aqi <= 150) return "#ff7e00";
-  if (aqi <= 200) return "#ff0000";
-  if (aqi <= 300) return "#8f3f97";
-  return "#7e0023";
+  const [r, g, b] = gradientColor(Math.max(0, aqi) / AQI_MAX, AQI_STOPS as [number, number, number][]);
+  return `rgb(${r}, ${g}, ${b})`;
 }
 
 // ── Env point tooltip ────────────────────────────────────────────────────────

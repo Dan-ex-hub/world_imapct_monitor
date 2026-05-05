@@ -817,6 +817,11 @@ const GlobeRenderer = forwardRef<GlobeRef, GlobeRendererProps>(
         if (container.contains(renderer.domElement)) {
           container.removeChild(renderer.domElement);
         }
+
+        // Reset refs so StrictMode double-mount doesn't break event syncing
+        prevEventsRef.current = [];
+        rippleMarkersRef.current = [];
+        hitMeshesRef.current.clear();
       };
     }, [
       createStarfield,

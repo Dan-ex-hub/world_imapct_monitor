@@ -1,0 +1,2679 @@
+
+
+=== FILE: src\app\loading.tsx ===
+
+1| export default function Loading() {
+2|   return (
+3|     <div className="min-h-screen flex items-center justify-center bg-bg-primary">
+4|       <div className="flex flex-col items-center gap-4">
+5|         <div className="w-12 h-12 rounded-full border-2 border-impact-critical border-t-transparent animate-spin" />
+6|         <p className="text-text-secondary font-display text-sm tracking-wide">
+7|           LOADING IMPACT DATA...
+8|         </p>
+9|       </div>
+10|     </div>
+11|   )
+12| }
+13| 
+
+
+=== FILE: src\app\page.tsx ===
+
+1| "use client";
+2| 
+3| import { useRef, useCallback, useEffect, useState } from "react";
+4| import dynamic from "next/dynamic";
+5| import AppShell from "@/components/layout/AppShell";
+6| import GlobeWrapper from "@/components/globe/GlobeWrapper";
+7| import { EventModal } from "@/components/ui/EventModal";
+8| import { TooltipOverlay } from "@/components/ui/TooltipOverlay";
+9| import { NewsInsightPanel } from '@/components/ui/NewsInsightPanel'
+10| import { EnvDataPanel } from "@/components/ui/EnvDataPanel";
+11| import { NewsTicker } from "@/components/ui/NewsTicker";
+12| import { EnvLayerPanel } from "@/components/ui/EnvLayerPanel";
+13| import { PlaybackControls } from "@/components/ui/PlaybackControls";
+14| import { useRealtimeEvents } from "@/lib/realtime/useRealtimeEvents";
+15| import { useEnvLayer } from "@/hooks/useEnvLayer";
+16| import { useGlobeStore } from "@/store/useGlobeStore";
+17| import type { GlobeRef } from "@/components/globe/GlobeRenderer";
+18| import type { GlobeEvent } from "@/store/types";
+19| import type { HoveredEnvPoint } from "@/store/useGlobeStore";
+20| 
+21| // 2D map loaded client-side only (Leaflet requires window)
+22| const MapView2D = dynamic(() => import("@/components/map/MapView2D"), {
+23|   ssr: false,
+24|   loading: () => (
+25|     <div className="w-full h-full flex items-center justify-center"
+26|          style={{ background: "#050d1a", color: "#8aaccc", fontSize: 14 }}>
+27|       Loading 2D Map…
+28|     </div>
+29|   ),
+30| });
+31| 
+32| export default function Home() {
+33|   const [viewMode, setViewMode] = useState<"globe" | "map">("globe");
+34|   const globeRef = useRef<GlobeRef>(null);
+35|   const newsEvents = useGlobeStore((s) => s.events);
+36|   const setEvents = useGlobeStore((s) => s.setEvents);
+37|   const setSelectedEvent = useGlobeStore((s) => s.setSelectedEvent);
+38|   const setHoveredEvent = useGlobeStore((s) => s.setHoveredEvent);
+39|   const setHoveredEnvPoint = useGlobeStore((s) => s.setHoveredEnvPoint);
+40|   const activeEnvLayer = useGlobeStore((s) => s.activeEnvLayer);
+41|   const envLayerData = useGlobeStore((s) => s.envLayerData);
+42|   const filters = useGlobeStore((s) => s.filters);
+43| 
+44|   // Subscribe to realtime events from Supabase
+45|   useRealtimeEvents();
+46| 
+47|   // Fetch environmental layer data when layer changes
+48|   useEnvLayer(activeEnvLayer);
+49| 
+50|   // ── Dev-mode cron heartbeat ──────────────────────────────────────────────
+51|   // Vercel crons don't run locally. This fires every minute in development
+52|   // to simulate the cron schedule (forex rotation, env data refresh, etc.).
+53|   useEffect(() => {
+54|     if (process.env.NODE_ENV !== "development") return;
+55| 
+56|     const fireHeartbeat = () => {
+57|       fetch("/api/cron/heartbeat").catch(() => {});
+58|     };
+59| 
+60|     // Fire immediately on mount, then every 60 seconds
+61|     fireHeartbeat();
+62|     const interval = setInterval(fireHeartbeat, 60_000);
+63|     return () => clearInterval(interval);
+64|   }, []);
+65| 
+66|   // On first load with no events: trigger Gemini to generate 20 fresh events.
+67|   // The heartbeat handles hourly refreshes after that.
+68|   useEffect(() => {
+69|     if (newsEvents.length === 0) {
+70|       fetch("/api/news/gemini").catch(() => {});
+71|     }
+72|   }, []); // eslint-disable-line react-hooks/exhaustive-deps
+73| 
+74|   // ── Apply filters to news events ──────────────────────────────────────────
+75|   // When categories or impact levels are selected, only events matching ALL
+76|   // active filter criteria appear as ripple markers on the globe.
+77|   const applyFilters = useCallback(
+78|     (events: GlobeEvent[]): GlobeEvent[] => {
+79|       let filtered = events;
+80| 
+81|       // Time range filter
+82|       const hoursMap: Record<string, number> = {
+83|         "1h": 1,
+84|         "6h": 6,
+85|         "24h": 24,
+86|         "48h": 48,
+87|       };
+88|       const hours = hoursMap[filters.timeRange] ?? 48;
+89|       const cutoff = Date.now() - hours * 3_600_000;
+90|       filtered = filtered.filter(
+91|         (e) => new Date(e.publishedAt).getTime() >= cutoff,
+92|       );
+93| 
+94|       // Category filter — if any are selected, only show those categories
+95|       if (filters.categories.length > 0) {
+96|         filtered = filtered.filter((e) =>
+97|           filters.categories.includes(e.category),
+98|         );
+99|       }
+100| 
+101|       // Impact level filter — if any are selected, only show those levels
+102|       if (filters.impactLevels.length > 0) {
+103|         filtered = filtered.filter((e) =>
+104|           filters.impactLevels.includes(e.impactLevel),
+105|         );
+106|       }
+107| 
+108|       // Search query filter
+109|       if (filters.searchQuery.trim()) {
+110|         const q = filters.searchQuery.toLowerCase();
+111|         filtered = filtered.filter(
+112|           (e) =>
+113|             e.headline.toLowerCase().includes(q) ||
+114|             e.country.toLowerCase().includes(q) ||
+115|             e.summary.toLowerCase().includes(q),
+116|         );
+117|       }
+118| 
+119|       return filtered;
+120|     },
+121|     [filters],
+122|   );
+123| 
+124|   // Convert environmental data to event markers
+125|   // Heatmap layers (wind, temp, aqi, sea_temp): hide news ripples — heatmap IS the visualization
+126|   // Discrete layers (earthquakes, fires, storms): show those events as ripple markers
+127|   // None: show all news events as ripples (filtered by active filters)
+128|   const displayEvents = useCallback((): GlobeEvent[] => {
+129|     // Heatmap layers — no ripple markers, the heatmap covers the globe
+130|     if (
+131|       ["wind", "temperature_anomaly", "aqi", "sea_temp"].includes(
+132|         activeEnvLayer,
+133|       )
+134|     ) {
+135|       return [];
+136|     }
+137| 
+138|     if (activeEnvLayer === "none") {
+139|       // Filter out events with invalid coordinates (0,0 = Gulf of Guinea)
+140|       const validEvents = applyFilters(newsEvents).filter(
+141|         (e) => !(Math.abs(e.lat) < 0.1 && Math.abs(e.lon) < 0.1)
+142|       )
+143| 
+144|       // ── Pick 5 per tier spread across the 0–47h window ─────────────────
+145|       // Instead of always taking the 5 newest, we divide 47 hours into 5 buckets
+146|       // and pick one event per bucket. This gives the globe events from "just now"
+147|       // AND from several hours ago, covering different regions at different times.
+148|       // Any unfilled buckets fall back to newest-available.
+149|       const spreadPick = (tier: GlobeEvent[]): GlobeEvent[] => {
+150|         const MAX = 5
+151|         if (tier.length <= MAX) return tier
+152| 
+153|         const now = Date.now()
+154|         const windowMs = 47 * 3_600_000            // 47h total window
+155|         const bucketMs  = windowMs / MAX            // ~9.4h per bucket
+156|         const picked: GlobeEvent[] = []
+157|         const usedIds = new Set<string>()
+158| 
+159|         // bucket 0 = oldest end, bucket 4 = freshest end
+160|         for (let i = 0; i < MAX; i++) {
+161|           const bucketEnd   = now - (MAX - 1 - i) * bucketMs
+162|           const bucketStart = bucketEnd - bucketMs
+163|           const inBucket = tier
+164|             .filter(e => {
+165|               const t = new Date(e.publishedAt).getTime()
+166|               return t >= bucketStart && t < bucketEnd && !usedIds.has(e.id)
+167|             })
+168|             .sort((a, b) => new Date(b.publishedAt).getTime() - new Date(a.publishedAt).getTime())
+169|           if (inBucket.length > 0) {
+170|             picked.push(inBucket[0])
+171|             usedIds.add(inBucket[0].id)
+172|           }
+173|         }
+174| 
+175|         // Fill any empty buckets with the newest events not yet selected
+176|         if (picked.length < MAX) {
+177|           const remaining = tier
+178|             .filter(e => !usedIds.has(e.id))
+179|             .sort((a, b) => new Date(b.publishedAt).getTime() - new Date(a.publishedAt).getTime())
+180|           picked.push(...remaining.slice(0, MAX - picked.length))
+181|         }
+182| 
+183|         return picked
+184|       }
+185| 
+186|       const tierEvents = (level: GlobeEvent['impactLevel']) =>
+187|         validEvents.filter(e => e.impactLevel === level)
+188| 
+189|       const chosen = [
+190|         ...spreadPick(tierEvents('Critical')),
+191|         ...spreadPick(tierEvents('High')),
+192|         ...spreadPick(tierEvents('Medium')),
+193|         ...spreadPick(tierEvents('Low')),
+194|       ]
+195| 
+196|       // ── Spread events from the same location so each shows as its own ripple ──
+197|       // Without jitter, multiple events from the same country stack on the same
+198|       // pixel and appear as one dot. Golden-angle spiral gives each a unique spot.
+199|       const seen = new Map<string, number>()
+200|       return chosen.map((e) => {
+201|         const key = `${Math.round(e.lat * 10)},${Math.round(e.lon * 10)}`
+202|         const idx = seen.get(key) ?? 0
+203|         seen.set(key, idx + 1)
+204|         if (idx === 0) return e
+205| 
+206|         const angle  = (idx * 137.5 * Math.PI) / 180  // golden angle
+207|         const radius = 1.5 + idx * 0.8                 // grows per collision (°)
+208|         return { ...e, lat: e.lat + radius * Math.sin(angle), lon: e.lon + radius * Math.cos(angle) }
+209|       })
+210|     }
+211| 
+212|     // Convert environmental data to GlobeEvent format
+213|     const envEvents: GlobeEvent[] = [];
+214| 
+215|     if (activeEnvLayer === "earthquakes" && envLayerData?.earthquakes) {
+216|       envLayerData.earthquakes.forEach((quake) => {
+217|         const impactLevel: GlobeEvent["impactLevel"] =
+218|           quake.magnitude >= 6.0
+219|             ? "Critical"
+220|             : quake.magnitude >= 5.0
+221|               ? "High"
+222|               : quake.magnitude >= 4.0
+223|                 ? "Medium"
+224|                 : "Low";
+225| 
+226|         envEvents.push({
+227|           id: quake.id,
+228|           headline: `M${quake.magnitude} Earthquake`,
+229|           country: quake.location,
+230|           lat: quake.lat,
+231|           lon: quake.lon,
+232|           impactLevel,
+233|           category: "Natural Disaster",
+234|           summary: `Magnitude ${quake.magnitude} earthquake at depth of ${quake.depth}km. ${quake.location}`,
+235|           sentiment: "Negative",
+236|           forexImpacts: [],
+237|           confidenceScore: 100,
+238|           isMarketMoving: quake.magnitude >= 6.0,
+239|           publishedAt: quake.time,
+240|           expiresAt: new Date(Date.now() + 86400000).toISOString(),
+241|           sourceUrl: quake.url,
+242|           createdBy: "ai-auto",
+243|         });
+244|       });
+245|     }
+246| 
+247|     if (activeEnvLayer === "wildfires" && envLayerData?.wildfires) {
+248|       envLayerData.wildfires.forEach((fire) => {
+249|         envEvents.push({
+250|           id: fire.id,
+251|           headline: fire.title,
+252|           country: fire.title.split(",").pop()?.trim() || "Unknown",
+253|           lat: fire.lat,
+254|           lon: fire.lon,
+255|           impactLevel: "High",
+256|           category: "Natural Disaster",
+257|           summary: `Active wildfire: ${fire.title}. Started: ${new Date(fire.date).toLocaleDateString()}`,
+258|           sentiment: "Negative",
+259|           forexImpacts: [],
+260|           confidenceScore: 100,
+261|           isMarketMoving: false,
+262|           publishedAt: fire.date,
+263|           expiresAt: new Date(Date.now() + 86400000).toISOString(),
+264|           sourceUrl: `https://eonet.gsfc.nasa.gov/`,
+265|           createdBy: "ai-auto",
+266|         });
+267|       });
+268|     }
+269| 
+270|     if (activeEnvLayer === "storms" && envLayerData?.storms) {
+271|       envLayerData.storms.forEach((storm) => {
+272|         const isHurricane =
+273|           storm.category?.toLowerCase().includes("hurricane") ?? false;
+274|         envEvents.push({
+275|           id: storm.id,
+276|           headline: storm.title,
+277|           country: storm.title.split(",").pop()?.trim() || "Unknown",
+278|           lat: storm.lat,
+279|           lon: storm.lon,
+280|           impactLevel: isHurricane ? "Critical" : "High",
+281|           category: "Natural Disaster",
+282|           summary: `${storm.category || "Storm"}: ${storm.title}`,
+283|           sentiment: "Negative",
+284|           forexImpacts: [],
+285|           confidenceScore: 100,
+286|           isMarketMoving: isHurricane,
+287|           publishedAt: storm.date,
+288|           expiresAt: new Date(Date.now() + 86400000).toISOString(),
+289|           sourceUrl: `https://eonet.gsfc.nasa.gov/`,
+290|           createdBy: "ai-auto",
+291|         });
+292|       });
+293|     }
+294| 
+295|     return envEvents;
+296|   }, [activeEnvLayer, envLayerData, newsEvents, applyFilters]);
+297| 
+298|   const events = displayEvents();
+299| 
+300|   const handleEventClick = useCallback(
+301|     (event: GlobeEvent) => {
+302|       console.log("[ImpactGlobe] Event clicked:", event.headline);
+303|       // Open modal
+304|       setSelectedEvent(event);
+305|       // Fly to the event location
+306|       globeRef.current?.flyTo(event.lat, event.lon);
+307|     },
+308|     [setSelectedEvent],
+309|   );
+310| 
+311|   const handleEnvHover = useCallback(
+312|     (point: HoveredEnvPoint | null, pos?: { x: number; y: number }) => {
+313|       setHoveredEnvPoint(point, pos);
+314|     },
+315|     [setHoveredEnvPoint],
+316|   );
+317| 
+318|   const handleEventHover = useCallback(
+319|     (event: GlobeEvent | null) => {
+320|       if (event) {
+321|         console.log("[ImpactGlobe] Hovering:", event.headline);
+322|         // Update store with hovered event
+323|         setHoveredEvent(event.id, { x: 0, y: 0 }); // Position will be updated by raycaster
+324|       } else {
+325|         setHoveredEvent(null);
+326|       }
+327|     },
+328|     [setHoveredEvent],
+329|   );
+330| 
+331|   return (
+332|     <AppShell>
+333|       {/* ── View mode toggle ── */}
+334|       <div style={{
+335|         position: "absolute", top: 80, left: 20, zIndex: 50,
+336|         display: "flex", gap: 0, borderRadius: 10,
+337|         overflow: "hidden",
+338|         border: "1px solid rgba(100,150,255,0.2)",
+339|         boxShadow: "0 4px 20px rgba(0,0,0,0.5)",
+340|         backdropFilter: "blur(12px)",
+341|       }}>
+342|         {(["globe", "map"] as const).map((mode) => (
+343|           <button
+344|             key={mode}
+345|             onClick={() => setViewMode(mode)}
+346|             style={{
+347|               padding: "7px 18px",
+348|               fontSize: 12, fontWeight: 700,
+349|               letterSpacing: "0.06em",
+350|               textTransform: "uppercase",
+351|               background: viewMode === mode
+352|                 ? "rgba(59,130,246,0.35)"
+353|                 : "rgba(5,13,26,0.85)",
+354|               color: viewMode === mode ? "#93c5fd" : "#4a6a8a",
+355|               border: "none", cursor: "pointer",
+356|               borderRight: mode === "globe" ? "1px solid rgba(100,150,255,0.15)" : "none",
+357|               transition: "all .2s",
+358|             }}
+359|           >
+360|             {mode === "globe" ? "🌍 Globe" : "🗺️ Map"}
+361|           </button>
+362|         ))}
+363|       </div>
+364| 
+365|       {/* ── 3D Globe ── */}
+366|       {viewMode === "globe" && (
+367|         <GlobeWrapper
+368|           ref={globeRef}
+369|           events={events}
+370|           onEventClick={handleEventClick}
+371|           onEventHover={handleEventHover}
+372|           onEnvHover={handleEnvHover}
+373|           activeEnvLayer={activeEnvLayer}
+374|           envLayerData={envLayerData}
+375|         />
+376|       )}
+377| 
+378|       {/* ── 2D Leaflet Map ── */}
+379|       {viewMode === "map" && (
+380|         <div className="absolute inset-0" style={{ zIndex: 1 }}>
+381|           <MapView2D
+382|             events={events}
+383|             activeEnvLayer={activeEnvLayer}
+384|             envLayerData={envLayerData}
+385|             onEventClick={handleEventClick}
+386|           />
+387|         </div>
+388|       )}
+389| 
+390|       {/* Gradient vignette overlay for depth */}
+391|       <div
+392|         className="pointer-events-none absolute inset-0 z-10"
+393|         style={{
+394|           background:
+395|             "radial-gradient(ellipse at center, transparent 40%, rgba(5,10,20,0.7) 100%)",
+396|         }}
+397|       />
+398| 
+399|       {/* Right sidebar - show EnvDataPanel if env layer active, otherwise NewsInsightPanel */}
+400|       {activeEnvLayer !== "none" ? <EnvDataPanel /> : <NewsInsightPanel />}
+401| 
+402|       {/* Environmental layer controls */}
+403|       <EnvLayerPanel />
+404| 
+405|       {/* Playback controls */}
+406|       <PlaybackControls />
+407| 
+408|       {/* News ticker */}
+409|       <NewsTicker />
+410| 
+411|       {/* Tooltip overlay */}
+412|       <TooltipOverlay />
+413| 
+414|       {/* Event modal */}
+415|       <EventModal />
+416|     </AppShell>
+417|   );
+418| }
+419| 
+
+
+=== FILE: src\components\globe\GlobeRenderer.tsx ===
+
+1| "use client";
+2| 
+3| import {
+4|   useRef,
+5|   useEffect,
+6|   useCallback,
+7|   useImperativeHandle,
+8|   forwardRef,
+9| } from "react";
+10| import * as THREE from "three";
+11| import { OrbitControls } from "three/examples/jsm/controls/OrbitControls.js";
+12| import { latLonToVector3, sunPosition } from "@/lib/geo/coordinates";
+13| import { IMPACT_COLORS, RIPPLE_CONFIG, easeInOut } from "./ripple.utils";
+14| import {
+15|   createHeatmapTexture,
+16|   findNearestWindPoint,
+17|   findNearestTempPoint,
+18|   findNearestAQIPoint,
+19|   findNearestSeaTempPoint,
+20| } from "./heatmap.utils";
+21| import type { GlobeEvent, ScreenPosition } from "@/store/types";
+22| import type { HoveredEnvPoint } from "@/store/useGlobeStore";
+23| 
+24| // ─── Public ref interface ────────────────────────────────────────────────
+25| export interface GlobeRef {
+26|   flyTo: (lat: number, lon: number) => void;
+27| }
+28| 
+29| // ─── Props ───────────────────────────────────────────────────────────────
+30| interface GlobeRendererProps {
+31|   events: GlobeEvent[];
+32|   onEventClick: (event: GlobeEvent) => void;
+33|   onEventHover: (event: GlobeEvent | null) => void;
+34|   onEnvHover: (
+35|     point: HoveredEnvPoint | null,
+36|     screenPos?: { x: number; y: number },
+37|   ) => void;
+38|   hoveredEventScreenPos: React.MutableRefObject<Map<string, ScreenPosition>>;
+39|   activeEnvLayer: import("@/store/types").EnvLayerType;
+40|   envLayerData: import("@/store/types").EnvLayerData | null;
+41| }
+42| 
+43| // ─── GeoJSON types ───────────────────────────────────────────────────────
+44| interface GeoJsonGeometry {
+45|   type: string;
+46|   coordinates: number[][][] | number[][][][];
+47| }
+48| interface GeoJsonFeature {
+49|   type: string;
+50|   properties: { NAME?: string; ADMIN?: string; [key: string]: unknown };
+51|   geometry: GeoJsonGeometry;
+52| }
+53| interface GeoJsonCollection {
+54|   type: string;
+55|   features: GeoJsonFeature[];
+56| }
+57| 
+58| // ─── Constants ───────────────────────────────────────────────────────────
+59| const GLOBE_RADIUS = 1.0;
+60| const CAMERA_DISTANCE = 2.8 * GLOBE_RADIUS;
+61| const CAMERA_MIN = 1.5;
+62| const CAMERA_MAX = 4.0;
+63| const FLY_TO_DURATION = 1200;
+64| const STAR_COUNT = 2000;
+65| const STAR_RADIUS = 300;
+66| const AUTO_ROTATE_RESUME_MS = 4000;
+67| const SUN_UPDATE_INTERVAL_MS = 60_000;
+68| 
+69| const EARTH_DAY_URL =
+70|   "https://unpkg.com/three-globe/example/img/earth-day.jpg";
+71| const EARTH_NIGHT_URL =
+72|   "https://unpkg.com/three-globe/example/img/earth-night.jpg";
+73| const COUNTRY_BORDERS_URL =
+74|   "https://raw.githubusercontent.com/nvkelso/natural-earth-vector/master/geojson/ne_110m_admin_0_countries.geojson";
+75| 
+76| // ─── Ripple marker internal type ─────────────────────────────────────────
+77| interface RippleMarker {
+78|   eventId: string;
+79|   group: THREE.Group;
+80|   rings: THREE.Mesh[];
+81|   coreDot: THREE.Mesh;
+82|   impactLevel: GlobeEvent["impactLevel"];
+83| }
+84| 
+85| // ─── Component ───────────────────────────────────────────────────────────
+86| const GlobeRenderer = forwardRef<GlobeRef, GlobeRendererProps>(
+87|   function GlobeRenderer(
+88|     {
+89|       events,
+90|       onEventClick,
+91|       onEventHover,
+92|       onEnvHover,
+93|       hoveredEventScreenPos,
+94|       activeEnvLayer,
+95|       envLayerData,
+96|     },
+97|     ref,
+98|   ) {
+99|     const containerRef = useRef<HTMLDivElement>(null);
+100| 
+101|     // Three.js core refs
+102|     const sceneRef = useRef<THREE.Scene | null>(null);
+103|     const cameraRef = useRef<THREE.PerspectiveCamera | null>(null);
+104|     const rendererRef = useRef<THREE.WebGLRenderer | null>(null);
+105|     const controlsRef = useRef<OrbitControls | null>(null);
+106|     const frameIdRef = useRef<number>(0);
+107| 
+108|     // Scene object refs
+109|     const markersGroupRef = useRef<THREE.Group | null>(null);
+110|     const rippleMarkersRef = useRef<RippleMarker[]>([]);
+111|     const hitMeshesRef = useRef<Map<string, THREE.Mesh>>(new Map());
+112|     const earthMeshRef = useRef<THREE.Mesh | null>(null);
+113|     const heatmapTextureRef = useRef<THREE.CanvasTexture | null>(null);
+114|     const heatmapMeshRef = useRef<THREE.Mesh | null>(null);
+115| 
+116|     // Interaction refs
+117|     const raycasterRef = useRef(new THREE.Raycaster());
+118|     const mouseRef = useRef(new THREE.Vector2(-999, -999));
+119|     const autoRotateTimerRef = useRef<ReturnType<typeof setTimeout> | null>(
+120|       null,
+121|     );
+122|     const sunIntervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
+123|     const dirLightRef = useRef<THREE.DirectionalLight | null>(null);
+124|     // Sun direction uniform — shared with the earth ShaderMaterial
+125|     const sunUniformRef = useRef<{ value: THREE.Vector3 }>({ value: new THREE.Vector3(1, 0, 0) });
+126| 
+127|     // FlyTo animation ref
+128|     const flyToAnimRef = useRef<{
+129|       startTime: number;
+130|       startPos: THREE.Vector3;
+131|       endPos: THREE.Vector3;
+132|     } | null>(null);
+133| 
+134|     // Track events for hover/click callbacks via ref (avoids stale closures)
+135|     const eventsRef = useRef<GlobeEvent[]>(events);
+136|     eventsRef.current = events;
+137|     const onEventClickRef = useRef(onEventClick);
+138|     onEventClickRef.current = onEventClick;
+139|     const onEventHoverRef = useRef(onEventHover);
+140|     onEventHoverRef.current = onEventHover;
+141|     const onEnvHoverRef = useRef(onEnvHover);
+142|     onEnvHoverRef.current = onEnvHover;
+143| 
+144|     // Refs for active env layer + data (avoids stale closures in animation loop)
+145|     const activeEnvLayerRef = useRef(activeEnvLayer);
+146|     activeEnvLayerRef.current = activeEnvLayer;
+147|     const envLayerDataRef = useRef(envLayerData);
+148|     envLayerDataRef.current = envLayerData;
+149| 
+150|     // Previous events for diffing
+151|     const prevEventsRef = useRef<GlobeEvent[]>([]);
+152| 
+153|     // ─── Create starfield ────────────────────────────────────────────────
+154|     const createStarfield = useCallback((): THREE.Points => {
+155|       const positions = new Float32Array(STAR_COUNT * 3);
+156|       for (let i = 0; i < STAR_COUNT; i++) {
+157|         // Uniform distribution on sphere surface
+158|         const theta = Math.random() * Math.PI * 2;
+159|         const phi = Math.acos(2 * Math.random() - 1);
+160|         positions[i * 3] = STAR_RADIUS * Math.sin(phi) * Math.cos(theta);
+161|         positions[i * 3 + 1] = STAR_RADIUS * Math.sin(phi) * Math.sin(theta);
+162|         positions[i * 3 + 2] = STAR_RADIUS * Math.cos(phi);
+163|       }
+164|       const geometry = new THREE.BufferGeometry();
+165|       geometry.setAttribute(
+166|         "position",
+167|         new THREE.BufferAttribute(positions, 3),
+168|       );
+169|       const material = new THREE.PointsMaterial({
+170|         color: 0xffffff,
+171|         size: 0.5,
+172|         sizeAttenuation: true,
+173|       });
+174|       return new THREE.Points(geometry, material);
+175|     }, []);
+176| 
+177|     // ─── Create earth sphere (day texture, reliable Phong lighting) ────────
+178|     const createEarth = useCallback((): THREE.Mesh => {
+179|       const geometry = new THREE.SphereGeometry(GLOBE_RADIUS, 64, 64);
+180|       const material = new THREE.MeshPhongMaterial({
+181|         color: new THREE.Color(0x112040),
+182|         shininess: 8,
+183|         specular: new THREE.Color(0x1a3a6e),
+184|       });
+185|       const loader = new THREE.TextureLoader();
+186|       loader.load(EARTH_DAY_URL, (texture) => {
+187|         texture.colorSpace = THREE.SRGBColorSpace;
+188|         texture.anisotropy = 4;
+189|         material.map = texture;
+190|         material.color.set(0xffffff);
+191|         material.needsUpdate = true;
+192|       });
+193|       return new THREE.Mesh(geometry, material);
+194|     }, []);
+195| 
+196|     // ─── City lights — night-only shader ──────────────────────────────────
+197|     // nightFactor=1 on dark side, 0 on day side — discard keeps day perfectly clean
+198|     const createCityLights = useCallback((): THREE.Mesh => {
+199|       const geometry = new THREE.SphereGeometry(GLOBE_RADIUS * 1.001, 64, 64);
+200|       const nightTex: { value: THREE.Texture | null } = { value: null };
+201|       const material = new THREE.ShaderMaterial({
+202|         uniforms: {
+203|           nightTexture: nightTex,
+204|           sunDirection: sunUniformRef.current,
+205|         },
+206|         vertexShader: /* glsl */`
+207|           varying vec3 vWorldNormal;
+208|           varying vec2 vUv;
+209|           void main() {
+210|             vUv = uv;
+211|             vWorldNormal = normalize(mat3(modelMatrix) * normal);
+212|             gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
+213|           }
+214|         `,
+215|         fragmentShader: /* glsl */`
+216|           uniform sampler2D nightTexture;
+217|           uniform vec3 sunDirection;
+218|           varying vec3 vWorldNormal;
+219|           varying vec2 vUv;
+220|           void main() {
+221|             float cosAngle = dot(vWorldNormal, normalize(sunDirection));
+222|             // nightFactor: 1.0 = full night, 0.0 = full day
+223|             float nightFactor = smoothstep(0.20, -0.20, cosAngle);
+224|             if (nightFactor <= 0.01) discard;
+225|             vec4 city = texture2D(nightTexture, vUv);
+226|             // Amplify 3.5x and tint warm golden (street light color)
+227|             vec3 warm = vec3(
+228|               city.r * 1.15,   // boost red for warm gold
+229|               city.g * 0.95,   // slight green
+230|               city.b * 0.55    // cut blue — street lights are not blue
+231|             ) * 3.5;
+232|             gl_FragColor = vec4(warm * nightFactor, nightFactor);
+233|           }
+234|         `,
+235|         transparent: true,
+236|         depthWrite: false,
+237|         blending: THREE.AdditiveBlending,
+238|       });
+239|       const loader = new THREE.TextureLoader();
+240|       loader.load(EARTH_NIGHT_URL, (t) => {
+241|         t.colorSpace = THREE.SRGBColorSpace; t.anisotropy = 4;
+242|         nightTex.value = t; material.needsUpdate = true;
+243|       });
+244|       return new THREE.Mesh(geometry, material);
+245|     }, []);
+246| 
+247|     // ─── Create atmosphere halo ──────────────────────────────────────────
+248|     const createAtmosphere = useCallback((): THREE.Mesh => {
+249|       const geometry = new THREE.SphereGeometry(GLOBE_RADIUS * 1.15, 32, 32);
+250|       const material = new THREE.MeshPhongMaterial({
+251|         color: 0x4488ff,
+252|         transparent: true,
+253|         opacity: 0.06,
+254|         side: THREE.BackSide,
+255|         depthWrite: false,
+256|       });
+257|       return new THREE.Mesh(geometry, material);
+258|     }, []);
+259| 
+260|     // ─── Load country borders (borders only, no labels) ──────────────────
+261|     const loadCountryBorders = useCallback((scene: THREE.Scene) => {
+262|       fetch(COUNTRY_BORDERS_URL)
+263|         .then((res) => res.json())
+264|         .then((geojson: GeoJsonCollection) => {
+265|           const lineMaterial = new THREE.LineBasicMaterial({
+266|             color: 0x334466,
+267|             transparent: true,
+268|             opacity: 0.4,
+269|           });
+270|           const bordersGroup = new THREE.Group();
+271|           for (const feature of geojson.features) {
+272|             const { geometry } = feature;
+273|             const rings: number[][][] =
+274|               geometry.type === "Polygon"
+275|                 ? (geometry.coordinates as number[][][])
+276|                 : geometry.type === "MultiPolygon"
+277|                   ? (geometry.coordinates as number[][][][]).flat()
+278|                   : [];
+279|             for (const ring of rings) {
+280|               if (ring.length < 2) continue;
+281|               const points: THREE.Vector3[] = [];
+282|               for (const coord of ring) {
+283|                 points.push(latLonToVector3(coord[1], coord[0], GLOBE_RADIUS * 1.001));
+284|               }
+285|               bordersGroup.add(new THREE.LineSegments(
+286|                 new THREE.BufferGeometry().setFromPoints(points), lineMaterial
+287|               ));
+288|             }
+289|           }
+290|           scene.add(bordersGroup);
+291|         })
+292|         .catch((err) => console.warn("Failed to load country borders:", err));
+293|     }, []);
+294| 
+295|     // ─── Create ripple marker for event ──────────────────────────────────
+296|     const createRippleMarker = useCallback(
+297|       (event: GlobeEvent): RippleMarker => {
+298|         const group = new THREE.Group();
+299|         const color = IMPACT_COLORS[event.impactLevel];
+300|         const config = RIPPLE_CONFIG[event.impactLevel];
+301|         const position = latLonToVector3(
+302|           event.lat,
+303|           event.lon,
+304|           GLOBE_RADIUS + 0.005,
+305|         );
+306| 
+307|         const rings: THREE.Mesh[] = [];
+308| 
+309|         // Create 3 rings with phase offsets at 0%, 33%, 66%
+310|         for (let i = 0; i < config.ringCount; i++) {
+311|           const ringGeo = new THREE.RingGeometry(0.0, 0.05, 32);
+312|           const ringMat = new THREE.MeshBasicMaterial({
+313|             color: new THREE.Color(color),
+314|             transparent: true,
+315|             side: THREE.DoubleSide,
+316|             depthWrite: false,
+317|           });
+318|           const ring = new THREE.Mesh(ringGeo, ringMat);
+319|           rings.push(ring);
+320|           group.add(ring);
+321|         }
+322| 
+323|         // Core dot (small sphere)
+324|         const dotGeo = new THREE.SphereGeometry(config.coreRadius, 16, 16);
+325|         const dotMat = new THREE.MeshBasicMaterial({
+326|           color: new THREE.Color(color),
+327|           transparent: true,
+328|           opacity: 0.9,
+329|         });
+330|         const coreDot = new THREE.Mesh(dotGeo, dotMat);
+331|         group.add(coreDot);
+332| 
+333|         // Position and orient the group to face outward from globe surface
+334|         group.position.copy(position);
+335|         group.lookAt(group.position.clone().multiplyScalar(2));
+336| 
+337|         return {
+338|           eventId: event.id,
+339|           group,
+340|           rings,
+341|           coreDot,
+342|           impactLevel: event.impactLevel,
+343|         };
+344|       },
+345|       [],
+346|     );
+347| 
+348|     // ─── Animate ripples each frame ──────────────────────────────────────
+349|     const animateRipples = useCallback((time: number) => {
+350|       for (const marker of rippleMarkersRef.current) {
+351|         const config = RIPPLE_CONFIG[marker.impactLevel];
+352| 
+353|         for (let i = 0; i < marker.rings.length; i++) {
+354|           // Phase offsets: ring 0 = 0%, ring 1 = 33%, ring 2 = 66%
+355|           const phaseOffset = (i / config.ringCount) * config.duration;
+356|           const progress =
+357|             ((time + phaseOffset) % config.duration) / config.duration; // 0 → 1
+358|           const scale = progress * config.maxScale;
+359|           const opacity = 1.0 - progress;
+360| 
+361|           marker.rings[i].scale.setScalar(scale || 0.001); // Avoid zero scale
+362|           const mat = marker.rings[i].material as THREE.MeshBasicMaterial;
+363|           mat.opacity = opacity * 0.85;
+364|         }
+365| 
+366|         // Core dot pulse
+367|         const pulseScale = 0.9 + 0.2 * Math.sin(time * 0.003);
+368|         marker.coreDot.scale.setScalar(pulseScale);
+369|       }
+370|     }, []);
+371| 
+372|     // ─── Sync events to markers (diff-based) ─────────────────────────────
+373|     const syncEventMarkers = useCallback(
+374|       (eventsList: GlobeEvent[]) => {
+375|         const markersGroup = markersGroupRef.current;
+376|         if (!markersGroup) return;
+377| 
+378|         const prevIds = new Set(prevEventsRef.current.map((e) => e.id));
+379|         const newIds = new Set(eventsList.map((e) => e.id));
+380| 
+381|         // Remove stale markers
+382|         rippleMarkersRef.current = rippleMarkersRef.current.filter((m) => {
+383|           if (!newIds.has(m.eventId)) {
+384|             markersGroup.remove(m.group);
+385|             m.rings.forEach((r) => {
+386|               r.geometry.dispose();
+387|               (r.material as THREE.Material).dispose();
+388|             });
+389|             m.coreDot.geometry.dispose();
+390|             (m.coreDot.material as THREE.Material).dispose();
+391| 
+392|             // Remove hit mesh
+393|             const hitMesh = hitMeshesRef.current.get(m.eventId);
+394|             if (hitMesh) {
+395|               markersGroup.remove(hitMesh);
+396|               hitMesh.geometry.dispose();
+397|               (hitMesh.material as THREE.Material).dispose();
+398|               hitMeshesRef.current.delete(m.eventId);
+399|             }
+400|             return false;
+401|           }
+402|           return true;
+403|         });
+404| 
+405|         // Add new markers
+406|         for (const event of eventsList) {
+407|           if (!prevIds.has(event.id)) {
+408|             const marker = createRippleMarker(event);
+409|             markersGroup.add(marker.group);
+410|             rippleMarkersRef.current.push(marker);
+411| 
+412|             // Invisible hit sphere for raycasting
+413|             const hitGeo = new THREE.SphereGeometry(0.07, 8, 8);
+414|             const hitMat = new THREE.MeshBasicMaterial({ visible: false });
+415|             const hitMesh = new THREE.Mesh(hitGeo, hitMat);
+416|             hitMesh.position.copy(
+417|               latLonToVector3(event.lat, event.lon, GLOBE_RADIUS * 1.05),
+418|             );
+419|             hitMesh.userData = { eventId: event.id };
+420|             markersGroup.add(hitMesh);
+421|             hitMeshesRef.current.set(event.id, hitMesh);
+422|           }
+423|         }
+424| 
+425|         prevEventsRef.current = eventsList;
+426|       },
+427|       [createRippleMarker],
+428|     );
+429| 
+430|     // ─── Handle mouse move ───────────────────────────────────────────────
+431|     const handleMouseMove = useCallback((e: MouseEvent) => {
+432|       const container = containerRef.current;
+433|       if (!container) return;
+434|       const rect = container.getBoundingClientRect();
+435|       mouseRef.current.x = ((e.clientX - rect.left) / rect.width) * 2 - 1;
+436|       mouseRef.current.y = -((e.clientY - rect.top) / rect.height) * 2 + 1;
+437|     }, []);
+438| 
+439|     // ─── Handle click ────────────────────────────────────────────────────
+440|     const handleClick = useCallback((e: MouseEvent) => {
+441|       const camera = cameraRef.current;
+442|       if (!camera) return;
+443| 
+444|       const container = containerRef.current;
+445|       if (!container) return;
+446|       const rect = container.getBoundingClientRect();
+447|       const mouse = new THREE.Vector2(
+448|         ((e.clientX - rect.left) / rect.width) * 2 - 1,
+449|         -((e.clientY - rect.top) / rect.height) * 2 + 1,
+450|       );
+451| 
+452|       raycasterRef.current.setFromCamera(mouse, camera);
+453|       const hitMeshes = Array.from(hitMeshesRef.current.values());
+454|       const intersects = raycasterRef.current.intersectObjects(
+455|         hitMeshes,
+456|         false,
+457|       );
+458| 
+459|       if (intersects.length > 0) {
+460|         const eventId = intersects[0].object.userData?.eventId;
+461|         if (eventId) {
+462|           const event = eventsRef.current.find((ev) => ev.id === eventId);
+463|           if (event) onEventClickRef.current(event);
+464|         }
+465|       }
+466|     }, []);
+467| 
+468|     // ─── Hover raycast (called in animation loop) ────────────────────────
+469|     const performHoverRaycast = useCallback(() => {
+470|       const camera = cameraRef.current;
+471|       const container = containerRef.current;
+472|       if (!camera || !container) return;
+473| 
+474|       raycasterRef.current.setFromCamera(mouseRef.current, camera);
+475| 
+476|       // ── Heatmap layer: raycast against the earth sphere for lat/lon lookup ──
+477|       const currentLayer = activeEnvLayerRef.current;
+478|       const isHeatmapLayer = [
+479|         "wind",
+480|         "temperature_anomaly",
+481|         "aqi",
+482|         "sea_temp",
+483|       ].includes(currentLayer);
+484| 
+485|       if (isHeatmapLayer) {
+486|         const earth = earthMeshRef.current;
+487|         if (earth) {
+488|           const hits = raycasterRef.current.intersectObject(earth, false);
+489|           if (hits.length > 0) {
+490|             let hitLat = 0,
+491|               hitLon = 0;
+492|             const uv = hits[0].uv;
+493|             if (uv) {
+494|               // Three.js SphereGeometry UV: u=0→1 maps lon -180→180, v=0→1 maps lat -90→90
+495|               hitLon = uv.x * 360 - 180;
+496|               hitLat = uv.y * 180 - 90;
+497|             } else {
+498|               const point = hits[0].point.clone().normalize();
+499|               hitLon = Math.atan2(point.z, point.x) * (180 / Math.PI);
+500|               hitLat =
+501|                 Math.asin(Math.max(-1, Math.min(1, point.y))) * (180 / Math.PI);
+502|             }
+503| 
+504|             const layerData = envLayerDataRef.current;
+505|             let envPoint: HoveredEnvPoint | null = null;
+506| 
+507|             if (currentLayer === "wind" && layerData?.wind?.length) {
+508|               const p = findNearestWindPoint(layerData.wind, hitLat, hitLon);
+509|               if (p)
+510|                 envPoint = {
+511|                   type: "wind",
+512|                   lat: hitLat,
+513|                   lon: hitLon,
+514|                   speed: p.speed,
+515|                   direction: p.direction,
+516|                 };
+517|             } else if (
+518|               currentLayer === "temperature_anomaly" &&
+519|               layerData?.tempAnomalies?.length
+520|             ) {
+521|               const p = findNearestTempPoint(
+522|                 layerData.tempAnomalies,
+523|                 hitLat,
+524|                 hitLon,
+525|               );
+526|               if (p)
+527|                 envPoint = {
+528|                   type: "temperature",
+529|                   lat: hitLat,
+530|                   lon: hitLon,
+531|                   tempC: p.anomalyC,
+532|                 };
+533|             } else if (currentLayer === "aqi" && layerData?.aqi?.length) {
+534|               const p = findNearestAQIPoint(layerData.aqi, hitLat, hitLon);
+535|               if (p)
+536|                 envPoint = {
+537|                   type: "aqi",
+538|                   lat: hitLat,
+539|                   lon: hitLon,
+540|                   aqi: p.aqi,
+541|                   pm25: p.pm25,
+542|                   category: p.category,
+543|                 };
+544|             } else if (
+545|               currentLayer === "sea_temp" &&
+546|               layerData?.seaTemp?.length
+547|             ) {
+548|               const p = findNearestSeaTempPoint(
+549|                 layerData.seaTemp,
+550|                 hitLat,
+551|                 hitLon,
+552|               );
+553|               if (p)
+554|                 envPoint = {
+555|                   type: "sea_temp",
+556|                   lat: hitLat,
+557|                   lon: hitLon,
+558|                   tempC: p.tempC,
+559|                 };
+560|             }
+561| 
+562|             if (envPoint) {
+563|               container.style.cursor = "crosshair";
+564|               const rect = container.getBoundingClientRect();
+565|               const sx = ((mouseRef.current.x + 1) / 2) * rect.width;
+566|               const sy = ((-mouseRef.current.y + 1) / 2) * rect.height;
+567|               onEnvHoverRef.current(envPoint, { x: sx, y: sy });
+568|               return;
+569|             }
+570|           }
+571|         }
+572|         onEnvHoverRef.current(null);
+573|         container.style.cursor = "";
+574|         return;
+575|       }
+576| 
+577|       // ── Discrete event markers ──
+578|       const hitMeshes = Array.from(hitMeshesRef.current.values());
+579|       const intersects = raycasterRef.current.intersectObjects(
+580|         hitMeshes,
+581|         false,
+582|       );
+583| 
+584|       if (intersects.length > 0) {
+585|         const hit = intersects[0].object;
+586|         const eventId = hit.userData?.eventId;
+587|         if (eventId) {
+588|           const event = eventsRef.current.find((ev) => ev.id === eventId);
+589|           if (event) {
+590|             container.style.cursor = "pointer";
+591|             onEventHoverRef.current(event);
+592| 
+593|             const worldPos = new THREE.Vector3();
+594|             hit.getWorldPosition(worldPos);
+595|             const projected = worldPos.clone().project(camera);
+596|             const rect = container.getBoundingClientRect();
+597|             const x = ((projected.x + 1) / 2) * rect.width;
+598|             const y = ((-projected.y + 1) / 2) * rect.height;
+599|             hoveredEventScreenPos.current.set(eventId, { x, y });
+600|             return;
+601|           }
+602|         }
+603|       }
+604| 
+605|       // No hit — reset
+606|       onEventHoverRef.current(null);
+607|       onEnvHoverRef.current(null);
+608|       container.style.cursor = "";
+609|     }, [hoveredEventScreenPos]);
+610| 
+611|     // ─── INITIALIZATION ──────────────────────────────────────────────────
+612|     useEffect(() => {
+613|       const container = containerRef.current;
+614|       if (!container) return;
+615| 
+616|       // ── Scene ──
+617|       const scene = new THREE.Scene();
+618|       scene.background = new THREE.Color(0x050a14);
+619|       sceneRef.current = scene;
+620| 
+621|       // ── Camera ──
+622|       const camera = new THREE.PerspectiveCamera(
+623|         45,
+624|         container.clientWidth / container.clientHeight,
+625|         0.1,
+626|         1000,
+627|       );
+628|       camera.position.set(0, 0, CAMERA_DISTANCE);
+629|       cameraRef.current = camera;
+630| 
+631|       // ── Renderer ──
+632|       const renderer = new THREE.WebGLRenderer({
+633|         antialias: true,
+634|         alpha: true,
+635|         powerPreference: "high-performance",
+636|       });
+637|       renderer.setSize(container.clientWidth, container.clientHeight);
+638|       renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+639|       container.appendChild(renderer.domElement);
+640|       rendererRef.current = renderer;
+641| 
+642|       // ── OrbitControls ──
+643|       const controls = new OrbitControls(camera, renderer.domElement);
+644|       controls.enableDamping = true;
+645|       controls.dampingFactor = 0.07;
+646|       controls.enableZoom = true;
+647|       controls.minDistance = CAMERA_MIN;
+648|       controls.maxDistance = CAMERA_MAX;
+649|       controls.enablePan = false;
+650|       controls.autoRotate = true;
+651|       controls.autoRotateSpeed = 0.25;
+652|       controlsRef.current = controls;
+653| 
+654|       // Track interaction: stop auto-rotate immediately on start,
+655|       // resume after 4 seconds of inactivity
+656|       controls.addEventListener("start", () => {
+657|         controls.autoRotate = false;
+658|         if (autoRotateTimerRef.current) {
+659|           clearTimeout(autoRotateTimerRef.current);
+660|           autoRotateTimerRef.current = null;
+661|         }
+662|       });
+663|       controls.addEventListener("end", () => {
+664|         if (autoRotateTimerRef.current) {
+665|           clearTimeout(autoRotateTimerRef.current);
+666|         }
+667|         autoRotateTimerRef.current = setTimeout(() => {
+668|           controls.autoRotate = true;
+669|         }, AUTO_ROTATE_RESUME_MS);
+670|       });
+671| 
+672|       // ── Lighting ──
+673|       // Near-zero ambient — space has no ambient light, only sun illumination
+674|       const ambientLight = new THREE.AmbientLight(0xffffff, 0.02);
+675|       scene.add(ambientLight);
+676| 
+677|       // Directional "sun" light — only illuminates the day side
+678|       const sun = sunPosition(new Date());
+679|       const sunPos = latLonToVector3(sun.lat, sun.lon, 50);
+680|       // Initialize shader sun direction uniform
+681|       sunUniformRef.current.value.copy(sunPos.clone().normalize());
+682|       const dirLight = new THREE.DirectionalLight(0xfffaf0, 1.1);
+683|       dirLight.position.copy(sunPos);
+684|       scene.add(dirLight);
+685|       dirLightRef.current = dirLight;
+686| 
+687|       // Update sun position + shader uniform every 60 seconds
+688|       sunIntervalRef.current = setInterval(() => {
+689|         const newSun = sunPosition(new Date());
+690|         const newSunPos = latLonToVector3(newSun.lat, newSun.lon, 50);
+691|         dirLight.position.copy(newSunPos);
+692|         sunUniformRef.current.value.copy(newSunPos.clone().normalize());
+693|       }, SUN_UPDATE_INTERVAL_MS);
+694| 
+695|       // ── Star field ──
+696|       const stars = createStarfield();
+697|       scene.add(stars);
+698| 
+699|       // ── Earth sphere ──
+700|       const earth = createEarth();
+701|       scene.add(earth);
+702|       earthMeshRef.current = earth;
+703| 
+704|       // ── City lights (night-only shader — golden glow on dark side only) ──
+705|       scene.add(createCityLights());
+706| 
+707|       // ── Atmosphere halo ──
+708|       const atmosphere = createAtmosphere();
+709|       scene.add(atmosphere);
+710| 
+711|       // ── Heatmap overlay sphere ──
+712|       const heatmapGeo = new THREE.SphereGeometry(GLOBE_RADIUS * 1.002, 64, 64);
+713|       const heatmapMat = new THREE.MeshBasicMaterial({
+714|         transparent: true,
+715|         opacity: 0,
+716|         depthWrite: false,
+717|         side: THREE.FrontSide,
+718|       });
+719|       const heatmapMesh = new THREE.Mesh(heatmapGeo, heatmapMat);
+720|       scene.add(heatmapMesh);
+721|       heatmapMeshRef.current = heatmapMesh;
+722| 
+723|       // ── Country borders ──
+724|       loadCountryBorders(scene);
+725| 
+726|       // ── Markers group ──
+727|       const markersGroup = new THREE.Group();
+728|       scene.add(markersGroup);
+729|       markersGroupRef.current = markersGroup;
+730| 
+731|       // ── Event listeners ──
+732|       container.addEventListener("mousemove", handleMouseMove);
+733|       container.addEventListener("click", handleClick);
+734| 
+735|       // ── Resize observer ──
+736|       const resizeObserver = new ResizeObserver(() => {
+737|         const w = container.clientWidth;
+738|         const h = container.clientHeight;
+739|         if (w === 0 || h === 0) return;
+740|         camera.aspect = w / h;
+741|         camera.updateProjectionMatrix();
+742|         renderer.setSize(w, h);
+743|       });
+744|       resizeObserver.observe(container);
+745| 
+746|       // ── Animation loop ──
+747|       let hoverFrame = 0;
+748|       const animate = () => {
+749|         frameIdRef.current = requestAnimationFrame(animate);
+750|         const time = performance.now();
+751| 
+752|         // Animate ripple markers
+753|         animateRipples(time);
+754| 
+755|         // FlyTo camera animation
+756|         const flyAnim = flyToAnimRef.current;
+757|         if (flyAnim) {
+758|           const t = Math.min((time - flyAnim.startTime) / FLY_TO_DURATION, 1);
+759|           const eased = easeInOut(t);
+760|           camera.position.lerpVectors(flyAnim.startPos, flyAnim.endPos, eased);
+761|           camera.lookAt(0, 0, 0);
+762|           if (t >= 1) {
+763|             flyToAnimRef.current = null;
+764|             controls.enabled = true;
+765|           }
+766|         }
+767| 
+768|         // Hover raycasting (every 3 frames for perf)
+769|         hoverFrame++;
+770|         if (hoverFrame % 3 === 0) {
+771|           performHoverRaycast();
+772|         }
+773| 
+774|         controls.update();
+775|         renderer.render(scene, camera);
+776|       };
+777|       animate();
+778| 
+779|       // ── Cleanup ──
+780|       return () => {
+781|         cancelAnimationFrame(frameIdRef.current);
+782|         resizeObserver.disconnect();
+783|         container.removeEventListener("mousemove", handleMouseMove);
+784|         container.removeEventListener("click", handleClick);
+785| 
+786|         if (autoRotateTimerRef.current)
+787|           clearTimeout(autoRotateTimerRef.current);
+788|         if (sunIntervalRef.current) clearInterval(sunIntervalRef.current);
+789| 
+790|         // Dispose all Three.js resources
+791|         controls.dispose();
+792|         renderer.dispose();
+793|         scene.traverse((obj) => {
+794|           if (
+795|             obj instanceof THREE.Mesh ||
+796|             obj instanceof THREE.LineSegments ||
+797|             obj instanceof THREE.Line
+798|           ) {
+799|             obj.geometry.dispose();
+800|             if (Array.isArray(obj.material)) {
+801|               obj.material.forEach((m) => m.dispose());
+802|             } else {
+803|               (obj.material as THREE.Material).dispose();
+804|             }
+805|           }
+806|           if (obj instanceof THREE.Points) {
+807|             obj.geometry.dispose();
+808|             (obj.material as THREE.Material).dispose();
+809|           }
+810|         });
+811| 
+812|         if (heatmapMeshRef.current) {
+813|           heatmapMeshRef.current.geometry.dispose();
+814|           (heatmapMeshRef.current.material as THREE.Material).dispose();
+815|         }
+816| 
+817|         if (container.contains(renderer.domElement)) {
+818|           container.removeChild(renderer.domElement);
+819|         }
+820|       };
+821|     }, [
+822|       createStarfield,
+823|       createEarth,
+824|       createCityLights,
+825|       createAtmosphere,
+826|       loadCountryBorders,
+827|       handleMouseMove,
+828|       handleClick,
+829|       animateRipples,
+830|       performHoverRaycast,
+831|     ]);
+832| 
+833|     // ─── Sync events to markers when events change ───────────────────────
+834|       useEffect(() => {
+835|       syncEventMarkers(events);
+836|     }, [events, syncEventMarkers]);
+837| 
+838|     // ─── Apply heatmap texture when environmental layer changes ──────────
+839|     useEffect(() => {
+840|       const heatmapMesh = heatmapMeshRef.current;
+841|       if (!heatmapMesh) return;
+842| 
+843|       const material = heatmapMesh.material as THREE.MeshBasicMaterial;
+844|       const isHeatmapLayer = [
+845|         "wind",
+846|         "temperature_anomaly",
+847|         "aqi",
+848|         "sea_temp",
+849|       ].includes(activeEnvLayer);
+850| 
+851|       if (isHeatmapLayer && envLayerData) {
+852|         console.log(
+853|           "[GlobeRenderer] Applying heatmap for layer:",
+854|           activeEnvLayer,
+855|         );
+856| 
+857|         const canvas = createHeatmapTexture(activeEnvLayer, envLayerData);
+858| 
+859|         if (canvas) {
+860|           if (heatmapTextureRef.current) {
+861|             heatmapTextureRef.current.dispose();
+862|           }
+863| 
+864|           const texture = new THREE.CanvasTexture(canvas);
+865|           texture.needsUpdate = true;
+866|           heatmapTextureRef.current = texture;
+867| 
+868|           material.map = texture;
+869|           material.opacity = 0.72;
+870|           material.needsUpdate = true;
+871| 
+872|           console.log("[GlobeRenderer] Heatmap texture applied");
+873|         } else {
+874|           console.warn("[GlobeRenderer] Failed to create heatmap texture");
+875|         }
+876|       } else {
+877|         material.opacity = 0;
+878|         material.map = null;
+879|         material.needsUpdate = true;
+880| 
+881|         if (heatmapTextureRef.current) {
+882|           console.log("[GlobeRenderer] Removing heatmap texture");
+883|           heatmapTextureRef.current.dispose();
+884|           heatmapTextureRef.current = null;
+885|         }
+886|       }
+887|     }, [activeEnvLayer, envLayerData]);
+888| 
+889|     // ─── Expose flyTo via ref ────────────────────────────────────────────
+890|     useImperativeHandle(
+891|       ref,
+892|       () => ({
+893|         flyTo(lat: number, lon: number) {
+894|           const camera = cameraRef.current;
+895|           const controls = controlsRef.current;
+896|           if (!camera || !controls) return;
+897| 
+898|           // Disable controls during flight
+899|           controls.enabled = false;
+900|           controls.autoRotate = false;
+901| 
+902|           // Calculate target position at same distance from center
+903|           const targetDir = latLonToVector3(lat, lon, 1).normalize();
+904|           const dist = CAMERA_DISTANCE;
+905|           const endPos = targetDir.multiplyScalar(dist);
+906| 
+907|           flyToAnimRef.current = {
+908|             startTime: performance.now(),
+909|             startPos: camera.position.clone(),
+910|             endPos,
+911|           };
+912|         },
+913|       }),
+914|       [],
+915|     );
+916| 
+917|     return (
+918|       <div
+919|         ref={containerRef}
+920|         className="w-full h-full cursor-grab active:cursor-grabbing"
+921|         style={{ touchAction: "none", position: "relative" }}
+922|       />
+923|     );
+924|   },
+925| );
+926| 
+927| export default GlobeRenderer;
+928| 
+
+
+=== FILE: src\components\globe\GlobeWrapper.tsx ===
+
+1| "use client";
+2| 
+3| import dynamic from "next/dynamic";
+4| import { forwardRef, useRef } from "react";
+5| import type { GlobeRef } from "./GlobeRenderer";
+6| import type {
+7|   GlobeEvent,
+8|   ScreenPosition,
+9|   EnvLayerType,
+10|   EnvLayerData,
+11| } from "@/store/types";
+12| 
+13| // Props passed through to GlobeRenderer
+14| interface GlobeWrapperProps {
+15|   events: GlobeEvent[];
+16|   onEventClick: (event: GlobeEvent) => void;
+17|   onEventHover: (event: GlobeEvent | null) => void;
+18|   onEnvHover: (
+19|     point: import("@/store/useGlobeStore").HoveredEnvPoint | null,
+20|     pos?: { x: number; y: number },
+21|   ) => void;
+22|   activeEnvLayer: EnvLayerType;
+23|   envLayerData: EnvLayerData | null;
+24| }
+25| 
+26| // Dynamically import GlobeRenderer with no SSR — Three.js requires browser APIs
+27| const GlobeRendererDynamic = dynamic(() => import("./GlobeRenderer"), {
+28|   ssr: false,
+29|   loading: () => (
+30|     <div
+31|       className="w-full h-full flex items-center justify-center"
+32|       style={{ background: "#050a14" }}
+33|     >
+34|       <div className="flex flex-col items-center gap-3">
+35|         <div className="relative">
+36|           {/* Pulsing dark circle */}
+37|           <div
+38|             className="w-20 h-20 rounded-full"
+39|             style={{
+40|               background: "radial-gradient(circle, #0f1628 0%, #050a14 100%)",
+41|               border: "1px solid rgba(255,255,255,0.08)",
+42|               animation: "pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite",
+43|             }}
+44|           />
+45|           {/* Subtle spinner overlay */}
+46|           <div
+47|             className="absolute inset-1 rounded-full"
+48|             style={{
+49|               border: "2px solid transparent",
+50|               borderTopColor: "#378add",
+51|               animation: "spin 1.5s linear infinite",
+52|             }}
+53|           />
+54|         </div>
+55|         <span
+56|           className="text-xs tracking-wider"
+57|           style={{ color: "#6b6a63", fontFamily: "monospace" }}
+58|         >
+59|           INITIALIZING GLOBE...
+60|         </span>
+61|       </div>
+62|     </div>
+63|   ),
+64| });
+65| 
+66| const GlobeWrapper = forwardRef<GlobeRef, GlobeWrapperProps>(
+67|   function GlobeWrapper(
+68|     {
+69|       events,
+70|       onEventClick,
+71|       onEventHover,
+72|       onEnvHover,
+73|       activeEnvLayer,
+74|       envLayerData,
+75|     },
+76|     ref,
+77|   ) {
+78|     // Screen positions ref for tooltip placement
+79|     const hoveredEventScreenPos = useRef<Map<string, ScreenPosition>>(
+80|       new Map(),
+81|     );
+82| 
+83|     return (
+84|       <div className="absolute inset-0 z-0">
+85|         <GlobeRendererDynamic
+86|           ref={ref}
+87|           events={events}
+88|           onEventClick={onEventClick}
+89|           onEventHover={onEventHover}
+90|           onEnvHover={onEnvHover}
+91|           hoveredEventScreenPos={hoveredEventScreenPos}
+92|           activeEnvLayer={activeEnvLayer}
+93|           envLayerData={envLayerData}
+94|         />
+95|       </div>
+96|     );
+97|   },
+98| );
+99| 
+100| export default GlobeWrapper;
+101| 
+
+
+=== FILE: src\components\globe\heatmap.utils.ts ===
+
+1| /**
+2|  * Heatmap texture generation — IDW scalar field interpolation
+3|  *
+4|  * APPROACH (same as Windy, Copernicus, NOAA):
+5|  *   1. Build a coarse value grid using Inverse Distance Weighting (IDW)
+6|  *      interpolation from the sparse data points.
+7|  *   2. Map each interpolated value through an absolute colour scale.
+8|  *   3. Write RGBA pixels directly into an ImageData buffer — no canvas
+9|  *      compositing, no alpha blending between blobs.  Each pixel gets exactly
+10|  *      the colour matching its interpolated value.
+11|  *   4. Apply a single Gaussian blur pass on the 3-wide tiled canvas to
+12|  *      smooth the field without introducing seams at lon = ±180.
+13|  *
+14|  * This means:
+15|  *   - 11 m/s wind → teal/green, NOT purple
+16|  *   - 37°C        → red/orange
+17|  *   - AQI 159     → red
+18|  *   - No colour mixing from overlapping blobs (there are no blobs)
+19|  *
+20|  * COORDINATE SYSTEM (equirectangular, Three.js SphereGeometry UV):
+21|  *   pixel x = (lon + 180) / 360 * W
+22|  *   pixel y = (90  - lat) / 180 * H
+23|  */
+24| 
+25| import type {
+26|   WindPoint,
+27|   TempAnomalyPoint,
+28|   AQIPoint,
+29|   SeaTempPoint,
+30|   EnvLayerData,
+31| } from "@/store/types";
+32| 
+33| // ─── Constants ────────────────────────────────────────────────────────────────
+34| 
+35| const W = 2048; // texture width  (equirectangular)
+36| const H = 1024; // texture height
+37| 
+38| /**
+39|  * IDW grid resolution — we compute the interpolated value on a downsampled
+40|  * grid, then upsample with bilinear interpolation for smooth output.
+41|  *
+42|  * IDW_STEP = 8  →  256×128 = 32,768 cells
+43|  * With ~2800 wind points: 32,768 × 2800 = ~92M ops — fast enough for a
+44|  * one-time texture build on modern hardware (~200ms).
+45|  * K = 4 nearest neighbours is sufficient for smooth IDW on a regular grid.
+46|  */
+47| const IDW_STEP = 8; // pixel downsampling factor
+48| const IDW_GW = Math.ceil(W / IDW_STEP) + 1; // +1 so bilinear can always read [gx+1]
+49| const IDW_GH = Math.ceil(H / IDW_STEP) + 1;
+50| 
+51| // ─── Colour helpers ───────────────────────────────────────────────────────────
+52| 
+53| function lerp3(
+54|   a: [number, number, number],
+55|   b: [number, number, number],
+56|   t: number,
+57| ): [number, number, number] {
+58|   return [
+59|     Math.round(a[0] + (b[0] - a[0]) * t),
+60|     Math.round(a[1] + (b[1] - a[1]) * t),
+61|     Math.round(a[2] + (b[2] - a[2]) * t),
+62|   ];
+63| }
+64| 
+65| function gradientColor(
+66|   t: number,
+67|   stops: [number, number, number][],
+68| ): [number, number, number] {
+69|   const clamped = Math.max(0, Math.min(1, t));
+70|   const seg = clamped * (stops.length - 1);
+71|   const idx = Math.min(Math.floor(seg), stops.length - 2);
+72|   return lerp3(stops[idx], stops[idx + 1], seg - idx);
+73| }
+74| 
+75| // ─── Coordinate helpers ───────────────────────────────────────────────────────
+76| 
+77| /** lat/lon → full-res pixel */
+78| function toPixel(lat: number, lon: number): [number, number] {
+79|   return [((lon + 180) / 360) * W, ((90 - lat) / 180) * H];
+80| }
+81| 
+82| // ─── IDW interpolation ────────────────────────────────────────────────────────
+83| 
+84| /**
+85|  * Build a W/IDW_STEP × H/IDW_STEP Float32Array of interpolated values using
+86|  * Inverse Distance Weighting.
+87|  *
+88|  * For each grid cell we find the K nearest data points (by squared pixel
+89|  * distance) and weight them as 1/d².  Using pixel distance means the
+90|  * influence of each point scales correctly with the projection.
+91|  *
+92|  * power = 2 gives smooth gradients; increase to sharpen local features.
+93|  */
+94| function buildIDWGrid(
+95|   points: { px: number; py: number; value: number }[],
+96|   K = 4,
+97| ): Float32Array {
+98|   const grid = new Float32Array(IDW_GW * IDW_GH);
+99|   const KMAX = Math.min(K, points.length);
+100| 
+101|   for (let gy = 0; gy < IDW_GH; gy++) {
+102|     for (let gx = 0; gx < IDW_GW; gx++) {
+103|       const cx = gx * IDW_STEP;
+104|       const cy = gy * IDW_STEP;
+105| 
+106|       const bestD = new Float32Array(KMAX).fill(Infinity);
+107|       const bestV = new Float32Array(KMAX);
+108|       let exactVal = NaN;
+109| 
+110|       for (let i = 0; i < points.length; i++) {
+111|         const dx = cx - points[i].px;
+112|         const dy = cy - points[i].py;
+113|         const d2 = dx * dx + dy * dy;
+114| 
+115|         if (d2 < 1) {
+116|           exactVal = points[i].value;
+117|           break;
+118|         } // exact hit
+119| 
+120|         if (d2 < bestD[KMAX - 1]) {
+121|           bestD[KMAX - 1] = d2;
+122|           bestV[KMAX - 1] = points[i].value;
+123|           // Insertion sort (ascending) to keep smallest distances first
+124|           for (let j = KMAX - 1; j > 0 && bestD[j] < bestD[j - 1]; j--) {
+125|             let tmp = bestD[j];
+126|             bestD[j] = bestD[j - 1];
+127|             bestD[j - 1] = tmp;
+128|             tmp = bestV[j];
+129|             bestV[j] = bestV[j - 1];
+130|             bestV[j - 1] = tmp;
+131|           }
+132|         }
+133|       }
+134| 
+135|       if (!isNaN(exactVal)) {
+136|         grid[gy * IDW_GW + gx] = exactVal;
+137|         continue;
+138|       }
+139| 
+140|       let sumW = 0,
+141|         sumWV = 0;
+142|       for (let k = 0; k < KMAX; k++) {
+143|         if (bestD[k] === Infinity) break;
+144|         const w = 1 / bestD[k]; // power=2, but d2 already squared → w = 1/d²
+145|         sumW += w;
+146|         sumWV += w * bestV[k];
+147|       }
+148|       grid[gy * IDW_GW + gx] = sumW > 0 ? sumWV / sumW : 0;
+149|     }
+150|   }
+151| 
+152|   return grid;
+153| }
+154| 
+155| // ─── Raster rendering ─────────────────────────────────────────────────────────
+156| 
+157| /**
+158|  * Convert an IDW value grid into full-resolution RGBA using bilinear
+159|  * interpolation between grid cells — avoids the blocky nearest-neighbour
+160|  * artefacts that would otherwise show at IDW_STEP=8.
+161|  */
+162| function renderGrid(
+163|   grid: Float32Array,
+164|   colorFn: (v: number) => [number, number, number],
+165| ): ImageData {
+166|   const imgData = new ImageData(W, H);
+167|   const buf = imgData.data;
+168| 
+169|   for (let py = 0; py < H; py++) {
+170|     const fy = py / IDW_STEP;
+171|     const gy0 = Math.min(Math.floor(fy), IDW_GH - 2);
+172|     const gy1 = gy0 + 1;
+173|     const ty = fy - gy0;
+174| 
+175|     for (let px = 0; px < W; px++) {
+176|       const fx = px / IDW_STEP;
+177|       const gx0 = Math.min(Math.floor(fx), IDW_GW - 2);
+178|       const gx1 = gx0 + 1;
+179|       const tx = fx - gx0;
+180| 
+181|       // Bilinear blend of the four surrounding IDW cells
+182|       const v00 = grid[gy0 * IDW_GW + gx0];
+183|       const v10 = grid[gy0 * IDW_GW + gx1];
+184|       const v01 = grid[gy1 * IDW_GW + gx0];
+185|       const v11 = grid[gy1 * IDW_GW + gx1];
+186|       const val =
+187|         v00 * (1 - tx) * (1 - ty) +
+188|         v10 * tx * (1 - ty) +
+189|         v01 * (1 - tx) * ty +
+190|         v11 * tx * ty;
+191| 
+192|       const [r, g, b] = colorFn(val);
+193|       const i = (py * W + px) * 4;
+194|       buf[i] = r;
+195|       buf[i + 1] = g;
+196|       buf[i + 2] = b;
+197|       buf[i + 3] = 215;
+198|     }
+199|   }
+200| 
+201|   return imgData;
+202| }
+203| 
+204| // ─── Seam-safe blur ───────────────────────────────────────────────────────────
+205| 
+206| /**
+207|  * Tile the canvas 3-wide before blurring so the Gaussian kernel has real
+208|  * neighbour data at the lon=±180 seam.  Only the centre tile is returned.
+209|  */
+210| function blurSeamless(
+211|   src: HTMLCanvasElement,
+212|   blurPx: number,
+213| ): HTMLCanvasElement {
+214|   // Build 3-wide tiled canvas
+215|   const tiled = document.createElement("canvas");
+216|   tiled.width = W * 3;
+217|   tiled.height = H;
+218|   const tc = tiled.getContext("2d")!;
+219|   tc.drawImage(src, 0, 0); // left tile
+220|   tc.drawImage(src, W, 0); // centre tile
+221|   tc.drawImage(src, W * 2, 0); // right tile
+222| 
+223|   // Blur
+224|   const blurred = document.createElement("canvas");
+225|   blurred.width = W * 3;
+226|   blurred.height = H;
+227|   const bc = blurred.getContext("2d")!;
+228|   bc.filter = `blur(${blurPx}px)`;
+229|   bc.drawImage(tiled, 0, 0);
+230|   bc.filter = "none";
+231| 
+232|   // Crop centre tile
+233|   const out = document.createElement("canvas");
+234|   out.width = W;
+235|   out.height = H;
+236|   out.getContext("2d")!.drawImage(blurred, W, 0, W, H, 0, 0, W, H);
+237|   return out;
+238| }
+239| 
+240| // ─── Full pipeline ────────────────────────────────────────────────────────────
+241| 
+242| function makeHeatmap(
+243|   rawPoints: { lat: number; lon: number; value: number }[],
+244|   colorFn: (v: number) => [number, number, number],
+245|   blurPx: number,
+246| ): HTMLCanvasElement {
+247|   if (!rawPoints.length) return document.createElement("canvas");
+248| 
+249|   // Convert lat/lon to pixel coordinates
+250|   const points = rawPoints.map((p) => {
+251|     const [px, py] = toPixel(p.lat, p.lon);
+252|     return { px, py, value: p.value };
+253|   });
+254| 
+255|   // Build IDW value grid
+256|   const grid = buildIDWGrid(points);
+257| 
+258|   // Render grid → full-res RGBA canvas
+259|   const canvas = document.createElement("canvas");
+260|   canvas.width = W;
+261|   canvas.height = H;
+262|   const ctx = canvas.getContext("2d")!;
+263|   ctx.putImageData(renderGrid(grid, colorFn), 0, 0);
+264| 
+265|   // Blur with seam wrapping
+266|   return blurSeamless(canvas, blurPx);
+267| }
+268| 
+269| // ─── Colour scales (all absolute, not dataset-relative) ───────────────────────
+270| //
+271| // Each scale uses physically meaningful fixed breakpoints so the colour at
+272| // every pixel matches what you'd see on Windy / NOAA / Copernicus.
+273| 
+274| // Wind: 0 → 38 m/s   (Beaufort-based)
+275| const WIND_STOPS: [number, number, number][] = [
+276|   [20, 60, 220], //  0 m/s – deep blue (calm)
+277|   [0, 160, 255], //  5 m/s – sky blue
+278|   [0, 210, 180], // 10 m/s – teal
+279|   [80, 220, 50], // 15 m/s – yellow-green
+280|   [255, 230, 0], // 20 m/s – yellow
+281|   [255, 140, 0], // 25 m/s – orange
+282|   [240, 40, 20], // 30 m/s – red
+283|   [140, 0, 180], // 38 m/s – purple (hurricane)
+284| ];
+285| const WIND_MAX = 38;
+286| 
+287| // Temperature: -40 → 45°C  (ERA5/Windy palette)
+288| const TEMP_STOPS: [number, number, number][] = [
+289|   [100, 0, 200], // -40°C – deep violet
+290|   [0, 40, 230], // -20°C – blue
+291|   [30, 120, 255], // -10°C – cornflower
+292|   [140, 200, 255], //  -2°C – ice blue
+293|   [230, 240, 255], //   5°C – near-white
+294|   [255, 250, 180], //  15°C – pale yellow
+295|   [255, 180, 40], //  25°C – amber
+296|   [255, 60, 0], //  35°C – red-orange
+297|   [180, 0, 0], //  45°C – deep red
+298| ];
+299| const TEMP_MIN = -40;
+300| const TEMP_RANGE = 85; // 45 - (-40)
+301| 
+302| // AQI: 0 → 500  (US EPA absolute breakpoints)
+303| const AQI_STOPS: [number, number, number][] = [
+304|   [0, 228, 0], //   0 – Good
+305|   [255, 255, 0], // 100 – Moderate
+306|   [255, 126, 0], // 200 – Unhealthy for Sensitive
+307|   [255, 0, 0], // 300 – Unhealthy
+308|   [143, 63, 151], // 400 – Very Unhealthy
+309|   [126, 0, 35], // 500 – Hazardous
+310| ];
+311| const AQI_MAX = 500;
+312| 
+313| // Sea temperature: -2 → 32°C  (NOAA/Copernicus)
+314| const SEA_STOPS: [number, number, number][] = [
+315|   [200, 230, 255], // -2°C – icy pale blue
+316|   [0, 60, 200], //  2°C – deep blue
+317|   [0, 140, 230], //  8°C – medium blue
+318|   [0, 210, 210], // 14°C – cyan
+319|   [0, 200, 120], // 18°C – teal-green
+320|   [80, 210, 0], // 22°C – green-yellow
+321|   [255, 220, 0], // 26°C – yellow
+322|   [255, 120, 0], // 29°C – orange
+323|   [220, 10, 10], // 32°C – red
+324| ];
+325| const SEA_MIN = -2;
+326| const SEA_RANGE = 34; // 32 - (-2)
+327| 
+328| // ─── Public exports ───────────────────────────────────────────────────────────
+329| 
+330| export function createWindHeatmap(data: WindPoint[]): HTMLCanvasElement {
+331|   return makeHeatmap(
+332|     data.map((p) => ({ lat: p.lat, lon: p.lon, value: p.speed })),
+333|     (v) => gradientColor(Math.max(0, v) / WIND_MAX, WIND_STOPS),
+334|     14,
+335|   );
+336| }
+337| 
+338| export function createTempAnomalyHeatmap(
+339|   data: TempAnomalyPoint[],
+340| ): HTMLCanvasElement {
+341|   return makeHeatmap(
+342|     data.map((p) => ({ lat: p.lat, lon: p.lon, value: p.anomalyC })),
+343|     (v) => gradientColor(Math.max(0, v - TEMP_MIN) / TEMP_RANGE, TEMP_STOPS),
+344|     18,
+345|   );
+346| }
+347| 
+348| export function createAQIHeatmap(data: AQIPoint[]): HTMLCanvasElement {
+349|   return makeHeatmap(
+350|     data.map((p) => ({ lat: p.lat, lon: p.lon, value: p.aqi })),
+351|     (v) => gradientColor(Math.max(0, v) / AQI_MAX, AQI_STOPS),
+352|     16,
+353|   );
+354| }
+355| 
+356| export function createSeaTempHeatmap(data: SeaTempPoint[]): HTMLCanvasElement {
+357|   return makeHeatmap(
+358|     data.map((p) => ({ lat: p.lat, lon: p.lon, value: p.tempC })),
+359|     (v) => gradientColor(Math.max(0, v - SEA_MIN) / SEA_RANGE, SEA_STOPS),
+360|     18,
+361|   );
+362| }
+363| 
+364| // ─── Nearest-point lookup (hover tooltip) ────────────────────────────────────
+365| 
+366| function dist2(lat1: number, lon1: number, lat2: number, lon2: number): number {
+367|   const dlat = lat1 - lat2;
+368|   const dlon = lon1 - lon2;
+369|   return dlat * dlat + dlon * dlon;
+370| }
+371| 
+372| export function findNearestWindPoint(
+373|   data: WindPoint[],
+374|   lat: number,
+375|   lon: number,
+376| ): WindPoint | null {
+377|   if (!data.length) return null;
+378|   let best = data[0],
+379|     bestD = dist2(lat, lon, best.lat, best.lon);
+380|   for (let i = 1; i < data.length; i++) {
+381|     const d = dist2(lat, lon, data[i].lat, data[i].lon);
+382|     if (d < bestD) {
+383|       bestD = d;
+384|       best = data[i];
+385|     }
+386|   }
+387|   return best;
+388| }
+389| 
+390| export function findNearestTempPoint(
+391|   data: TempAnomalyPoint[],
+392|   lat: number,
+393|   lon: number,
+394| ): TempAnomalyPoint | null {
+395|   if (!data.length) return null;
+396|   let best = data[0],
+397|     bestD = dist2(lat, lon, best.lat, best.lon);
+398|   for (let i = 1; i < data.length; i++) {
+399|     const d = dist2(lat, lon, data[i].lat, data[i].lon);
+400|     if (d < bestD) {
+401|       bestD = d;
+402|       best = data[i];
+403|     }
+404|   }
+405|   return best;
+406| }
+407| 
+408| export function findNearestAQIPoint(
+409|   data: AQIPoint[],
+410|   lat: number,
+411|   lon: number,
+412| ): AQIPoint | null {
+413|   if (!data.length) return null;
+414|   let best = data[0],
+415|     bestD = dist2(lat, lon, best.lat, best.lon);
+416|   for (let i = 1; i < data.length; i++) {
+417|     const d = dist2(lat, lon, data[i].lat, data[i].lon);
+418|     if (d < bestD) {
+419|       bestD = d;
+420|       best = data[i];
+421|     }
+422|   }
+423|   return best;
+424| }
+425| 
+426| export function findNearestSeaTempPoint(
+427|   data: SeaTempPoint[],
+428|   lat: number,
+429|   lon: number,
+430| ): SeaTempPoint | null {
+431|   if (!data.length) return null;
+432|   let best = data[0],
+433|     bestD = dist2(lat, lon, best.lat, best.lon);
+434|   for (let i = 1; i < data.length; i++) {
+435|     const d = dist2(lat, lon, data[i].lat, data[i].lon);
+436|     if (d < bestD) {
+437|       bestD = d;
+438|       best = data[i];
+439|     }
+440|   }
+441|   return best;
+442| }
+443| 
+444| // ─── Dispatcher ───────────────────────────────────────────────────────────────
+445| 
+446| export function createHeatmapTexture(
+447|   layerType: string,
+448|   layerData: EnvLayerData | null,
+449| ): HTMLCanvasElement | null {
+450|   if (!layerData) return null;
+451|   switch (layerType) {
+452|     case "wind":
+453|       return layerData.wind?.length ? createWindHeatmap(layerData.wind) : null;
+454|     case "temperature_anomaly":
+455|       return layerData.tempAnomalies?.length
+456|         ? createTempAnomalyHeatmap(layerData.tempAnomalies)
+457|         : null;
+458|     case "aqi":
+459|       return layerData.aqi?.length ? createAQIHeatmap(layerData.aqi) : null;
+460|     case "sea_temp":
+461|       return layerData.seaTemp?.length
+462|         ? createSeaTempHeatmap(layerData.seaTemp)
+463|         : null;
+464|     default:
+465|       return null;
+466|   }
+467| }
+468| 
+
+
+=== FILE: src\components\globe\ripple.utils.ts ===
+
+1| import type { ImpactLevel } from '@/store/types'
+2| 
+3| /** Impact level → hex color mapping */
+4| export const IMPACT_COLORS: Record<ImpactLevel, string> = {
+5|   Critical: '#e24b4a',
+6|   High: '#ef9f27',
+7|   Medium: '#1d9e75',
+8|   Low: '#378add',
+9| }
+10| 
+11| /** Ripple animation configuration per impact level */
+12| export const RIPPLE_CONFIG: Record<ImpactLevel, {
+13|   maxScale: number
+14|   duration: number   // ms for one full ring expansion
+15|   ringCount: number
+16|   coreRadius: number
+17| }> = {
+18|   Critical: { maxScale: 1.6, duration: 1000, ringCount: 3, coreRadius: 0.014 },
+19|   High:     { maxScale: 1.3, duration: 1400, ringCount: 3, coreRadius: 0.012 },
+20|   Medium:   { maxScale: 1.0, duration: 2000, ringCount: 3, coreRadius: 0.010 },
+21|   Low:      { maxScale: 0.8, duration: 2800, ringCount: 3, coreRadius: 0.009 },
+22| }
+23| 
+24| /** Convert hex color to normalized RGB tuple [0-1, 0-1, 0-1] */
+25| export function hexToRgb(hex: string): [number, number, number] {
+26|   const r = parseInt(hex.slice(1, 3), 16) / 255
+27|   const g = parseInt(hex.slice(3, 5), 16) / 255
+28|   const b = parseInt(hex.slice(5, 7), 16) / 255
+29|   return [r, g, b]
+30| }
+31| 
+32| /** Smooth ease-in-out interpolation (quadratic) */
+33| export function easeInOut(t: number): number {
+34|   return t < 0.5 ? 2 * t * t : -1 + (4 - 2 * t) * t
+35| }
+36| 
+
+
+=== FILE: src\components\globe\shaders.ts ===
+
+1| /** Custom GLSL shaders for the globe atmosphere and effects */
+2| 
+3| // Atmosphere glow — renders a soft halo around the earth
+4| export const atmosphereVertexShader = `
+5|   varying vec3 vNormal;
+6|   varying vec3 vPosition;
+7|   void main() {
+8|     vNormal = normalize(normalMatrix * normal);
+9|     vPosition = (modelViewMatrix * vec4(position, 1.0)).xyz;
+10|     gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
+11|   }
+12| `
+13| 
+14| export const atmosphereFragmentShader = `
+15|   uniform vec3 glowColor;
+16|   uniform float intensity;
+17|   uniform float power;
+18|   varying vec3 vNormal;
+19|   varying vec3 vPosition;
+20|   void main() {
+21|     vec3 viewDir = normalize(-vPosition);
+22|     float fresnel = pow(1.0 - abs(dot(viewDir, vNormal)), power);
+23|     gl_FragColor = vec4(glowColor, fresnel * intensity);
+24|   }
+25| `
+26| 
+27| // Earth surface — adds subtle grid overlay and fresnel rim glow
+28| export const earthVertexShader = `
+29|   varying vec2 vUv;
+30|   varying vec3 vNormal;
+31|   varying vec3 vPosition;
+32|   void main() {
+33|     vUv = uv;
+34|     vNormal = normalize(normalMatrix * normal);
+35|     vPosition = (modelViewMatrix * vec4(position, 1.0)).xyz;
+36|     gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
+37|   }
+38| `
+39| 
+40| export const earthFragmentShader = `
+41|   uniform sampler2D earthTexture;
+42|   uniform float gridOpacity;
+43|   uniform vec3 rimColor;
+44|   uniform float rimPower;
+45|   varying vec2 vUv;
+46|   varying vec3 vNormal;
+47|   varying vec3 vPosition;
+48| 
+49|   void main() {
+50|     // Sample earth night texture
+51|     vec4 texColor = texture2D(earthTexture, vUv);
+52| 
+53|     // Darken the texture to match our theme (multiply by dark tint)
+54|     vec3 color = texColor.rgb * 0.7;
+55| 
+56|     // Add subtle lat/lon grid lines
+57|     float lat = vUv.y * 180.0;
+58|     float lon = vUv.x * 360.0;
+59|     float latLine = 1.0 - smoothstep(0.45, 0.5, abs(fract(lat / 30.0) - 0.5));
+60|     float lonLine = 1.0 - smoothstep(0.45, 0.5, abs(fract(lon / 30.0) - 0.5));
+61|     float grid = max(latLine, lonLine) * gridOpacity;
+62|     color += vec3(0.15, 0.25, 0.45) * grid;
+63| 
+64|     // Fresnel rim glow
+65|     vec3 viewDir = normalize(-vPosition);
+66|     float rim = 1.0 - max(dot(viewDir, vNormal), 0.0);
+67|     rim = pow(rim, rimPower);
+68|     color += rimColor * rim * 0.4;
+69| 
+70|     gl_FragColor = vec4(color, 1.0);
+71|   }
+72| `
+73| 
+
+
+=== FILE: src\components\layout\AppShell.tsx ===
+
+1| "use client";
+2| 
+3| import { ReactNode } from "react";
+4| import TopBar from "./TopBar";
+5| 
+6| interface AppShellProps {
+7|   children: ReactNode;
+8| }
+9| 
+10| export default function AppShell({ children }: AppShellProps) {
+11|   return (
+12|     <div className="relative h-screen w-screen overflow-hidden bg-bg-primary">
+13|       <TopBar />
+14|       <main className="absolute inset-0 top-16 bottom-0 w-full">
+15|         {children}
+16|       </main>
+17|     </div>
+18|   );
+19| }
+20| 
+
+
+=== FILE: src\components\layout\Footer.tsx ===
+
+1| 'use client'
+2| 
+3| import Link from 'next/link'
+4| 
+5| export function Footer() {
+6|   return (
+7|     <footer className="fixed bottom-0 left-0 right-0 z-[5] bg-bg-surface/80 backdrop-blur-sm border-t border-border-subtle">
+8|       <div className="max-w-7xl mx-auto px-4 py-3">
+9|         <div className="flex flex-col sm:flex-row items-center justify-between gap-3 text-xs text-text-muted">
+10|           {/* Data Attribution */}
+11|           <div className="flex flex-wrap items-center justify-center sm:justify-start gap-x-4 gap-y-1">
+12|             <span className="font-medium text-text-secondary">Data sources:</span>
+13|             <a
+14|               href="https://open-meteo.com"
+15|               target="_blank"
+16|               rel="noopener noreferrer"
+17|               className="hover:text-text-primary transition-colors"
+18|             >
+19|               Open-Meteo
+20|             </a>
+21|             <a
+22|               href="https://openaq.org"
+23|               target="_blank"
+24|               rel="noopener noreferrer"
+25|               className="hover:text-text-primary transition-colors"
+26|             >
+27|               OpenAQ
+28|             </a>
+29|             <a
+30|               href="https://earthquake.usgs.gov"
+31|               target="_blank"
+32|               rel="noopener noreferrer"
+33|               className="hover:text-text-primary transition-colors"
+34|             >
+35|               USGS
+36|             </a>
+37|             <a
+38|               href="https://eonet.gsfc.nasa.gov"
+39|               target="_blank"
+40|               rel="noopener noreferrer"
+41|               className="hover:text-text-primary transition-colors"
+42|             >
+43|               NASA EONET
+44|             </a>
+45|             <a
+46|               href="https://www.weather.gov"
+47|               target="_blank"
+48|               rel="noopener noreferrer"
+49|               className="hover:text-text-primary transition-colors"
+50|             >
+51|               NOAA
+52|             </a>
+53|           </div>
+54| 
+55|           {/* Legal Links */}
+56|           <div className="flex items-center gap-4">
+57|             <Link
+58|               href="/privacy"
+59|               className="hover:text-text-primary transition-colors"
+60|             >
+61|               Privacy
+62|             </Link>
+63|             <Link
+64|               href="/terms"
+65|               className="hover:text-text-primary transition-colors"
+66|             >
+67|               Terms
+68|             </Link>
+69|             <span>© 2026 ImpactGlobe</span>
+70|           </div>
+71|         </div>
+72|       </div>
+73|     </footer>
+74|   )
+75| }
+76| 
+
+
+=== FILE: src\components\layout\TopBar.tsx ===
+
+1| "use client";
+2| 
+3| import { useGlobeStore } from "@/store/useGlobeStore";
+4| import { FilterBar } from "@/components/ui/FilterBar";
+5| 
+6| export default function TopBar() {
+7|   const events = useGlobeStore((s) => s.events);
+8| 
+9|   return (
+10|     <header className="relative z-40 flex h-16 items-center justify-between border-b border-border-subtle bg-bg-surface/80 px-6 backdrop-blur-sm">
+11|       {/* Logo + live indicator */}
+12|       <div className="flex items-center gap-4 shrink-0">
+13|         <h1 className="font-display text-xl font-bold text-text-primary">
+14|           Impact<span className="text-impact-critical">Globe</span>
+15|         </h1>
+16|         <div className="flex items-center gap-2 rounded-full bg-impact-critical/10 px-3 py-1">
+17|           <div className="h-2 w-2 animate-pulse rounded-full bg-impact-critical" />
+18|           <span className="text-xs font-medium uppercase tracking-wide text-impact-critical">
+19|             Live
+20|           </span>
+21|         </div>
+22|       </div>
+23| 
+24|       {/* Filter bar — centre */}
+25|       <div className="flex-1 px-8">
+26|         <FilterBar />
+27|       </div>
+28| 
+29|       {/* Event counter — total tracked vs displayed on globe */}
+30|       <div className="flex items-center gap-2 rounded-lg bg-bg-card px-4 py-2 shrink-0">
+31|         <div className="h-2 w-2 rounded-full bg-env-wind" />
+32|         <span className="text-sm font-medium text-text-secondary">
+33|           {events.filter(e => !(Math.abs(e.lat) < 0.1 && Math.abs(e.lon) < 0.1)).length} EVENTS TRACKED
+34|         </span>
+35|       </div>
+36|     </header>
+37|   );
+38| }
+39| 
+
+
+=== FILE: src\components\map\MapView2D.tsx ===
+
+1| "use client";
+2| 
+3| import { useEffect, useRef, useCallback, useState } from "react";
+4| import type { GlobeEvent, EnvLayerData } from "@/store/types";
+5| import type { HoveredEnvPoint } from "@/store/useGlobeStore";
+6| import { useGlobeStore } from "@/store/useGlobeStore";
+7| 
+8| const IMPACT_COLORS: Record<string, string> = {
+9|   Critical: "#ff2d55", High: "#ff9f0a", Medium: "#ffd60a", Low: "#34c759",
+10| };
+11| 
+12| interface Props {
+13|   events: GlobeEvent[];
+14|   activeEnvLayer: string;
+15|   envLayerData: EnvLayerData | null;
+16|   onEventClick?: (event: GlobeEvent) => void;
+17| }
+18| 
+19| type RGB = [number, number, number];
+20| 
+21| function lerp(a: number, b: number, t: number) { return a + (b - a) * t; }
+22| 
+23| // ── Color ramps — IDENTICAL to heatmap.utils.ts on the 3D globe ─────────
+24| // gradientColor maps a 0-1 normalised value through a set of equally-spaced
+25| // colour stops (same algorithm as the 3D renderer).
+26| function gradientColor(t: number, stops: RGB[]): RGB {
+27|   const clamped = Math.max(0, Math.min(1, t));
+28|   const seg = clamped * (stops.length - 1);
+29|   const idx = Math.min(Math.floor(seg), stops.length - 2);
+30|   const frac = seg - idx;
+31|   const a = stops[idx], b = stops[idx + 1];
+32|   return [
+33|     Math.round(a[0] + (b[0] - a[0]) * frac),
+34|     Math.round(a[1] + (b[1] - a[1]) * frac),
+35|     Math.round(a[2] + (b[2] - a[2]) * frac),
+36|   ];
+37| }
+38| 
+39| // Wind: 0 → 38 m/s (Beaufort-based, same as 3D globe)
+40| const WIND_STOPS: RGB[]  = [
+41|   [20, 60, 220], [0, 160, 255], [0, 210, 180],
+42|   [80, 220, 50], [255, 230, 0], [255, 140, 0],
+43|   [240, 40, 20], [140, 0, 180],
+44| ];
+45| const WIND_MAX = 38;
+46| 
+47| // Temperature: -40 → 45°C (ERA5/Windy palette, same as 3D globe)
+48| const TEMP_STOPS: RGB[] = [
+49|   [100, 0, 200], [0, 40, 230], [30, 120, 255], [140, 200, 255],
+50|   [230, 240, 255], [255, 250, 180], [255, 180, 40], [255, 60, 0], [180, 0, 0],
+51| ];
+52| const TEMP_MIN   = -40;
+53| const TEMP_RANGE = 85;   // 45 - (-40)
+54| 
+55| // AQI: 0 → 500 (US EPA, same as 3D globe)
+56| const AQI_STOPS: RGB[] = [
+57|   [0, 228, 0], [255, 255, 0], [255, 126, 0],
+58|   [255, 0, 0], [143, 63, 151], [126, 0, 35],
+59| ];
+60| const AQI_MAX = 500;
+61| 
+62| // Sea temp: -2 → 32°C (NOAA/Copernicus, same as 3D globe)
+63| const SEA_STOPS: RGB[] = [
+64|   [200, 230, 255], [0, 60, 200], [0, 140, 230], [0, 210, 210],
+65|   [0, 200, 120], [80, 210, 0], [255, 220, 0], [255, 120, 0], [220, 10, 10],
+66| ];
+67| const SEA_MIN   = -2;
+68| const SEA_RANGE = 34;   // 32 - (-2)
+69| 
+70| // Map a raw scalar value to the correct RGB via the same normalisation as 3D
+71| function layerColor(layer: string, val: number): RGB {
+72|   switch (layer) {
+73|     case "wind":                return gradientColor(Math.max(0, val) / WIND_MAX, WIND_STOPS);
+74|     case "temperature_anomaly": return gradientColor(Math.max(0, val - TEMP_MIN) / TEMP_RANGE, TEMP_STOPS);
+75|     case "aqi":                 return gradientColor(Math.max(0, val) / AQI_MAX, AQI_STOPS);
+76|     case "sea_temp":            return gradientColor(Math.max(0, val - SEA_MIN) / SEA_RANGE, SEA_STOPS);
+77|     default:                    return [128, 128, 128];
+78|   }
+79| }
+80| 
+81| // ── Grid stores raw scalar values (NOT colors) for smooth interpolation ───
+82| type ValGrid = { vals: (number | null)[]; GW: number; GH: number; step: number; layer: string };
+83| 
+84| function buildValGrid(layer: string, data: EnvLayerData | null): ValGrid | null {
+85|   const step = 2.5;
+86|   const GW = Math.ceil(360 / step) + 1;
+87|   const GH = Math.ceil(180 / step) + 1;
+88|   const vals: (number | null)[] = new Array(GW * GH).fill(null);
+89| 
+90|   const put = (lat: number, lon: number, v: number) => {
+91|     const i = Math.round((lon + 180) / step);
+92|     const j = Math.round((90 - lat)  / step);
+93|     if (i >= 0 && i < GW && j >= 0 && j < GH) vals[j * GW + i] = v;
+94|   };
+95| 
+96|   if (!data) return null;
+97| 
+98|   if (layer === "wind" && data.wind) {
+99|     data.wind.forEach((p) => put(p.lat, p.lon, p.speed ?? 0));
+100|   } else if (layer === "temperature_anomaly" && data.tempAnomalies) {
+101|     data.tempAnomalies.forEach((p) => put(p.lat, p.lon, p.anomalyC));
+102|   } else if (layer === "aqi" && data.aqi) {
+103|     data.aqi.forEach((p) => { if (p.aqi !== undefined) put(p.lat, p.lon, p.aqi); });
+104|   } else if (layer === "sea_temp" && data.seaTemp) {
+105|     data.seaTemp.forEach((p) => put(p.lat, p.lon, p.tempC ?? 0));
+106|   } else {
+107|     return null;
+108|   }
+109| 
+110|   // BFS flood-fill
+111|   const queue: number[] = [];
+112|   for (let k = 0; k < vals.length; k++) if (vals[k] !== null) queue.push(k);
+113|   let head = 0;
+114|   const dirs = [-1, 1, -GW, GW];
+115|   while (head < queue.length) {
+116|     const k = queue[head++];
+117|     for (const d of dirs) {
+118|       const nk = k + d;
+119|       if (nk >= 0 && nk < vals.length && vals[nk] === null) {
+120|         if (d === -1 && k % GW === 0) continue;
+121|         if (d === 1 && k % GW === GW - 1) continue;
+122|         vals[nk] = vals[k];
+123|         queue.push(nk);
+124|       }
+125|     }
+126|   }
+127| 
+128|   // Gaussian blur (6 passes) for smooth gradients
+129|   let src = vals as number[];
+130|   for (let pass = 0; pass < 6; pass++) {
+131|     const dst = new Array<number>(GW * GH);
+132|     for (let j = 0; j < GH; j++) {
+133|       for (let i = 0; i < GW; i++) {
+134|         let sum = 0, weight = 0;
+135|         for (let dj = -1; dj <= 1; dj++) {
+136|           for (let di = -1; di <= 1; di++) {
+137|             const ni = i + di, nj = j + dj;
+138|             if (ni < 0 || ni >= GW || nj < 0 || nj >= GH) continue;
+139|             const w = (di === 0 && dj === 0) ? 4 : (di === 0 || dj === 0) ? 2 : 1;
+140|             sum += src[nj * GW + ni] * w;
+141|             weight += w;
+142|           }
+143|         }
+144|         dst[j * GW + i] = sum / weight;
+145|       }
+146|     }
+147|     src = dst;
+148|   }
+149| 
+150|   return { vals: src as (number | null)[], GW, GH, step, layer };
+151| }
+152| 
+153| /** Sample interpolated scalar value (not color) at a lat/lon */
+154| function sampleScalar(g: ValGrid, lat: number, lon: number): number | null {
+155|   const fi = (lon + 180) / g.step;
+156|   const fj = (90 - lat)  / g.step;
+157|   const i0 = Math.floor(fi), j0 = Math.floor(fj);
+158|   const i1 = Math.min(i0 + 1, g.GW - 1), j1 = Math.min(j0 + 1, g.GH - 1);
+159|   const tx = fi - i0, ty = fj - j0;
+160|   const v00 = g.vals[j0 * g.GW + i0];
+161|   const v10 = g.vals[j0 * g.GW + i1];
+162|   const v01 = g.vals[j1 * g.GW + i0];
+163|   const v11 = g.vals[j1 * g.GW + i1];
+164|   if (v00 === null && v10 === null && v01 === null && v11 === null) return null;
+165|   const s00 = v00 ?? v10 ?? v01 ?? v11 ?? 0;
+166|   const s10 = v10 ?? v00 ?? v11 ?? v01 ?? 0;
+167|   const s01 = v01 ?? v00 ?? v11 ?? v10 ?? 0;
+168|   const s11 = v11 ?? v10 ?? v01 ?? v00 ?? 0;
+169|   return lerp(lerp(s00, s10, tx), lerp(s01, s11, tx), ty);
+170| }
+171| 
+172| function sampleGrid(g: ValGrid, lat: number, lon: number): RGB | null {
+173|   const val = sampleScalar(g, lat, lon);
+174|   if (val === null) return null;
+175|   return layerColor(g.layer, val);
+176| }
+177| 
+178| // ── Build a HoveredEnvPoint from the interpolated grid ───────────────────
+179| function buildHoverPoint(
+180|   layer: string,
+181|   grid: ValGrid,
+182|   data: EnvLayerData,
+183|   lat: number,
+184|   lon: number,
+185| ): HoveredEnvPoint | null {
+186|   const val = sampleScalar(grid, lat, lon);
+187|   if (val === null) return null;
+188| 
+189|   if (layer === "wind" && data.wind) {
+190|     // Find nearest wind point for direction
+191|     let nearest = data.wind[0];
+192|     let minD = Infinity;
+193|     for (const p of data.wind) {
+194|       const d = (p.lat - lat) ** 2 + (p.lon - lon) ** 2;
+195|       if (d < minD) { minD = d; nearest = p; }
+196|     }
+197|     return { type: "wind", lat, lon, speed: val, direction: nearest?.direction ?? 0 };
+198|   }
+199|   if (layer === "temperature_anomaly") {
+200|     return { type: "temperature", lat, lon, tempC: val };
+201|   }
+202|   if (layer === "aqi" && data.aqi) {
+203|     // Find nearest AQI point for category & pm25
+204|     let nearest = data.aqi[0];
+205|     let minD = Infinity;
+206|     for (const p of data.aqi) {
+207|       const d = (p.lat - lat) ** 2 + (p.lon - lon) ** 2;
+208|       if (d < minD) { minD = d; nearest = p; }
+209|     }
+210|     return {
+211|       type: "aqi", lat, lon, aqi: Math.round(val),
+212|       pm25: nearest?.pm25 ?? 0, category: nearest?.category ?? "Unknown",
+213|     };
+214|   }
+215|   if (layer === "sea_temp") {
+216|     return { type: "sea_temp", lat, lon, tempC: val };
+217|   }
+218|   return null;
+219| }
+220| 
+221| export default function MapView2D({ events, activeEnvLayer, envLayerData, onEventClick }: Props) {
+222|   const containerRef    = useRef<HTMLDivElement>(null);
+223|   // eslint-disable-next-line @typescript-eslint/no-explicit-any
+224|   const mapRef          = useRef<any>(null);
+225|   // eslint-disable-next-line @typescript-eslint/no-explicit-any
+226|   const markersLayerRef = useRef<any>(null);
+227|   const envCleanupRef   = useRef<(() => void) | null>(null);
+228|   const initRef         = useRef(false);
+229|   // Stores the current grid so the mousemove handler can sample it
+230|   const gridRef         = useRef<ValGrid | null>(null);
+231| 
+232|   // Trigger state so the heatmap effect re-runs when the map becomes ready
+233|   const [mapReady, setMapReady] = useState(false);
+234| 
+235|   const setHoveredEnvPoint = useGlobeStore((s) => s.setHoveredEnvPoint);
+236| 
+237|   // ── Init Leaflet map (guarded against double-init from StrictMode / HMR) ─
+238|   useEffect(() => {
+239|     const el = containerRef.current;
+240|     if (!el || mapRef.current || initRef.current) return;
+241|     // eslint-disable-next-line @typescript-eslint/no-explicit-any
+242|     if ((el as any)._leaflet_id) return;
+243|     initRef.current = true;
+244| 
+245|     import("leaflet").then((L) => {
+246|       if (!containerRef.current) { initRef.current = false; return; }
+247|       // eslint-disable-next-line @typescript-eslint/no-explicit-any
+248|       if ((containerRef.current as any)._leaflet_id) { initRef.current = false; return; }
+249| 
+250|       // eslint-disable-next-line @typescript-eslint/no-explicit-any
+251|       delete (L.Icon.Default.prototype as any)._getIconUrl;
+252|       L.Icon.Default.mergeOptions({
+253|         iconRetinaUrl: "https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon-2x.png",
+254|         iconUrl: "https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon.png",
+255|         shadowUrl: "https://unpkg.com/leaflet@1.9.4/dist/images/marker-shadow.png",
+256|       });
+257|       const map = L.map(containerRef.current!, {
+258|         center: [20, 10], zoom: 3, zoomControl: true, attributionControl: false,
+259|         maxBounds: [[-85, -210], [85, 210]], minZoom: 2,
+260|       });
+261|       L.tileLayer("https://{s}.basemaps.cartocdn.com/dark_nolabels/{z}/{x}/{y}{r}.png",
+262|         { subdomains: "abcd", maxZoom: 19, zIndex: 100 }).addTo(map);
+263| 
+264|       fetch("https://raw.githubusercontent.com/nvkelso/natural-earth-vector/master/geojson/ne_110m_admin_0_countries.geojson")
+265|         .then((r) => r.json()).then((geo) => {
+266|           L.geoJSON(geo, { style: { color: "#ffffff", weight: 0.5, fillOpacity: 0, opacity: 0.2 } }).addTo(map);
+267|           L.tileLayer("https://{s}.basemaps.cartocdn.com/dark_only_labels/{z}/{x}/{y}{r}.png",
+268|             { subdomains: "abcd", maxZoom: 19, zIndex: 700, opacity: 0.9 }).addTo(map);
+269|         }).catch(() => {});
+270| 
+271|       markersLayerRef.current = L.layerGroup().addTo(map);
+272|       mapRef.current = map;
+273|       // Signal that the map is ready so heatmap effect can run
+274|       setMapReady(true);
+275|     });
+276|     return () => {
+277|       envCleanupRef.current?.();
+278|       if (mapRef.current) { mapRef.current.remove(); mapRef.current = null; }
+279|       initRef.current = false;
+280|       setMapReady(false);
+281|     };
+282|   // eslint-disable-next-line react-hooks/exhaustive-deps
+283|   }, []);
+284| 
+285|   // ── Pulsing icon ──────────────────────────────────────────────────────────
+286|   // eslint-disable-next-line @typescript-eslint/no-explicit-any
+287|   const pulsingIcon = useCallback((L: any, color: string) => L.divIcon({
+288|     className: "", iconSize: [22, 22], iconAnchor: [11, 11],
+289|     html: `<div style="position:relative;width:22px;height:22px">
+290|       <div style="position:absolute;inset:0;border-radius:50%;background:${color};opacity:.22;animation:mapPulse 2s ease-out infinite"></div>
+291|       <div style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:11px;height:11px;border-radius:50%;background:${color};box-shadow:0 0 8px ${color},0 0 18px ${color}66"></div>
+292|     </div>`,
+293|   }), []);
+294| 
+295|   // ── Event markers ─────────────────────────────────────────────────────────
+296|   useEffect(() => {
+297|     const layer = markersLayerRef.current;
+298|     if (!layer) return;
+299|     import("leaflet").then((L) => {
+300|       layer.clearLayers();
+301|       if (["wind","temperature_anomaly","aqi","sea_temp"].includes(activeEnvLayer)) return;
+302|       events.filter((e) => e.lat || e.lon).forEach((event) => {
+303|         const color = IMPACT_COLORS[event.impactLevel] ?? "#888";
+304|         const m = L.marker([event.lat, event.lon], { icon: pulsingIcon(L, color) });
+305|         m.bindPopup(`<div style="background:#0d1a2e;color:#e0eaff;padding:10px 14px;border-radius:8px;font-family:Inter,sans-serif;border:1px solid ${color}44;min-width:220px">
+306|           <div style="display:inline-block;padding:2px 8px;border-radius:12px;background:${color}22;color:${color};font-size:10px;font-weight:700;letter-spacing:.06em;margin-bottom:6px">${event.impactLevel.toUpperCase()}</div>
+307|           <div style="font-weight:600;font-size:13px;line-height:1.4;margin-bottom:4px">${event.headline}</div>
+308|           <div style="font-size:11px;color:#8aaccc">📍 ${event.country} · ${event.category}</div>
+309|         </div>`, { maxWidth: 280, className: "impact-popup" });
+310|         m.on("click", () => onEventClick?.(event));
+311|         m.addTo(layer);
+312|       });
+313|     });
+314|   // eslint-disable-next-line react-hooks/exhaustive-deps
+315|   }, [events, activeEnvLayer, pulsingIcon]);
+316| 
+317|   // ── Windy-style pixel heatmap + hover tooltip ─────────────────────────────
+318|   // Depends on mapReady so it re-runs when Leaflet finishes async init
+319|   useEffect(() => {
+320|     const map = mapRef.current;
+321|     if (!map || !mapReady) return;
+322| 
+323|     import("leaflet").then((L) => {
+324|       envCleanupRef.current?.();
+325|       envCleanupRef.current = null;
+326|       gridRef.current = null;
+327| 
+328|       if (!["wind","temperature_anomaly","aqi","sea_temp"].includes(activeEnvLayer) || !envLayerData) return;
+329| 
+330|       const grid = buildValGrid(activeEnvLayer, envLayerData);
+331|       if (!grid) return;
+332|       gridRef.current = grid;
+333| 
+334|       const overlayPane = map.getPanes().overlayPane as HTMLElement;
+335|       const canvas = document.createElement("canvas");
+336|       canvas.style.cssText = "position:absolute;top:0;left:0;pointer-events:none;z-index:410;";
+337|       overlayPane.appendChild(canvas);
+338| 
+339|       const offscreen = document.createElement("canvas");
+340|       let rafId = 0;
+341|       let drawing = false;
+342| 
+343|       const draw = () => {
+344|         if (drawing) return;
+345|         drawing = true;
+346|         const fullW = map.getSize().x;
+347|         const fullH = map.getSize().y;
+348|         const W = Math.ceil(fullW / 2);
+349|         const H = Math.ceil(fullH / 2);
+350| 
+351|         offscreen.width = W;
+352|         offscreen.height = H;
+353|         const oc = offscreen.getContext("2d")!;
+354|         const img = oc.createImageData(W, H);
+355|         const pxData = img.data;
+356| 
+357|         const bounds = map.getBounds();
+358|         const north = bounds.getNorth(), south = bounds.getSouth();
+359|         const west  = bounds.getWest(),  east  = bounds.getEast();
+360|         const latStep = (north - south) / H;
+361|         const lonStep = (east - west) / W;
+362| 
+363|         for (let y = 0; y < H; y++) {
+364|           const lat = north - latStep * y;
+365|           if (lat < -85 || lat > 85) continue;
+366|           const rowOff = y * W * 4;
+367|           for (let x = 0; x < W; x++) {
+368|             const rawLon = west + lonStep * x;
+369|             const lon = ((rawLon + 180) % 360 + 360) % 360 - 180;
+370|             const cell = sampleGrid(grid, lat, lon);
+371|             if (cell) {
+372|               const k = rowOff + x * 4;
+373|               pxData[k]     = cell[0];
+374|               pxData[k + 1] = cell[1];
+375|               pxData[k + 2] = cell[2];
+376|               pxData[k + 3] = 148;
+377|             }
+378|           }
+379|         }
+380|         oc.putImageData(img, 0, 0);
+381| 
+382|         canvas.width = fullW;
+383|         canvas.height = fullH;
+384|         const origin = map.containerPointToLayerPoint([0, 0]);
+385|         canvas.style.left = `${origin.x}px`;
+386|         canvas.style.top  = `${origin.y}px`;
+387|         const ctx = canvas.getContext("2d")!;
+388|         ctx.imageSmoothingEnabled = true;
+389|         ctx.imageSmoothingQuality = "high";
+390|         ctx.drawImage(offscreen, 0, 0, fullW, fullH);
+391|         drawing = false;
+392|       };
+393| 
+394|       const scheduleDraw = () => { cancelAnimationFrame(rafId); rafId = requestAnimationFrame(draw); };
+395|       map.on("move zoom resize viewreset", scheduleDraw);
+396|       scheduleDraw();
+397| 
+398|       envCleanupRef.current = () => {
+399|         cancelAnimationFrame(rafId);
+400|         map.off("move zoom resize viewreset", scheduleDraw);
+401|         canvas.parentNode?.removeChild(canvas);
+402|       };
+403|     });
+404|   // eslint-disable-next-line react-hooks/exhaustive-deps
+405|   }, [activeEnvLayer, envLayerData, mapReady]);
+406| 
+407|   // ── Mouse-move hover tooltip ──────────────────────────────────────────────
+408|   useEffect(() => {
+409|     const el = containerRef.current;
+410|     if (!el) return;
+411| 
+412|     const onMouseMove = (e: MouseEvent) => {
+413|       const map = mapRef.current;
+414|       const grid = gridRef.current;
+415|       const isHeatmap = ["wind","temperature_anomaly","aqi","sea_temp"].includes(activeEnvLayer);
+416| 
+417|       if (!map || !grid || !isHeatmap || !envLayerData) {
+418|         setHoveredEnvPoint(null);
+419|         return;
+420|       }
+421| 
+422|       // Convert mouse pixel coords to lat/lon
+423|       const rect = el.getBoundingClientRect();
+424|       const px = e.clientX - rect.left;
+425|       const py = e.clientY - rect.top;
+426|       // eslint-disable-next-line @typescript-eslint/no-explicit-any
+427|       const latlng = map.containerPointToLatLng([px, py] as any);
+428|       const lat = latlng.lat as number;
+429|       const rawLon = latlng.lng as number;
+430|       const lon = ((rawLon + 180) % 360 + 360) % 360 - 180;
+431| 
+432|       const point = buildHoverPoint(activeEnvLayer, grid, envLayerData, lat, lon);
+433|       setHoveredEnvPoint(point, { x: e.clientX, y: e.clientY });
+434|     };
+435| 
+436|     const onMouseLeave = () => setHoveredEnvPoint(null);
+437| 
+438|     el.addEventListener("mousemove", onMouseMove);
+439|     el.addEventListener("mouseleave", onMouseLeave);
+440|     return () => {
+441|       el.removeEventListener("mousemove", onMouseMove);
+442|       el.removeEventListener("mouseleave", onMouseLeave);
+443|     };
+444|   // eslint-disable-next-line react-hooks/exhaustive-deps
+445|   }, [activeEnvLayer, envLayerData]);
+446| 
+447|   return (
+448|     <>
+449|       <style>{`
+450|         @import url('https://unpkg.com/leaflet@1.9.4/dist/leaflet.css');
+451|         @keyframes mapPulse{0%{transform:scale(1);opacity:.6}100%{transform:scale(3.5);opacity:0}}
+452|         .leaflet-container{background:#050d1a}
+453|         .leaflet-popup-content-wrapper,.leaflet-popup-tip{background:transparent!important;box-shadow:none!important}
+454|         .leaflet-popup-content{margin:0!important}
+455|         .leaflet-control-zoom a{background:#0d1a2e!important;color:#8aaccc!important;border-color:#1a3a6e!important}
+456|         .leaflet-control-zoom a:hover{background:#1a3a6e!important}
+457|       `}</style>
+458|       <div ref={containerRef} style={{ width: "100%", height: "100%", background: "#050d1a" }} />
+459|     </>
+460|   );
+461| }
+462| 

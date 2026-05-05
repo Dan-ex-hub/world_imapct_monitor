@@ -30,6 +30,7 @@ import {
 import { format, subMinutes } from "date-fns";
 import { useGlobeStore } from "@/store/useGlobeStore";
 import { ImpactBadge } from "./ImpactBadge";
+import { convertQuakeToEvent } from "@/lib/utils/events";
 import type { GlobeEvent, EarthquakeEvent } from "@/store/types";
 
 // ─── Constants ────────────────────────────────────────────────────────────────
@@ -135,35 +136,6 @@ export function PlaybackControls() {
     }
   }, [eventsUpTo, setEvents, showToast]);
 
-  // ── convertQuakeToEvent: turn EarthquakeEvent into a GlobeEvent ─────────
-  const convertQuakeToEvent = useCallback(
-    (quake: EarthquakeEvent): GlobeEvent => ({
-      id: quake.id,
-      headline: `M${quake.magnitude.toFixed(1)} Earthquake — ${quake.location}`,
-      country: quake.location,
-      lat: quake.lat,
-      lon: quake.lon,
-      impactLevel:
-        quake.magnitude >= 6.0
-          ? "Critical"
-          : quake.magnitude >= 5.0
-            ? "High"
-            : quake.magnitude >= 4.0
-              ? "Medium"
-              : "Low",
-      category: "Natural Disaster",
-      summary: `Magnitude ${quake.magnitude.toFixed(1)} earthquake at ${quake.depth}km depth. ${quake.location}`,
-      sentiment: "Negative",
-      forexImpacts: [],
-      confidenceScore: 100,
-      isMarketMoving: quake.magnitude >= 6.0,
-      publishedAt: quake.time,
-      expiresAt: new Date(Date.now() + 86400000).toISOString(),
-      sourceUrl: quake.url,
-      createdBy: "ai-auto",
-    }),
-    [],
-  );
 
   // ── enterPlayback ─────────────────────────────────────────────────────────
   const enterPlayback = useCallback(async () => {
@@ -251,7 +223,6 @@ export function PlaybackControls() {
     setEvents,
     activeEnvLayer,
     envLayerData,
-    convertQuakeToEvent,
   ]);
 
   // ── exitPlayback ──────────────────────────────────────────────────────────

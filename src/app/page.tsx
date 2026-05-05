@@ -9,12 +9,12 @@ import { TooltipOverlay } from "@/components/ui/TooltipOverlay";
 import { NewsInsightPanel } from '@/components/ui/NewsInsightPanel'
 import { EnvDataPanel } from "@/components/ui/EnvDataPanel";
 import { NewsTicker } from "@/components/ui/NewsTicker";
-import { EnvLayerPanel } from "@/components/ui/EnvLayerPanel";
 import { PlaybackControls } from "@/components/ui/PlaybackControls";
 import { useRealtimeEvents } from "@/lib/realtime/useRealtimeEvents";
 import { useEnvLayer } from "@/hooks/useEnvLayer";
 import { useGlobeStore } from "@/store/useGlobeStore";
 import type { GlobeRef } from "@/components/globe/GlobeRenderer";
+import { convertQuakeToEvent } from "@/lib/utils/events";
 import type { GlobeEvent } from "@/store/types";
 import type { HoveredEnvPoint } from "@/store/useGlobeStore";
 
@@ -214,33 +214,7 @@ export default function Home() {
 
     if (activeEnvLayer === "earthquakes" && envLayerData?.earthquakes) {
       envLayerData.earthquakes.forEach((quake) => {
-        const impactLevel: GlobeEvent["impactLevel"] =
-          quake.magnitude >= 6.0
-            ? "Critical"
-            : quake.magnitude >= 5.0
-              ? "High"
-              : quake.magnitude >= 4.0
-                ? "Medium"
-                : "Low";
-
-        envEvents.push({
-          id: quake.id,
-          headline: `M${quake.magnitude} Earthquake`,
-          country: quake.location,
-          lat: quake.lat,
-          lon: quake.lon,
-          impactLevel,
-          category: "Natural Disaster",
-          summary: `Magnitude ${quake.magnitude} earthquake at depth of ${quake.depth}km. ${quake.location}`,
-          sentiment: "Negative",
-          forexImpacts: [],
-          confidenceScore: 100,
-          isMarketMoving: quake.magnitude >= 6.0,
-          publishedAt: quake.time,
-          expiresAt: new Date(Date.now() + 86400000).toISOString(),
-          sourceUrl: quake.url,
-          createdBy: "ai-auto",
-        });
+        envEvents.push(convertQuakeToEvent(quake));
       });
     }
 
@@ -398,9 +372,6 @@ export default function Home() {
 
       {/* Right sidebar - show EnvDataPanel if env layer active, otherwise NewsInsightPanel */}
       {activeEnvLayer !== "none" ? <EnvDataPanel /> : <NewsInsightPanel />}
-
-      {/* Environmental layer controls */}
-      <EnvLayerPanel />
 
       {/* Playback controls */}
       <PlaybackControls />

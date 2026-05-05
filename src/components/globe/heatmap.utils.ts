@@ -62,7 +62,7 @@ function lerp3(
   ];
 }
 
-function gradientColor(
+export function gradientColor(
   t: number,
   stops: [number, number, number][],
 ): [number, number, number] {
@@ -272,7 +272,7 @@ function makeHeatmap(
 // every pixel matches what you'd see on Windy / NOAA / Copernicus.
 
 // Wind: 0 → 38 m/s   (Beaufort-based)
-const WIND_STOPS: [number, number, number][] = [
+export const WIND_STOPS: [number, number, number][] = [
   [20, 60, 220], //  0 m/s – deep blue (calm)
   [0, 160, 255], //  5 m/s – sky blue
   [0, 210, 180], // 10 m/s – teal
@@ -282,10 +282,10 @@ const WIND_STOPS: [number, number, number][] = [
   [240, 40, 20], // 30 m/s – red
   [140, 0, 180], // 38 m/s – purple (hurricane)
 ];
-const WIND_MAX = 38;
+export const WIND_MAX = 38;
 
 // Temperature: -40 → 45°C  (ERA5/Windy palette)
-const TEMP_STOPS: [number, number, number][] = [
+export const TEMP_STOPS: [number, number, number][] = [
   [100, 0, 200], // -40°C – deep violet
   [0, 40, 230], // -20°C – blue
   [30, 120, 255], // -10°C – cornflower
@@ -296,11 +296,11 @@ const TEMP_STOPS: [number, number, number][] = [
   [255, 60, 0], //  35°C – red-orange
   [180, 0, 0], //  45°C – deep red
 ];
-const TEMP_MIN = -40;
-const TEMP_RANGE = 85; // 45 - (-40)
+export const TEMP_MIN = -40;
+export const TEMP_RANGE = 85; // 45 - (-40)
 
 // AQI: 0 → 500  (US EPA absolute breakpoints)
-const AQI_STOPS: [number, number, number][] = [
+export const AQI_STOPS: [number, number, number][] = [
   [0, 228, 0], //   0 – Good
   [255, 255, 0], // 100 – Moderate
   [255, 126, 0], // 200 – Unhealthy for Sensitive
@@ -308,10 +308,10 @@ const AQI_STOPS: [number, number, number][] = [
   [143, 63, 151], // 400 – Very Unhealthy
   [126, 0, 35], // 500 – Hazardous
 ];
-const AQI_MAX = 500;
+export const AQI_MAX = 500;
 
 // Sea temperature: -2 → 32°C  (NOAA/Copernicus)
-const SEA_STOPS: [number, number, number][] = [
+export const SEA_STOPS: [number, number, number][] = [
   [200, 230, 255], // -2°C – icy pale blue
   [0, 60, 200], //  2°C – deep blue
   [0, 140, 230], //  8°C – medium blue
@@ -322,8 +322,8 @@ const SEA_STOPS: [number, number, number][] = [
   [255, 120, 0], // 29°C – orange
   [220, 10, 10], // 32°C – red
 ];
-const SEA_MIN = -2;
-const SEA_RANGE = 34; // 32 - (-2)
+export const SEA_MIN = -2;
+export const SEA_RANGE = 34; // 32 - (-2)
 
 // ─── Public exports ───────────────────────────────────────────────────────────
 

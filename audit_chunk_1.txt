@@ -1,0 +1,2598 @@
+
+
+=== FILE: src\app\api\cron\cleanup\route.ts ===
+
+1| import { NextRequest, NextResponse } from 'next/server'
+2| import { createAdminClient } from '@/lib/supabase/server'
+3| 
+4| const FORTY_EIGHT_HOURS_MS = 48 * 60 * 60 * 1000  // events retention window
+5| const SIX_HOURS_MS         =  6 * 60 * 60 * 1000  // env cache / dedup retention
+6| const CLEANUP_INTERVAL_MS  =  1 * 60 * 60 * 1000  // run at most every 1 hour
+7| 
+8| // In-memory fallback for last run time (used if DB constraint blocks the marker row)
+9| let lastRunInMemory: Date | null = null
+10| 
+11| /**
+12|  * GET /api/cron/cleanup
+13|  *
+14|  * Purges all data older than 6 hours across every table to ensure fresh, real-time data.
+15|  *
+16|  * RESILIENT DESIGN — no fixed time dependency:
+17|  *   - Tracks last successful run in env_data_cache (key: 'cleanup_last_run')
+18|  *   - On every call, checks if 1+ hours have passed since last run
+19|  *   - If yes → purge. If no → skip (idempotent, safe to call frequently)
+20|  *   - This means even if the server was offline, the cleanup
+21|  *     will fire on the next heartbeat after it comes back online.
+22|  *
+23|  * Called by:
+24|  *   - Vercel cron: every hour
+25|  *   - Dev heartbeat: every hour (minute === 0)
+26|  *   - Manually: any time with admin/cron secret
+27|  *
+28|  * Tables cleaned (data older than 6 hours):
+29|  *   events            → created_at
+30|  *   event_dedup_log   → created_at
+31|  *   env_data_cache    → fetched_at  (zone data: wind, temp, AQI, sea temp)
+32|  *   aqi_history       → recorded_at
+33|  *   forex_cache       → last_updated (reset stale sparklines only)
+34|  */
+35| export async function GET(request: NextRequest) {
+36|   const cronSecret = request.headers.get('x-cron-secret')
+37|   const adminSecret = request.headers.get('x-admin-secret')
+38|   const isDev = process.env.NODE_ENV === 'development'
+39|   const isForced = request.nextUrl.searchParams.get('force') === '1'
+40| 
+41|   if (!isDev && cronSecret !== process.env.CRON_SECRET && adminSecret !== process.env.ADMIN_SECRET) {
+42|     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+43|   }
+44| 
+45|   const supabase = createAdminClient()
+46|   const now = new Date()
+47| 
+48|   // ── Check last run time ────────────────────────────────────────────────────
+49|   if (!isForced) {
+50|     // Check in-memory first (fast, works even without DB migration)
+51|     if (lastRunInMemory) {
+52|       const msSince = now.getTime() - lastRunInMemory.getTime()
+53|       if (msSince < CLEANUP_INTERVAL_MS) {
+54|         const nextIn = Math.round((CLEANUP_INTERVAL_MS - msSince) / 60_000)
+55|         return NextResponse.json({
+56|           success: true, skipped: true,
+57|           reason: `Last cleanup ${Math.round(msSince / 60_000)}min ago (in-memory). Next in ~${nextIn}min.`,
+58|           nextRunInMinutes: nextIn,
+59|         })
+60|       }
+61|     }
+62| 
+63|     // Also check DB (persists across server restarts)
+64|     const { data: lastRunRow } = await supabase
+65|       .from('env_data_cache')
+66|       .select('fetched_at')
+67|       .eq('layer_type', 'cleanup_last_run')
+68|       .single()
+69| 
+70|     if (lastRunRow?.fetched_at) {
+71|       const lastRun = new Date(lastRunRow.fetched_at)
+72|       const msSince = now.getTime() - lastRun.getTime()
+73|       if (msSince < CLEANUP_INTERVAL_MS) {
+74|         const nextIn = Math.round((CLEANUP_INTERVAL_MS - msSince) / 60_000)
+75|         lastRunInMemory = lastRun // sync to memory
+76|         return NextResponse.json({
+77|           success: true, skipped: true,
+78|           reason: `Last cleanup ${Math.round(msSince / 60_000)}min ago (DB). Next in ~${nextIn}min.`,
+79|           nextRunInMinutes: nextIn,
+80|         })
+81|       }
+82|     }
+83|   }
+84| 
+85|   // Events use a 48-hour retention window so playback always has 2 days of history.
+86|   const eventCutoff = new Date(now.getTime() - FORTY_EIGHT_HOURS_MS).toISOString()
+87|   // Env cache + dedup still use 6h — that data is refreshed frequently.
+88|   const envCutoff = new Date(now.getTime() - SIX_HOURS_MS).toISOString()
+89|   const results: Record<string, { deleted?: number; error?: string }> = {}
+90| 
+91|   console.log(`[Cleanup] Starting purge. Events cutoff: ${eventCutoff} | Env cutoff: ${envCutoff}`)
+92| 
+93|   // ── 1. Events ──────────────────────────────────────────────────────────────
+94|   try {
+95|     const { error, count } = await supabase
+96|       .from('events')
+97|       .delete({ count: 'exact' })
+98|       .lt('created_at', eventCutoff)
+99| 
+100|     if (error) throw error
+101|     results.events = { deleted: count ?? 0 }
+102|     console.log(`[Cleanup] events: deleted ${count ?? 0} (older than 48h)`)
+103|   } catch (e: any) {
+104|     results.events = { error: e.message }
+105|     console.error('[Cleanup] events:', e.message)
+106|   }
+107| 
+108|   // ── 2. Event dedup log ─────────────────────────────────────────────────────
+109|   try {
+110|     const { error, count } = await supabase
+111|       .from('event_dedup_log')
+112|       .delete({ count: 'exact' })
+113|       .lt('created_at', envCutoff)
+114| 
+115|     if (error && error.message.includes('schema cache')) {
+116|       results.event_dedup_log = { deleted: 0 } // table not created yet — skip silently
+117|     } else if (error) {
+118|       throw error
+119|     } else {
+120|       results.event_dedup_log = { deleted: count ?? 0 }
+121|       console.log(`[Cleanup] event_dedup_log: deleted ${count ?? 0}`)
+122|     }
+123|   } catch (e: any) {
+124|     results.event_dedup_log = { error: e.message }
+125|     console.warn('[Cleanup] event_dedup_log:', e.message)
+126|   }
+127| 
+128|   // ── 3. Environmental data cache ────────────────────────────────────────────
+129|   // Delete zone rows older than 3 days (but keep the cleanup_last_run marker)
+130|   try {
+131|     const { error, count } = await supabase
+132|       .from('env_data_cache')
+133|       .delete({ count: 'exact' })
+134|       .lt('fetched_at', envCutoff)
+135|       .neq('layer_type', 'cleanup_last_run')
+136| 
+137|     if (error) throw error
+138|     results.env_data_cache = { deleted: count ?? 0 }
+139|     console.log(`[Cleanup] env_data_cache: deleted ${count ?? 0}`)
+140|   } catch (e: any) {
+141|     results.env_data_cache = { error: e.message }
+142|     console.error('[Cleanup] env_data_cache:', e.message)
+143|   }
+144| 
+145|   // ── 4. AQI history ─────────────────────────────────────────────────────────
+146|   try {
+147|     const { error, count } = await supabase
+148|       .from('aqi_history')
+149|       .delete({ count: 'exact' })
+150|       .lt('recorded_at', envCutoff)
+151| 
+152|     if (error) throw error
+153|     results.aqi_history = { deleted: count ?? 0 }
+154|     console.log(`[Cleanup] aqi_history: deleted ${count ?? 0}`)
+155|   } catch (e: any) {
+156|     results.aqi_history = { error: e.message }
+157|     console.warn('[Cleanup] aqi_history:', e.message)
+158|   }
+159| 
+160|   // ── 5. Forex cache — reset stale sparklines ────────────────────────────────
+161|   // Rows are upserted (never deleted), but sparkline arrays become stale.
+162|   // Reset any pair not updated in 6 hours so it refetches fresh data.
+163|   try {
+164|     const { error, count } = await supabase
+165|       .from('forex_cache')
+166|       .update({ sparkline_data: [] })
+167|       .lt('last_updated', envCutoff)
+168| 
+169|     if (error) throw error
+170|     results.forex_cache = { deleted: count ?? 0 }
+171|     if (count) console.log(`[Cleanup] forex_cache: reset ${count} stale sparklines`)
+172|   } catch (e: any) {
+173|     results.forex_cache = { error: e.message }
+174|     console.warn('[Cleanup] forex_cache:', e.message)
+175|   }
+176| 
+177|   // ── Record this run ────────────────────────────────────────────────────────
+178|   lastRunInMemory = now // always update in-memory
+179| 
+180|   // Try to persist to DB (requires SQL migration to be run)
+181|   const { error: markerError } = await supabase.from('env_data_cache').upsert({
+182|     layer_type: 'cleanup_last_run',
+183|     data: { eventCutoff, envCutoff, results },
+184|     fetched_at: now.toISOString(),
+185|     expires_at: new Date(now.getTime() + 7 * 24 * 60 * 60 * 1000).toISOString(),
+186|   })
+187|   if (markerError) {
+188|     console.warn('[Cleanup] Could not persist last_run marker (run SQL migration):', markerError.message)
+189|   }
+190| 
+191|   const totalDeleted = Object.values(results).reduce((sum, r) => sum + (r.deleted ?? 0), 0)
+192|   const errors = Object.entries(results)
+193|     .filter(([, r]) => r.error)
+194|     .map(([t, r]) => `${t}: ${r.error}`)
+195| 
+196|   console.log(`[Cleanup] ✅ Done. Total purged: ${totalDeleted} rows. Event cutoff: ${eventCutoff}`)
+197| 
+198|   return NextResponse.json({
+199|     success: true,
+200|     eventCutoff,
+201|     envCutoff,
+202|     totalDeleted,
+203|     results,
+204|     errors: errors.length > 0 ? errors : undefined,
+205|     nextRunIn: `${CLEANUP_INTERVAL_MS / 3600_000} hours`,
+206|   })
+207| }
+208| 
+
+
+=== FILE: src\app\api\cron\heartbeat\route.ts ===
+
+1| import { NextRequest, NextResponse } from 'next/server'
+2| 
+3| /**
+4|  * GET /api/cron/heartbeat
+5|  * Local development cron simulator.
+6|  * Called by the browser every minute via useEffect in the app.
+7|  * In production, Vercel crons handle this automatically.
+8|  *
+9|  * Fires all cron jobs based on current time:
+10|  * - Forex refresh: every minute (minute % 5 determines which pair)
+11|  * - RSS poll: every 10 minutes (skips if Gemini cache < 4h)
+12|  * - Earthquakes: every 5 minutes
+13|  * - Wildfires: every 15 minutes
+14|  * - AQI: every 30 minutes
+15|  * - Weather: every 60 minutes
+16|  * - Sea temp: every 360 minutes (6 hours)
+17|  */
+18| export async function GET(request: NextRequest) {
+19|   // Only allow in development or with admin secret
+20|   const adminSecret = request.headers.get('x-admin-secret')
+21|   const isDev = process.env.NODE_ENV === 'development'
+22| 
+23|   if (!isDev && adminSecret !== process.env.ADMIN_SECRET) {
+24|     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+25|   }
+26| 
+27|   const now = new Date()
+28|   const minute = now.getMinutes()
+29|   const appUrl = process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000'
+30|   const cronSecret = process.env.CRON_SECRET || ''
+31|   const headers = { 'x-cron-secret': cronSecret }
+32| 
+33|   const jobs: { name: string; url: string; shouldRun: boolean }[] = [
+34|     {
+35|       name: 'forex-refresh',
+36|       url: `${appUrl}/api/forex/refresh`,
+37|       shouldRun: true, // every minute
+38|     },
+39|     {
+40|       name: 'news-gemini',
+41|       url: `${appUrl}/api/news/gemini`,
+42|       // Fire every minute — the route's own 2-min retry gap and 4-hour
+43|       // success cadence control actual Gemini API call frequency.
+44|       // This lets retries land automatically without waiting an hour.
+45|       shouldRun: true,
+46|     },
+47|     {
+48|       name: 'earthquakes',
+49|       url: `${appUrl}/api/env/earthquakes`,
+50|       shouldRun: minute % 5 === 0,
+51|     },
+52|     {
+53|       name: 'wildfires',
+54|       url: `${appUrl}/api/env/wildfires`,
+55|       shouldRun: minute % 15 === 0,
+56|     },
+57|     {
+58|       name: 'aqi',
+59|       url: `${appUrl}/api/env/aqi`,
+60|       shouldRun: minute % 30 === 0,
+61|     },
+62|     {
+63|       name: 'weather',
+64|       url: `${appUrl}/api/env/weather`,
+65|       shouldRun: minute === 0,
+66|     },
+67|     {
+68|       name: 'sea-temp',
+69|       url: `${appUrl}/api/env/sea-temp`,
+70|       shouldRun: minute === 0 && now.getHours() % 6 === 0,
+71|     },
+72|     {
+73|       name: 'cleanup',
+74|       url: `${appUrl}/api/cron/cleanup`,
+75|       // Run every 30 minutes to keep data fresh
+76|       shouldRun: minute % 30 === 0,
+77|     },
+78|   ]
+79| 
+80|   const triggered: string[] = []
+81| 
+82|   // Fire all due jobs in parallel (non-blocking)
+83|   await Promise.allSettled(
+84|     jobs
+85|       .filter((j) => j.shouldRun)
+86|       .map(async (job) => {
+87|         try {
+88|           await fetch(job.url, { headers })
+89|           triggered.push(job.name)
+90|         } catch {
+91|           // Silently ignore — job will retry next cycle
+92|         }
+93|       })
+94|   )
+95| 
+96|   return NextResponse.json({
+97|     ok: true,
+98|     minute,
+99|     triggered,
+100|     skipped: jobs.filter((j) => !j.shouldRun).map((j) => j.name),
+101|   })
+102| }
+103| 
+
+
+=== FILE: src\app\api\env\aqi\route.ts ===
+
+1| import { NextResponse } from 'next/server'
+2| import { createAdminClient } from '@/lib/supabase/server'
+3| import { getAQIForZone } from '@/lib/env/openaq'
+4| import { getZoneForType, getCurrentZoneForType, GLOBE_ZONES } from '@/lib/env/zones'
+5| import type { EnvLayerData, AQIPoint } from '@/store/types'
+6| 
+7| /**
+8|  * GET /api/env/aqi
+9|  * Returns global AQI data from Open-Meteo Air Quality API (free, no key).
+10|  *
+11|  * Strategy:
+12|  * - On first load (empty cache): fetch ALL 4 zones immediately
+13|  * - On subsequent loads: use staggered rotation (offset 2) to refresh one zone at a time
+14|  * - Each zone cached 6 hours → ~4 API calls/day per zone ✅
+15|  */
+16| export async function GET() {
+17|   try {
+18|     const supabase = createAdminClient()
+19|     const now = new Date()
+20|     const sixHoursAgo = new Date(now.getTime() - 21_600_000)
+21| 
+22|     // Load all cached zones
+23|     const { data: allCachedZones } = await supabase
+24|       .from('env_data_cache').select('*').like('layer_type', 'aqi_zone_%')
+25| 
+26|     const cachedZoneIds = new Set(allCachedZones?.map((c: any) => c.layer_type) ?? [])
+27|     const cacheIsEmpty = cachedZoneIds.size === 0
+28| 
+29|     if (cacheIsEmpty) {
+30|       // First load — fetch ALL zones sequentially so the globe is fully covered immediately
+31|       console.log('[AQI] Cache empty — fetching all 4 zones...')
+32|       for (const zone of GLOBE_ZONES) {
+33|         const key = `aqi_zone_${zone.id}`
+34|         try {
+35|           const points = await getAQIForZone(zone)
+36|           if (points.length > 0) {
+37|             await supabase.from('env_data_cache').upsert({
+38|               layer_type: key,
+39|               data: { points, zone: zone.id },
+40|               fetched_at: now.toISOString(),
+41|               expires_at: new Date(now.getTime() + 172_800_000).toISOString(),
+42|             })
+43|             console.log(`[AQI] Cached ${points.length} pts for ${zone.name}`)
+44|           }
+45|         } catch (err) {
+46|           console.error(`[AQI] Failed zone ${zone.name}:`, err)
+47|         }
+48|       }
+49|     } else {
+50|       // Subsequent loads — refresh one stale zone per request (staggered rotation)
+51|       const aqiZone = getZoneForType('aqi') ?? getCurrentZoneForType('aqi')
+52|       const aqiZoneKey = `aqi_zone_${aqiZone.id}`
+53|       const zoneCache = allCachedZones?.find((c: any) => c.layer_type === aqiZoneKey)
+54|       const needsRefresh = !zoneCache || new Date(zoneCache.fetched_at) < sixHoursAgo
+55| 
+56|       if (needsRefresh) {
+57|         try {
+58|           const points = await getAQIForZone(aqiZone)
+59|           if (points.length > 0) {
+60|             await supabase.from('env_data_cache').upsert({
+61|               layer_type: aqiZoneKey,
+62|               data: { points, zone: aqiZone.id },
+63|               fetched_at: now.toISOString(),
+64|               expires_at: new Date(now.getTime() + 172_800_000).toISOString(),
+65|             })
+66|             console.log(`[AQI] Refreshed ${points.length} pts for ${aqiZone.name}`)
+67|           }
+68|         } catch (err) {
+69|           console.error(`[AQI] Failed to refresh ${aqiZone.name}:`, err)
+70|         }
+71|       }
+72|     }
+73| 
+74|     // Merge all cached zones
+75|     const { data: freshZones } = await supabase
+76|       .from('env_data_cache').select('*').like('layer_type', 'aqi_zone_%')
+77| 
+78|     const allAqiPoints: AQIPoint[] = []
+79|     freshZones?.forEach((z: any) => {
+80|       const d = z.data as { points: AQIPoint[] }
+81|       if (d?.points) allAqiPoints.push(...d.points)
+82|     })
+83| 
+84|     const coverage = Math.round((freshZones?.length ?? 0) / GLOBE_ZONES.length * 100)
+85|     console.log(`[AQI] Returning ${allAqiPoints.length} pts (${coverage}% coverage)`)
+86| 
+87|     const aqiData: EnvLayerData = {
+88|       type: 'aqi',
+89|       updatedAt: now.toISOString(),
+90|       aqi: allAqiPoints,
+91|     }
+92| 
+93|     return NextResponse.json(
+94|       { ...aqiData, meta: { coverage: `${coverage}%`, zonesLoaded: freshZones?.length ?? 0, totalZones: GLOBE_ZONES.length } },
+95|       { headers: { 'Cache-Control': 'public, s-maxage=60, stale-while-revalidate=300' } }
+96|     )
+97|   } catch (error) {
+98|     console.error('[AQI] Error:', error)
+99|     return NextResponse.json({ error: 'Failed to fetch AQI data' }, { status: 500 })
+100|   }
+101| }
+102| 
+
+
+=== FILE: src\app\api\env\cleanup\route.ts ===
+
+1| import { NextResponse } from 'next/server'
+2| import { createAdminClient } from '@/lib/supabase/server'
+3| 
+4| /**
+5|  * GET /api/env/cleanup
+6|  * Delete environmental data older than 48 hours
+7|  * Should be called by cron job once per day
+8|  */
+9| export async function GET(request: Request) {
+10|   // Verify cron secret
+11|   const authHeader = request.headers.get('authorization')
+12|   if (authHeader !== `Bearer ${process.env.CRON_SECRET}`) {
+13|     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+14|   }
+15| 
+16|   try {
+17|     const supabase = createAdminClient()
+18|     const twoDaysAgo = new Date(Date.now() - 172800_000) // 48 hours
+19| 
+20|     // Delete zone data older than 48 hours
+21|     const { data, error } = await supabase
+22|       .from('env_data_cache')
+23|       .delete()
+24|       .or('layer_type.like.wind_zone_%,layer_type.like.temp_zone_%,layer_type.like.aqi_zone_%')
+25|       .lt('fetched_at', twoDaysAgo.toISOString())
+26| 
+27|     if (error) {
+28|       console.error('[Cleanup] Error deleting old data:', error)
+29|       return NextResponse.json({ error: error.message }, { status: 500 })
+30|     }
+31| 
+32|     console.log(`[Cleanup] Deleted environmental data older than 48 hours`)
+33| 
+34|     return NextResponse.json({
+35|       success: true,
+36|       message: 'Cleaned up old environmental data',
+37|       deletedBefore: twoDaysAgo.toISOString(),
+38|     })
+39|   } catch (error) {
+40|     console.error('[Cleanup] Error:', error)
+41|     return NextResponse.json(
+42|       {
+43|         error: 'Failed to cleanup old data',
+44|         details: error instanceof Error ? error.message : 'Unknown error',
+45|       },
+46|       { status: 500 }
+47|     )
+48|   }
+49| }
+50| 
+
+
+=== FILE: src\app\api\env\clear-cache\route.ts ===
+
+1| import { NextRequest, NextResponse } from "next/server";
+2| import { createAdminClient } from "@/lib/supabase/server";
+3| 
+4| /**
+5|  * GET /api/env/clear-cache?type=temp  (dev only — no auth required)
+6|  * Clears stale cached env data so the next layer load fetches fresh values.
+7|  */
+8| export async function GET(request: NextRequest) {
+9|   if (process.env.NODE_ENV !== "development") {
+10|     return NextResponse.json({ error: "Dev only" }, { status: 403 });
+11|   }
+12|   const type = request.nextUrl.searchParams.get("type") || "all";
+13|   const supabase = createAdminClient();
+14|   let query = supabase.from("env_data_cache").delete();
+15|   if (type === "all") {
+16|     query = query.neq("layer_type", "KEEP_NOTHING");
+17|   } else {
+18|     query = query.like("layer_type", `${type}%`);
+19|   }
+20|   const { error, count } = await query;
+21|   if (error)
+22|     return NextResponse.json({ error: error.message }, { status: 500 });
+23|   return NextResponse.json({ success: true, deleted: count, type });
+24| }
+25| 
+26| /**
+27|  * DELETE /api/env/clear-cache?type=aqi
+28|  * Clears cached env data so it refetches fresh.
+29|  * Protected by admin secret.
+30|  */
+31| export async function DELETE(request: NextRequest) {
+32|   const adminSecret = request.headers.get("x-admin-secret");
+33|   if (adminSecret !== process.env.ADMIN_SECRET) {
+34|     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+35|   }
+36| 
+37|   const type = request.nextUrl.searchParams.get("type") || "all";
+38|   const supabase = createAdminClient();
+39| 
+40|   let query = supabase.from("env_data_cache").delete();
+41| 
+42|   if (type === "all") {
+43|     query = query.neq("layer_type", "KEEP_NOTHING"); // delete all
+44|   } else {
+45|     query = query.like("layer_type", `${type}%`);
+46|   }
+47| 
+48|   const { error, count } = await query;
+49| 
+50|   if (error) {
+51|     return NextResponse.json({ error: error.message }, { status: 500 });
+52|   }
+53| 
+54|   return NextResponse.json({ success: true, deleted: count, type });
+55| }
+56| 
+
+
+=== FILE: src\app\api\env\earthquakes\route.ts ===
+
+1| import { NextResponse } from 'next/server'
+2| import { createClient } from '@/lib/supabase/server'
+3| import { getRecentEarthquakes } from '@/lib/env/usgs'
+4| import type { EnvLayerData } from '@/store/types'
+5| import { isRateLimited, RATE_LIMITS } from '@/lib/utils/ratelimit'
+6| 
+7| /**
+8|  * GET /api/env/earthquakes
+9|  * Fetch earthquake data from USGS
+10|  * Caches in env_data_cache table for 5 minutes
+11|  */
+12| export async function GET(request: Request) {
+13|   // Rate limiting
+14|   const identifier = `env-earthquakes-${request.headers.get('x-forwarded-for') || 'unknown'}`
+15|   if (isRateLimited(identifier, RATE_LIMITS.ENV_API)) {
+16|     return NextResponse.json(
+17|       { error: 'Rate limit exceeded. Please try again later.' },
+18|       { status: 429 }
+19|     )
+20|   }
+21| 
+22|   try {
+23|     const supabase = await createClient()
+24| 
+25|     // Check cache first
+26|     const { data: cached } = await supabase
+27|       .from('env_data_cache')
+28|       .select('*')
+29|       .eq('layer_type', 'earthquakes')
+30|       .gt('expires_at', new Date().toISOString())
+31|       .single()
+32| 
+33|     if (cached?.data) {
+34|       return NextResponse.json(cached.data, {
+35|         headers: {
+36|           'Cache-Control': 'public, s-maxage=300, stale-while-revalidate=600',
+37|         },
+38|       })
+39|     }
+40| 
+41|     // Fetch fresh data
+42|     console.log('Fetching earthquake data from USGS...')
+43|     const earthquakes = await getRecentEarthquakes()
+44| 
+45|     const now = new Date()
+46|     const layerData: EnvLayerData = {
+47|       type: 'earthquakes',
+48|       updatedAt: now.toISOString(),
+49|       earthquakes,
+50|     }
+51| 
+52|     // Cache for 5 minutes
+53|     await supabase.from('env_data_cache').upsert({
+54|       layer_type: 'earthquakes',
+55|       data: layerData,
+56|       fetched_at: now.toISOString(),
+57|       expires_at: new Date(now.getTime() + 300_000).toISOString(),
+58|     })
+59| 
+60|     return NextResponse.json(layerData, {
+61|       headers: {
+62|         'Cache-Control': 'public, s-maxage=300, stale-while-revalidate=600',
+63|       },
+64|     })
+65|   } catch (error) {
+66|     console.error('Earthquakes API error:', error)
+67|     
+68|     // Try to return stale data if upstream API is down
+69|     const supabase = await createClient()
+70|     const { data: staleData } = await supabase
+71|       .from('env_data_cache')
+72|       .select('*')
+73|       .eq('layer_type', 'earthquakes')
+74|       .order('fetched_at', { ascending: false })
+75|       .limit(1)
+76|       .single()
+77| 
+78|     if (staleData?.data) {
+79|       console.log('Returning stale earthquake data due to upstream error')
+80|       return NextResponse.json(
+81|         {
+82|           ...staleData.data,
+83|           warning: 'Using cached data due to upstream service unavailability',
+84|         },
+85|         {
+86|           headers: {
+87|             'Cache-Control': 'public, s-maxage=300, stale-while-revalidate=600',
+88|           },
+89|         }
+90|       )
+91|     }
+92| 
+93|     return NextResponse.json(
+94|       {
+95|         error: 'Failed to fetch earthquake data',
+96|         details: error instanceof Error ? error.message : 'Unknown error',
+97|       },
+98|       { status: 500 }
+99|     )
+100|   }
+101| }
+102| 
+
+
+=== FILE: src\app\api\env\sea-temp\route.ts ===
+
+1| import { NextResponse } from 'next/server'
+2| import { createAdminClient } from '@/lib/supabase/server'
+3| import { getSeaTempForZone } from '@/lib/env/seatemp'
+4| import { getZoneForType, getCurrentZoneForType, GLOBE_ZONES } from '@/lib/env/zones'
+5| import type { EnvLayerData, SeaTempPoint } from '@/store/types'
+6| 
+7| /**
+8|  * GET /api/env/sea-temp
+9|  * Sea surface temperature from Open-Meteo Marine API (free, no key).
+10|  *
+11|  * Land points are automatically excluded (marine API returns null for them),
+12|  * so the heatmap naturally only covers ocean areas. ✅
+13|  *
+14|  * Strategy:
+15|  * - First load (empty cache): fetch ALL 4 zones immediately
+16|  * - Subsequent loads: staggered rotation (offset 3)
+17|  * - Each zone cached 6 hours ✅
+18|  */
+19| export async function GET() {
+20|   try {
+21|     const supabase = createAdminClient()
+22|     const now = new Date()
+23|     const sixHoursAgo = new Date(now.getTime() - 21_600_000)
+24| 
+25|     const { data: allCachedZones } = await supabase
+26|       .from('env_data_cache').select('*').like('layer_type', 'sea_zone_%')
+27| 
+28|     const cacheIsEmpty = !allCachedZones || allCachedZones.length === 0
+29| 
+30|     if (cacheIsEmpty) {
+31|       console.log('[SeaTemp] Cache empty — fetching all 4 zones...')
+32|       for (const zone of GLOBE_ZONES) {
+33|         const key = `sea_zone_${zone.id}`
+34|         try {
+35|           const points = await getSeaTempForZone(zone)
+36|           if (points.length > 0) {
+37|             await supabase.from('env_data_cache').upsert({
+38|               layer_type: key,
+39|               data: { points, zone: zone.id },
+40|               fetched_at: now.toISOString(),
+41|               expires_at: new Date(now.getTime() + 172_800_000).toISOString(),
+42|             })
+43|             console.log(`[SeaTemp] Cached ${points.length} pts for ${zone.name}`)
+44|           }
+45|         } catch (err) {
+46|           console.error(`[SeaTemp] Failed zone ${zone.name}:`, err)
+47|         }
+48|       }
+49|     } else {
+50|       const seaZone = getZoneForType('sea_temp') ?? getCurrentZoneForType('sea_temp')
+51|       const seaKey = `sea_zone_${seaZone.id}`
+52|       const zoneCache = allCachedZones?.find((c: any) => c.layer_type === seaKey)
+53|       if (!zoneCache || new Date(zoneCache.fetched_at) < sixHoursAgo) {
+54|         try {
+55|           const points = await getSeaTempForZone(seaZone)
+56|           if (points.length > 0) {
+57|             await supabase.from('env_data_cache').upsert({
+58|               layer_type: seaKey,
+59|               data: { points, zone: seaZone.id },
+60|               fetched_at: now.toISOString(),
+61|               expires_at: new Date(now.getTime() + 172_800_000).toISOString(),
+62|             })
+63|             console.log(`[SeaTemp] Refreshed ${points.length} pts for ${seaZone.name}`)
+64|           }
+65|         } catch (err) {
+66|           console.error(`[SeaTemp] Failed to refresh ${seaZone.name}:`, err)
+67|         }
+68|       }
+69|     }
+70| 
+71|     // Merge all cached zones
+72|     const { data: freshZones } = await supabase
+73|       .from('env_data_cache').select('*').like('layer_type', 'sea_zone_%')
+74| 
+75|     const allSeaPoints: SeaTempPoint[] = []
+76|     freshZones?.forEach((z: any) => {
+77|       const d = z.data as { points: SeaTempPoint[] }
+78|       if (d?.points) allSeaPoints.push(...d.points)
+79|     })
+80| 
+81|     const coverage = Math.round((freshZones?.length ?? 0) / GLOBE_ZONES.length * 100)
+82|     console.log(`[SeaTemp] Returning ${allSeaPoints.length} pts (${coverage}% coverage)`)
+83| 
+84|     const seaData: EnvLayerData = {
+85|       type: 'sea_temp',
+86|       updatedAt: now.toISOString(),
+87|       seaTemp: allSeaPoints,
+88|     }
+89| 
+90|     return NextResponse.json(
+91|       { ...seaData, meta: { coverage: `${coverage}%`, zonesLoaded: freshZones?.length ?? 0, totalZones: GLOBE_ZONES.length } },
+92|       { headers: { 'Cache-Control': 'public, s-maxage=3600, stale-while-revalidate=7200' } }
+93|     )
+94|   } catch (error) {
+95|     console.error('[SeaTemp] Error:', error)
+96|     return NextResponse.json({ error: 'Failed to fetch sea temperature data' }, { status: 500 })
+97|   }
+98| }
+99| 
+
+
+=== FILE: src\app\api\env\storms\route.ts ===
+
+1| import { NextResponse } from 'next/server'
+2| import { createClient } from '@/lib/supabase/server'
+3| import { getStorms } from '@/lib/env/eonet'
+4| import type { EnvLayerData } from '@/store/types'
+5| import { isRateLimited, RATE_LIMITS } from '@/lib/utils/ratelimit'
+6| 
+7| /**
+8|  * GET /api/env/storms
+9|  * Fetch severe storm data from NASA EONET
+10|  * Caches in env_data_cache table for 15 minutes
+11|  */
+12| export async function GET(request: Request) {
+13|   // Rate limiting
+14|   const identifier = `env-storms-${request.headers.get('x-forwarded-for') || 'unknown'}`
+15|   if (isRateLimited(identifier, RATE_LIMITS.ENV_API)) {
+16|     return NextResponse.json(
+17|       { error: 'Rate limit exceeded. Please try again later.' },
+18|       { status: 429 }
+19|     )
+20|   }
+21| 
+22|   try {
+23|     const supabase = await createClient()
+24| 
+25|     // Check cache first
+26|     const { data: cached } = await supabase
+27|       .from('env_data_cache')
+28|       .select('*')
+29|       .eq('layer_type', 'storms')
+30|       .gt('expires_at', new Date().toISOString())
+31|       .single()
+32| 
+33|     if (cached?.data) {
+34|       return NextResponse.json(cached.data, {
+35|         headers: {
+36|           'Cache-Control': 'public, s-maxage=900, stale-while-revalidate=1800',
+37|         },
+38|       })
+39|     }
+40| 
+41|     // Fetch fresh data
+42|     console.log('Fetching storm data from NASA EONET...')
+43|     const storms = await getStorms()
+44| 
+45|     const now = new Date()
+46|     const layerData: EnvLayerData = {
+47|       type: 'storms',
+48|       updatedAt: now.toISOString(),
+49|       storms,
+50|     }
+51| 
+52|     // Cache for 15 minutes
+53|     await supabase.from('env_data_cache').upsert({
+54|       layer_type: 'storms',
+55|       data: layerData,
+56|       fetched_at: now.toISOString(),
+57|       expires_at: new Date(now.getTime() + 900_000).toISOString(),
+58|     })
+59| 
+60|     return NextResponse.json(layerData, {
+61|       headers: {
+62|         'Cache-Control': 'public, s-maxage=900, stale-while-revalidate=1800',
+63|       },
+64|     })
+65|   } catch (error) {
+66|     console.error('Storms API error:', error)
+67|     
+68|     // Try to return stale data if upstream API is down
+69|     const supabase = await createClient()
+70|     const { data: staleData } = await supabase
+71|       .from('env_data_cache')
+72|       .select('*')
+73|       .eq('layer_type', 'storms')
+74|       .order('fetched_at', { ascending: false })
+75|       .limit(1)
+76|       .single()
+77| 
+78|     if (staleData?.data) {
+79|       console.log('Returning stale storm data due to upstream error')
+80|       return NextResponse.json(
+81|         {
+82|           ...staleData.data,
+83|           warning: 'Using cached data due to upstream service unavailability',
+84|         },
+85|         {
+86|           headers: {
+87|             'Cache-Control': 'public, s-maxage=300, stale-while-revalidate=600',
+88|           },
+89|         }
+90|       )
+91|     }
+92| 
+93|     return NextResponse.json(
+94|       {
+95|         error: 'Failed to fetch storm data',
+96|         details: error instanceof Error ? error.message : 'Unknown error',
+97|       },
+98|       { status: 500 }
+99|     )
+100|   }
+101| }
+102| 
+
+
+=== FILE: src\app\api\env\weather\route.ts ===
+
+1| import { NextResponse } from 'next/server'
+2| import { createAdminClient } from '@/lib/supabase/server'
+3| import { getWindGridForZone, getTempAnomaliesForZone } from '@/lib/env/openmeteo'
+4| import { getWindGridForZoneWeatherAPI, getTempAnomaliesForZoneWeatherAPI } from '@/lib/env/weatherapi'
+5| import { getZoneForType, getCurrentZoneForType, GLOBE_ZONES } from '@/lib/env/zones'
+6| import type { EnvLayerData, WindPoint, TempAnomalyPoint } from '@/store/types'
+7| 
+8| /**
+9|  * GET /api/env/weather
+10|  * Returns wind + temperature anomaly data from Open-Meteo (free, no key).
+11|  *
+12|  * Strategy:
+13|  * - First load (empty cache): fetch ALL 4 zones immediately for full coverage
+14|  * - Subsequent loads: staggered rotation — wind offset 0, temp offset 1
+15|  * - Each zone cached 6 hours → ~4 API calls/day ✅
+16|  */
+17| export async function GET() {
+18|   try {
+19|     const supabase = createAdminClient()
+20|     const now = new Date()
+21|     const sixHoursAgo = new Date(now.getTime() - 21_600_000)
+22| 
+23|     // ── Wind ──────────────────────────────────────────────────────────────
+24|     const { data: allWindZones } = await supabase
+25|       .from('env_data_cache').select('*').like('layer_type', 'wind_zone_%')
+26| 
+27|     const windCacheEmpty = !allWindZones || allWindZones.length === 0
+28| 
+29|     if (windCacheEmpty) {
+30|       console.log('[Weather] Wind cache empty — fetching all 4 zones...')
+31|       for (const zone of GLOBE_ZONES) {
+32|         const key = `wind_zone_${zone.id}`
+33|         let points: WindPoint[] = []
+34|         try {
+35|           points = await getWindGridForZone(zone)
+36|         } catch {
+37|           try { points = await getWindGridForZoneWeatherAPI(zone) } catch { /* skip */ }
+38|         }
+39|         if (points.length > 0) {
+40|           await supabase.from('env_data_cache').upsert({
+41|             layer_type: key,
+42|             data: { points, zone: zone.id },
+43|             fetched_at: now.toISOString(),
+44|             expires_at: new Date(now.getTime() + 172_800_000).toISOString(),
+45|           })
+46|           console.log(`[Weather] Cached ${points.length} wind pts for ${zone.name}`)
+47|         }
+48|       }
+49|     } else {
+50|       // Staggered refresh — one zone per scheduled minute
+51|       const windZone = getZoneForType('wind') ?? getCurrentZoneForType('wind')
+52|       const windKey = `wind_zone_${windZone.id}`
+53|       const cached = allWindZones?.find((c: any) => c.layer_type === windKey)
+54|       if (!cached || new Date(cached.fetched_at) < sixHoursAgo) {
+55|         let points: WindPoint[] = []
+56|         try { points = await getWindGridForZone(windZone) } catch {
+57|           try { points = await getWindGridForZoneWeatherAPI(windZone) } catch { /* skip */ }
+58|         }
+59|         if (points.length > 0) {
+60|           await supabase.from('env_data_cache').upsert({
+61|             layer_type: windKey,
+62|             data: { points, zone: windZone.id },
+63|             fetched_at: now.toISOString(),
+64|             expires_at: new Date(now.getTime() + 172_800_000).toISOString(),
+65|           })
+66|           console.log(`[Weather] Refreshed ${points.length} wind pts for ${windZone.name}`)
+67|         }
+68|       }
+69|     }
+70| 
+71|     // ── Temperature ───────────────────────────────────────────────────────
+72|     const { data: allTempZones } = await supabase
+73|       .from('env_data_cache').select('*').like('layer_type', 'temp_zone_%')
+74| 
+75|     const tempCacheEmpty = !allTempZones || allTempZones.length === 0
+76| 
+77|     if (tempCacheEmpty) {
+78|       console.log('[Weather] Temp cache empty — fetching all 4 zones...')
+79|       for (const zone of GLOBE_ZONES) {
+80|         const key = `temp_zone_${zone.id}`
+81|         let points: TempAnomalyPoint[] = []
+82|         try {
+83|           points = await getTempAnomaliesForZone(zone)
+84|         } catch {
+85|           try { points = await getTempAnomaliesForZoneWeatherAPI(zone) } catch { /* skip */ }
+86|         }
+87|         if (points.length > 0) {
+88|           await supabase.from('env_data_cache').upsert({
+89|             layer_type: key,
+90|             data: { points, zone: zone.id },
+91|             fetched_at: now.toISOString(),
+92|             expires_at: new Date(now.getTime() + 172_800_000).toISOString(),
+93|           })
+94|           console.log(`[Weather] Cached ${points.length} temp pts for ${zone.name}`)
+95|         }
+96|       }
+97|     } else {
+98|       const tempZone = getZoneForType('temp') ?? getCurrentZoneForType('temp')
+99|       const tempKey = `temp_zone_${tempZone.id}`
+100|       const cached = allTempZones?.find((c: any) => c.layer_type === tempKey)
+101|       if (!cached || new Date(cached.fetched_at) < sixHoursAgo) {
+102|         let points: TempAnomalyPoint[] = []
+103|         try { points = await getTempAnomaliesForZone(tempZone) } catch {
+104|           try { points = await getTempAnomaliesForZoneWeatherAPI(tempZone) } catch { /* skip */ }
+105|         }
+106|         if (points.length > 0) {
+107|           await supabase.from('env_data_cache').upsert({
+108|             layer_type: tempKey,
+109|             data: { points, zone: tempZone.id },
+110|             fetched_at: now.toISOString(),
+111|             expires_at: new Date(now.getTime() + 172_800_000).toISOString(),
+112|           })
+113|           console.log(`[Weather] Refreshed ${points.length} temp pts for ${tempZone.name}`)
+114|         }
+115|       }
+116|     }
+117| 
+118|     // ── Merge all cached zones ─────────────────────────────────────────────
+119|     const { data: freshWindZones } = await supabase
+120|       .from('env_data_cache').select('*').like('layer_type', 'wind_zone_%')
+121|     const { data: freshTempZones } = await supabase
+122|       .from('env_data_cache').select('*').like('layer_type', 'temp_zone_%')
+123| 
+124|     const allWindPoints: WindPoint[] = []
+125|     freshWindZones?.forEach((z: any) => {
+126|       const d = z.data as { points: WindPoint[] }
+127|       if (d?.points) allWindPoints.push(...d.points)
+128|     })
+129| 
+130|     const allTempPoints: TempAnomalyPoint[] = []
+131|     freshTempZones?.forEach((z: any) => {
+132|       const d = z.data as { points: TempAnomalyPoint[] }
+133|       if (d?.points) allTempPoints.push(...d.points)
+134|     })
+135| 
+136|     const windCoverage = Math.round((freshWindZones?.length ?? 0) / GLOBE_ZONES.length * 100)
+137|     const tempCoverage = Math.round((freshTempZones?.length ?? 0) / GLOBE_ZONES.length * 100)
+138| 
+139|     console.log(`[Weather] Returning ${allWindPoints.length} wind (${windCoverage}%), ${allTempPoints.length} temp (${tempCoverage}%)`)
+140| 
+141|     return NextResponse.json(
+142|       {
+143|         wind: { type: 'wind', updatedAt: now.toISOString(), wind: allWindPoints } as EnvLayerData,
+144|         temperature_anomaly: { type: 'temperature_anomaly', updatedAt: now.toISOString(), tempAnomalies: allTempPoints } as EnvLayerData,
+145|         meta: { windCoverage: `${windCoverage}%`, tempCoverage: `${tempCoverage}%`, zonesLoaded: { wind: freshWindZones?.length ?? 0, temp: freshTempZones?.length ?? 0, total: GLOBE_ZONES.length } },
+146|       },
+147|       { headers: { 'Cache-Control': 'public, s-maxage=60, stale-while-revalidate=300' } }
+148|     )
+149|   } catch (error) {
+150|     console.error('[Weather] Error:', error)
+151|     return NextResponse.json({ error: 'Failed to fetch weather data' }, { status: 500 })
+152|   }
+153| }
+154| 
+
+
+=== FILE: src\app\api\env\wildfires\route.ts ===
+
+1| import { NextResponse } from 'next/server'
+2| import { createClient } from '@/lib/supabase/server'
+3| import { getWildfires } from '@/lib/env/eonet'
+4| import type { EnvLayerData } from '@/store/types'
+5| import { isRateLimited, RATE_LIMITS } from '@/lib/utils/ratelimit'
+6| 
+7| /**
+8|  * GET /api/env/wildfires
+9|  * Fetch wildfire data from NASA EONET
+10|  * Caches in env_data_cache table for 15 minutes
+11|  */
+12| export async function GET(request: Request) {
+13|   // Rate limiting
+14|   const identifier = `env-wildfires-${request.headers.get('x-forwarded-for') || 'unknown'}`
+15|   if (isRateLimited(identifier, RATE_LIMITS.ENV_API)) {
+16|     return NextResponse.json(
+17|       { error: 'Rate limit exceeded. Please try again later.' },
+18|       { status: 429 }
+19|     )
+20|   }
+21| 
+22|   try {
+23|     const supabase = await createClient()
+24| 
+25|     // Check cache first
+26|     const { data: cached } = await supabase
+27|       .from('env_data_cache')
+28|       .select('*')
+29|       .eq('layer_type', 'wildfires')
+30|       .gt('expires_at', new Date().toISOString())
+31|       .single()
+32| 
+33|     if (cached?.data) {
+34|       return NextResponse.json(cached.data, {
+35|         headers: {
+36|           'Cache-Control': 'public, s-maxage=900, stale-while-revalidate=1800',
+37|         },
+38|       })
+39|     }
+40| 
+41|     // Fetch fresh data
+42|     console.log('Fetching wildfire data from NASA EONET...')
+43|     const wildfires = await getWildfires()
+44| 
+45|     const now = new Date()
+46|     const layerData: EnvLayerData = {
+47|       type: 'wildfires',
+48|       updatedAt: now.toISOString(),
+49|       wildfires,
+50|     }
+51| 
+52|     // Cache for 15 minutes
+53|     await supabase.from('env_data_cache').upsert({
+54|       layer_type: 'wildfires',
+55|       data: layerData,
+56|       fetched_at: now.toISOString(),
+57|       expires_at: new Date(now.getTime() + 900_000).toISOString(),
+58|     })
+59| 
+60|     return NextResponse.json(layerData, {
+61|       headers: {
+62|         'Cache-Control': 'public, s-maxage=900, stale-while-revalidate=1800',
+63|       },
+64|     })
+65|   } catch (error) {
+66|     console.error('Wildfires API error:', error)
+67|     
+68|     // Try to return stale data if upstream API is down
+69|     const supabase = await createClient()
+70|     const { data: staleData } = await supabase
+71|       .from('env_data_cache')
+72|       .select('*')
+73|       .eq('layer_type', 'wildfires')
+74|       .order('fetched_at', { ascending: false })
+75|       .limit(1)
+76|       .single()
+77| 
+78|     if (staleData?.data) {
+79|       console.log('Returning stale wildfire data due to upstream error')
+80|       return NextResponse.json(
+81|         {
+82|           ...staleData.data,
+83|           warning: 'Using cached data due to upstream service unavailability',
+84|         },
+85|         {
+86|           headers: {
+87|             'Cache-Control': 'public, s-maxage=300, stale-while-revalidate=600',
+88|           },
+89|         }
+90|       )
+91|     }
+92| 
+93|     return NextResponse.json(
+94|       {
+95|         error: 'Failed to fetch wildfire data',
+96|         details: error instanceof Error ? error.message : 'Unknown error',
+97|       },
+98|       { status: 500 }
+99|     )
+100|   }
+101| }
+102| 
+
+
+=== FILE: src\app\api\events\route.ts ===
+
+1| import { NextRequest, NextResponse } from 'next/server'
+2| import { createClient } from '@/lib/supabase/server'
+3| 
+4| /**
+5|  * GET /api/events
+6|  * Fetch all active events with optional filters
+7|  */
+8| export async function GET(request: NextRequest) {
+9|   try {
+10|     const searchParams = request.nextUrl.searchParams
+11|     const timeRange = searchParams.get('timeRange') || '48h'
+12|     const category = searchParams.get('category')
+13|     const impactLevel = searchParams.get('impactLevel')
+14|     const country = searchParams.get('country')
+15|     const includeExpired = searchParams.get('include_expired') === 'true'
+16| 
+17|     const supabase = await createClient()
+18| 
+19|     // Calculate time threshold
+20|     const hoursMap: Record<string, number> = {
+21|       '1h': 1,
+22|       '6h': 6,
+23|       '24h': 24,
+24|       '48h': 48,
+25|     }
+26|     const hours = hoursMap[timeRange] || 48
+27|     const threshold = new Date(Date.now() - hours * 60 * 60 * 1000).toISOString()
+28| 
+29|     // Build query
+30|     let query = supabase
+31|       .from('events')
+32|       .select('*')
+33|       .gte('published_at', threshold)
+34|       .order('published_at', { ascending: false })
+35| 
+36|     // Only filter by expiration if not including expired events
+37|     if (!includeExpired) {
+38|       query = query.lte('expires_at', new Date(Date.now() + 48 * 60 * 60 * 1000).toISOString())
+39|     }
+40| 
+41|     // Apply filters
+42|     if (category) {
+43|       query = query.eq('category', category)
+44|     }
+45|     if (impactLevel) {
+46|       query = query.eq('impact_level', impactLevel)
+47|     }
+48|     if (country) {
+49|       query = query.eq('country', country)
+50|     }
+51| 
+52|     const { data, error } = await query
+53| 
+54|     if (error) {
+55|       console.error('Failed to fetch events:', error)
+56|       return NextResponse.json(
+57|         { error: 'Failed to fetch events' },
+58|         { status: 500 }
+59|       )
+60|     }
+61| 
+62|     // Transform database format to app format
+63|     const events = data.map((row) => ({
+64|       id: row.id,
+65|       headline: row.headline,
+66|       country: row.country,
+67|       lat: Number(row.lat),
+68|       lon: Number(row.lon),
+69|       impactLevel: row.impact_level,
+70|       category: row.category,
+71|       summary: row.summary,
+72|       sentiment: row.sentiment,
+73|       forexImpacts: row.forex_impacts || [],
+74|       confidenceScore: Number(row.confidence_score),
+75|       isMarketMoving: row.is_market_moving,
+76|       publishedAt: row.published_at,
+77|       expiresAt: row.expires_at,
+78|       sourceUrl: row.source_url,
+79|       createdBy: row.created_by,
+80|     }))
+81| 
+82|     return NextResponse.json(events, {
+83|       headers: {
+84|         'Cache-Control': 'public, s-maxage=60, stale-while-revalidate=120',
+85|       },
+86|     })
+87|   } catch (error) {
+88|     console.error('Events API error:', error)
+89|     return NextResponse.json(
+90|       { error: 'Internal server error' },
+91|       { status: 500 }
+92|     )
+93|   }
+94| }
+95| 
+96| /**
+97|  * POST /api/events
+98|  * Create a new event (authenticated users only)
+99|  */
+100| export async function POST(request: NextRequest) {
+101|   try {
+102|     const supabase = await createClient()
+103| 
+104|     // Check authentication
+105|     const {
+106|       data: { user },
+107|     } = await supabase.auth.getUser()
+108| 
+109|     if (!user) {
+110|       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+111|     }
+112| 
+113|     const body = await request.json()
+114| 
+115|     // Validate required fields
+116|     const requiredFields = [
+117|       'headline',
+118|       'country',
+119|       'lat',
+120|       'lon',
+121|       'impactLevel',
+122|       'category',
+123|       'summary',
+124|       'sentiment',
+125|     ]
+126| 
+127|     for (const field of requiredFields) {
+128|       if (!body[field]) {
+129|         return NextResponse.json(
+130|           { error: `Missing required field: ${field}` },
+131|           { status: 400 }
+132|         )
+133|       }
+134|     }
+135| 
+136|     // Calculate expiration (48 hours from now)
+137|     const expiresAt = new Date(Date.now() + 48 * 60 * 60 * 1000).toISOString()
+138| 
+139|     // Insert event
+140|     const { data, error } = await supabase
+141|       .from('events')
+142|       .insert({
+143|         headline: body.headline,
+144|         country: body.country,
+145|         lat: body.lat,
+146|         lon: body.lon,
+147|         impact_level: body.impactLevel,
+148|         category: body.category,
+149|         summary: body.summary,
+150|         sentiment: body.sentiment,
+151|         forex_impacts: body.forexImpacts || [],
+152|         confidence_score: (body.confidenceScore || 0) / 100, // Convert 0-100 to 0-1
+153|         is_market_moving: body.isMarketMoving || false,
+154|         expires_at: expiresAt,
+155|         source_url: body.sourceUrl,
+156|         created_by: body.createdBy || 'manual',
+157|       })
+158|       .select()
+159|       .single()
+160| 
+161|     if (error) {
+162|       console.error('Failed to create event:', error)
+163|       return NextResponse.json(
+164|         { error: 'Failed to create event' },
+165|         { status: 500 }
+166|       )
+167|     }
+168| 
+169|     return NextResponse.json(data, { status: 201 })
+170|   } catch (error) {
+171|     console.error('Events POST error:', error)
+172|     return NextResponse.json(
+173|       { error: 'Internal server error' },
+174|       { status: 500 }
+175|     )
+176|   }
+177| }
+178| 
+
+
+=== FILE: src\app\api\events\[id]\route.ts ===
+
+1| import { NextRequest, NextResponse } from 'next/server'
+2| import { createClient } from '@/lib/supabase/server'
+3| 
+4| /**
+5|  * GET /api/events/[id]
+6|  * Fetch a single event by ID
+7|  */
+8| export async function GET(
+9|   request: NextRequest,
+10|   { params }: { params: Promise<{ id: string }> }
+11| ) {
+12|   try {
+13|     const { id } = await params
+14|     const supabase = await createClient()
+15| 
+16|     const { data, error } = await supabase
+17|       .from('events')
+18|       .select('*')
+19|       .eq('id', id)
+20|       .single()
+21| 
+22|     if (error) {
+23|       if (error.code === 'PGRST116') {
+24|         return NextResponse.json({ error: 'Event not found' }, { status: 404 })
+25|       }
+26|       console.error('Failed to fetch event:', error)
+27|       return NextResponse.json(
+28|         { error: 'Failed to fetch event' },
+29|         { status: 500 }
+30|       )
+31|     }
+32| 
+33|     // Transform to app format
+34|     const event = {
+35|       id: data.id,
+36|       headline: data.headline,
+37|       country: data.country,
+38|       lat: Number(data.lat),
+39|       lon: Number(data.lon),
+40|       impactLevel: data.impact_level,
+41|       category: data.category,
+42|       summary: data.summary,
+43|       sentiment: data.sentiment,
+44|       forexImpacts: data.forex_impacts || [],
+45|       confidenceScore: Number(data.confidence_score) * 100,
+46|       isMarketMoving: data.is_market_moving,
+47|       publishedAt: data.published_at,
+48|       expiresAt: data.expires_at,
+49|       sourceUrl: data.source_url,
+50|       createdBy: data.created_by,
+51|     }
+52| 
+53|     return NextResponse.json(event, {
+54|       headers: {
+55|         'Cache-Control': 'public, s-maxage=300, stale-while-revalidate=600',
+56|       },
+57|     })
+58|   } catch (error) {
+59|     console.error('Event fetch error:', error)
+60|     return NextResponse.json(
+61|       { error: 'Internal server error' },
+62|       { status: 500 }
+63|     )
+64|   }
+65| }
+66| 
+67| /**
+68|  * DELETE /api/events/[id]
+69|  * Delete an event (authenticated users only)
+70|  */
+71| export async function DELETE(
+72|   request: NextRequest,
+73|   { params }: { params: Promise<{ id: string }> }
+74| ) {
+75|   try {
+76|     const { id } = await params
+77|     const supabase = await createClient()
+78| 
+79|     // Check authentication
+80|     const {
+81|       data: { user },
+82|     } = await supabase.auth.getUser()
+83| 
+84|     if (!user) {
+85|       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+86|     }
+87| 
+88|     const { error } = await supabase.from('events').delete().eq('id', id)
+89| 
+90|     if (error) {
+91|       console.error('Failed to delete event:', error)
+92|       return NextResponse.json(
+93|         { error: 'Failed to delete event' },
+94|         { status: 500 }
+95|       )
+96|     }
+97| 
+98|     return NextResponse.json({ success: true })
+99|   } catch (error) {
+100|     console.error('Event delete error:', error)
+101|     return NextResponse.json(
+102|       { error: 'Internal server error' },
+103|       { status: 500 }
+104|     )
+105|   }
+106| }
+107| 
+108| /**
+109|  * PATCH /api/events/[id]
+110|  * Update an event (authenticated users only)
+111|  */
+112| export async function PATCH(
+113|   request: NextRequest,
+114|   { params }: { params: Promise<{ id: string }> }
+115| ) {
+116|   try {
+117|     const { id } = await params
+118|     const supabase = await createClient()
+119| 
+120|     // Check authentication
+121|     const {
+122|       data: { user },
+123|     } = await supabase.auth.getUser()
+124| 
+125|     if (!user) {
+126|       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+127|     }
+128| 
+129|     const body = await request.json()
+130| 
+131|     // Build update object (only include provided fields)
+132|     const updates: Record<string, unknown> = {}
+133| 
+134|     if (body.headline !== undefined) updates.headline = body.headline
+135|     if (body.country !== undefined) updates.country = body.country
+136|     if (body.lat !== undefined) updates.lat = body.lat
+137|     if (body.lon !== undefined) updates.lon = body.lon
+138|     if (body.impactLevel !== undefined) updates.impact_level = body.impactLevel
+139|     if (body.category !== undefined) updates.category = body.category
+140|     if (body.summary !== undefined) updates.summary = body.summary
+141|     if (body.sentiment !== undefined) updates.sentiment = body.sentiment
+142|     if (body.forexImpacts !== undefined) updates.forex_impacts = body.forexImpacts
+143|     if (body.confidenceScore !== undefined)
+144|       updates.confidence_score = body.confidenceScore / 100
+145|     if (body.isMarketMoving !== undefined)
+146|       updates.is_market_moving = body.isMarketMoving
+147| 
+148|     const { data, error } = await supabase
+149|       .from('events')
+150|       .update(updates)
+151|       .eq('id', id)
+152|       .select()
+153|       .single()
+154| 
+155|     if (error) {
+156|       console.error('Failed to update event:', error)
+157|       return NextResponse.json(
+158|         { error: 'Failed to update event' },
+159|         { status: 500 }
+160|       )
+161|     }
+162| 
+163|     // Transform to app format
+164|     const event = {
+165|       id: data.id,
+166|       headline: data.headline,
+167|       country: data.country,
+168|       lat: Number(data.lat),
+169|       lon: Number(data.lon),
+170|       impactLevel: data.impact_level,
+171|       category: data.category,
+172|       summary: data.summary,
+173|       sentiment: data.sentiment,
+174|       forexImpacts: data.forex_impacts || [],
+175|       confidenceScore: Number(data.confidence_score) * 100,
+176|       isMarketMoving: data.is_market_moving,
+177|       publishedAt: data.published_at,
+178|       expiresAt: data.expires_at,
+179|       sourceUrl: data.source_url,
+180|       createdBy: data.created_by,
+181|     }
+182| 
+183|     return NextResponse.json(event)
+184|   } catch (error) {
+185|     console.error('Event update error:', error)
+186|     return NextResponse.json(
+187|       { error: 'Internal server error' },
+188|       { status: 500 }
+189|     )
+190|   }
+191| }
+192| 
+
+
+=== FILE: src\app\api\forex\init\route.ts ===
+
+1| import { NextRequest, NextResponse } from 'next/server'
+2| import {
+3|   MAJOR_PAIRS,
+4|   getForexQuote,
+5|   getForexTimeSeries,
+6|   calculate24hChange,
+7|   extractSparklineData,
+8| } from '@/lib/forex/twelvedata'
+9| import { updateForexPairsCacheBatch } from '@/lib/forex/cache'
+10| 
+11| /**
+12|  * GET /api/forex/init
+13|  * Initialize ALL forex pairs at once
+14|  * Use this ONLY for initial setup or when cache is completely empty
+15|  * 
+16|  * WARNING: Uses 10 API credits (2 per pair × 5 pairs)
+17|  * Protected by ADMIN_SECRET
+18|  */
+19| export async function GET(request: NextRequest) {
+20|   try {
+21|     // Verify admin secret
+22|     const adminSecret = request.headers.get('x-admin-secret')
+23| 
+24|     if (adminSecret !== process.env.ADMIN_SECRET) {
+25|       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+26|     }
+27| 
+28|     console.log('[Forex Init] Initializing all forex pairs...')
+29| 
+30|     const results = []
+31|     const errors = []
+32| 
+33|     // Fetch all pairs with delays between calls
+34|     for (let i = 0; i < MAJOR_PAIRS.length; i++) {
+35|       const pair = MAJOR_PAIRS[i]
+36|       
+37|       try {
+38|         console.log(`[Forex Init] Fetching ${pair} (${i + 1}/${MAJOR_PAIRS.length})...`)
+39|         
+40|         // Fetch quote (1 API credit)
+41|         const quote = await getForexQuote(pair)
+42|         console.log(`[Forex Init] Quote fetched for ${pair}: ${quote.close}`)
+43| 
+44|         // Wait 10 seconds between calls to respect rate limits
+45|         await new Promise((resolve) => setTimeout(resolve, 10000))
+46| 
+47|         // Fetch 24h time series (1 API credit)
+48|         const timeSeries = await getForexTimeSeries(pair, '1h', 24)
+49|         console.log(`[Forex Init] Time series fetched for ${pair}: ${timeSeries.values.length} points`)
+50| 
+51|         const { change, changePercent } = calculate24hChange(timeSeries.values)
+52|         const sparklineData = extractSparklineData(timeSeries.values)
+53| 
+54|         results.push({
+55|           pair,
+56|           currentPrice: parseFloat(quote.close),
+57|           change24h: change,
+58|           changePercent24h: changePercent,
+59|           sparklineData,
+60|         })
+61| 
+62|         // Wait another 10 seconds before next pair
+63|         if (i < MAJOR_PAIRS.length - 1) {
+64|           await new Promise((resolve) => setTimeout(resolve, 10000))
+65|         }
+66|       } catch (error) {
+67|         console.error(`[Forex Init] Failed to fetch ${pair}:`, error)
+68|         errors.push({
+69|           pair,
+70|           error: error instanceof Error ? error.message : 'Unknown error',
+71|         })
+72|       }
+73|     }
+74| 
+75|     // Update cache with all successfully fetched pairs
+76|     if (results.length > 0) {
+77|       await updateForexPairsCacheBatch(results)
+78|       console.log(`[Forex Init] Successfully initialized ${results.length} pairs`)
+79|     }
+80| 
+81|     return NextResponse.json({
+82|       success: true,
+83|       message: `Initialized ${results.length}/${MAJOR_PAIRS.length} pairs`,
+84|       initialized: results.map(r => ({
+85|         pair: r.pair,
+86|         currentPrice: r.currentPrice,
+87|         changePercent24h: r.changePercent24h,
+88|       })),
+89|       errors: errors.length > 0 ? errors : undefined,
+90|       stats: {
+91|         totalPairs: MAJOR_PAIRS.length,
+92|         successfulPairs: results.length,
+93|         failedPairs: errors.length,
+94|         apiCreditsUsed: results.length * 2,
+95|       },
+96|     })
+97|   } catch (error) {
+98|     console.error('[Forex Init] Fatal error:', error)
+99|     return NextResponse.json(
+100|       {
+101|         error: 'Forex initialization failed',
+102|         details: error instanceof Error ? error.message : 'Unknown error',
+103|       },
+104|       { status: 500 }
+105|     )
+106|   }
+107| }
+108| 
+
+
+=== FILE: src\app\api\forex\pairs\route.ts ===
+
+1| import { NextResponse } from 'next/server'
+2| import { getCachedForexPairs, getTopMovers } from '@/lib/forex/cache'
+3| 
+4| /**
+5|  * GET /api/forex/pairs
+6|  * Fetch forex pairs data (cached)
+7|  * Query params:
+8|  *   - top: number (optional) - Get top N movers only
+9|  */
+10| export async function GET(request: Request) {
+11|   try {
+12|     const { searchParams } = new URL(request.url)
+13|     const topParam = searchParams.get('top')
+14| 
+15|     let pairs
+16| 
+17|     if (topParam) {
+18|       const limit = parseInt(topParam, 10)
+19|       if (isNaN(limit) || limit < 1 || limit > 20) {
+20|         return NextResponse.json(
+21|           { error: 'Invalid top parameter (must be 1-20)' },
+22|           { status: 400 }
+23|         )
+24|       }
+25|       pairs = await getTopMovers(limit)
+26|     } else {
+27|       pairs = await getCachedForexPairs()
+28|     }
+29| 
+30|     return NextResponse.json(pairs, {
+31|       headers: {
+32|         // No CDN caching — forex data changes every minute, always serve fresh
+33|         'Cache-Control': 'no-store, no-cache, must-revalidate',
+34|       },
+35|     })
+36|   } catch (error) {
+37|     console.error('Forex pairs API error:', error)
+38|     return NextResponse.json(
+39|       {
+40|         error: 'Failed to fetch forex pairs',
+41|         details: error instanceof Error ? error.message : 'Unknown error',
+42|       },
+43|       { status: 500 }
+44|     )
+45|   }
+46| }
+47| 
+
+
+=== FILE: src\app\api\forex\refresh\route.ts ===
+
+1| import { NextRequest, NextResponse } from 'next/server'
+2| import {
+3|   MAJOR_PAIRS,
+4|   getForexQuote,
+5|   getForexTimeSeries,
+6|   calculate24hChange,
+7|   extractSparklineData,
+8| } from '@/lib/forex/twelvedata'
+9| import { updateForexPairCache, getForexPairFromCache } from '@/lib/forex/cache'
+10| 
+11| /**
+12|  * GET /api/forex/refresh
+13|  * Rotating forex refresh — updates ONE pair per call.
+14|  *
+15|  * Cron fires every 1 minute (vercel.json: "* * * * *")
+16|  * Each pair gets updated once every 5 minutes (5 pairs × 1 min = 5-min cycle).
+17|  *
+18|  * Rotation logic:
+19|  *   minute 0,5,10,15,20,25,30,35,40,45,50,55 → pair 0 (EUR/USD)
+20|  *   minute 1,6,11,16,21,26,31,36,41,46,51,56 → pair 1 (GBP/USD)
+21|  *   minute 2,7,12,17,22,27,32,37,42,47,52,57 → pair 2 (USD/JPY)
+22|  *   minute 3,8,13,18,23,28,33,38,43,48,53,58 → pair 3 (AUD/USD)
+23|  *   minute 4,9,14,19,24,29,34,39,44,49,54,59 → pair 4 (USD/CAD)
+24|  *
+25|  * API usage: 2 credits/call × 60 calls/hour × 24h = 2,880/day
+26|  * But only 1 pair per call → 12 calls/pair/hour → well within 800/day free tier
+27|  * (288 calls/day × 2 credits = 576 credits/day ✅)
+28|  *
+29|  * Protected by CRON_SECRET (Vercel) or ADMIN_SECRET (manual)
+30|  */
+31| export async function GET(request: NextRequest) {
+32|   try {
+33|     const cronSecret = request.headers.get('x-cron-secret')
+34|     const adminSecret = request.headers.get('x-admin-secret')
+35| 
+36|     if (
+37|       cronSecret !== process.env.CRON_SECRET &&
+38|       adminSecret !== process.env.ADMIN_SECRET
+39|     ) {
+40|       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+41|     }
+42| 
+43|     // ── Determine which pair to update this minute ──────────────────────
+44|     // Use minute % MAJOR_PAIRS.length so each minute maps to exactly one pair
+45|     const currentMinute = new Date().getMinutes()
+46|     const pairIndex = currentMinute % MAJOR_PAIRS.length
+47|     const pairToUpdate = MAJOR_PAIRS[pairIndex]
+48| 
+49|     console.log(`[Forex] Minute ${currentMinute} → updating pair ${pairIndex + 1}/${MAJOR_PAIRS.length}: ${pairToUpdate}`)
+50| 
+51|     // ── Check if this pair was updated recently (skip if < 4 minutes old) ──
+52|     const cached = await getForexPairFromCache(pairToUpdate)
+53|     if (cached) {
+54|       const ageMs = Date.now() - new Date(cached.lastUpdated).getTime()
+55|       const ageMin = ageMs / 60_000
+56|       if (ageMin < 4) {
+57|         console.log(`[Forex] ${pairToUpdate} updated ${ageMin.toFixed(1)}min ago — skipping`)
+58|         return NextResponse.json({
+59|           success: true,
+60|           skipped: true,
+61|           message: `${pairToUpdate} is fresh (${ageMin.toFixed(1)}min old), skipping`,
+62|           pair: pairToUpdate,
+63|         })
+64|       }
+65|     }
+66| 
+67|     // ── Fetch quote (1 API credit) ──────────────────────────────────────
+68|     const quote = await getForexQuote(pairToUpdate)
+69|     console.log(`[Forex] Quote: ${pairToUpdate} = ${quote.close}`)
+70| 
+71|     // 10-second gap between the two API calls (rate limit safety)
+72|     await new Promise((resolve) => setTimeout(resolve, 10_000))
+73| 
+74|     // ── Fetch 24h time series for sparkline (1 API credit) ─────────────
+75|     const timeSeries = await getForexTimeSeries(pairToUpdate, '1h', 24)
+76|     console.log(`[Forex] Time series: ${timeSeries.values.length} points`)
+77| 
+78|     const { change, changePercent } = calculate24hChange(timeSeries.values)
+79|     const sparklineData = extractSparklineData(timeSeries.values)
+80| 
+81|     await updateForexPairCache(pairToUpdate, {
+82|       currentPrice: parseFloat(quote.close),
+83|       change24h: change,
+84|       changePercent24h: changePercent,
+85|       sparklineData,
+86|     })
+87| 
+88|     console.log(`[Forex] ✅ Updated ${pairToUpdate}`)
+89| 
+90|     // Return current state of all pairs
+91|     const allPairs = await Promise.all(
+92|       MAJOR_PAIRS.map(async (pair) => {
+93|         const c = await getForexPairFromCache(pair)
+94|         return c ? {
+95|           pair: c.pair,
+96|           currentPrice: c.currentPrice,
+97|           changePercent24h: c.changePercent24h,
+98|           lastUpdated: c.lastUpdated,
+99|           ageMinutes: Math.round((Date.now() - new Date(c.lastUpdated).getTime()) / 60_000),
+100|         } : { pair, missing: true }
+101|       })
+102|     )
+103| 
+104|     return NextResponse.json({
+105|       success: true,
+106|       updated: pairToUpdate,
+107|       nextPair: MAJOR_PAIRS[(pairIndex + 1) % MAJOR_PAIRS.length],
+108|       allPairs,
+109|     })
+110|   } catch (error) {
+111|     console.error('[Forex] Error:', error)
+112|     return NextResponse.json(
+113|       { error: 'Forex refresh failed', details: error instanceof Error ? error.message : 'Unknown error' },
+114|       { status: 500 }
+115|     )
+116|   }
+117| }
+118| 
+
+
+=== FILE: src\app\api\forex\sparkline\[pair]\route.ts ===
+
+1| import { NextRequest, NextResponse } from 'next/server'
+2| import { getForexTimeSeries, extractSparklineData } from '@/lib/forex/twelvedata'
+3| 
+4| /**
+5|  * GET /api/forex/sparkline/[pair]
+6|  * Get sparkline data for a specific forex pair
+7|  * Returns 24 hours of hourly data
+8|  */
+9| export async function GET(
+10|   request: NextRequest,
+11|   { params }: { params: Promise<{ pair: string }> }
+12| ) {
+13|   try {
+14|     const { pair } = await params
+15| 
+16|     // Validate pair format (e.g., EUR-USD or EURUSD)
+17|     const normalizedPair = pair.replace('-', '/').toUpperCase()
+18| 
+19|     if (!/^[A-Z]{3}\/[A-Z]{3}$/.test(normalizedPair)) {
+20|       return NextResponse.json(
+21|         { error: 'Invalid pair format. Use format: EUR-USD or EURUSD' },
+22|         { status: 400 }
+23|       )
+24|     }
+25| 
+26|     // Fetch time series data
+27|     const timeSeries = await getForexTimeSeries(normalizedPair, '1h', 24)
+28| 
+29|     // Extract sparkline data (close prices)
+30|     const sparklineData = extractSparklineData(timeSeries.values)
+31| 
+32|     return NextResponse.json(
+33|       {
+34|         pair: normalizedPair,
+35|         interval: '1h',
+36|         dataPoints: sparklineData.length,
+37|         data: sparklineData,
+38|         meta: timeSeries.meta,
+39|       },
+40|       {
+41|         headers: {
+42|           'Cache-Control': 'public, s-maxage=300, stale-while-revalidate=600',
+43|         },
+44|       }
+45|     )
+46|   } catch (error) {
+47|     console.error('Sparkline API error:', error)
+48|     return NextResponse.json(
+49|       {
+50|         error: 'Failed to fetch sparkline data',
+51|         details: error instanceof Error ? error.message : 'Unknown error',
+52|       },
+53|       { status: 500 }
+54|     )
+55|   }
+56| }
+57| 
+
+
+=== FILE: src\app\api\news\gemini\route.ts ===
+
+1| import { NextRequest, NextResponse } from 'next/server'
+2| import { createAdminClient } from '@/lib/supabase/server'
+3| 
+4| // ── Seed events — used when all AI providers are unavailable ─────────────────
+5| const SEED_EVENTS = [
+6|   { headline: 'Russia launches mass drone strike on Kyiv energy grid', country: 'Ukraine', lat: 50.4501, lon: 30.5234, impactLevel: 'Critical', category: 'Geopolitical', summary: 'Russia launched 120+ Shahed drones targeting Kyiv power infrastructure, triggering EU emergency energy summit. UAH and regional currencies under pressure.', sentiment: 'Negative market sentiment', forexImpacts: [{ pair: 'EUR/USD', direction: -1, magnitude: 'Large', movePercent: '-0.6%', reasoning: 'Risk-off; European energy supply shock' }, { pair: 'USD/JPY', direction: -1, magnitude: 'Medium', movePercent: '-0.4%', reasoning: 'Yen safe-haven demand surge' }] },
+7|   { headline: 'Israel expands ground operation into Rafah amid ceasefire collapse', country: 'Israel', lat: 31.2918, lon: 34.2479, impactLevel: 'Critical', category: 'Geopolitical', summary: 'IDF ground forces entered Rafah as ceasefire talks broke down in Doha. Oil futures jumped 3% on Middle East escalation fears.', sentiment: 'Negative market sentiment', forexImpacts: [{ pair: 'XAU/USD', direction: 1, magnitude: 'Large', movePercent: '+1.2%', reasoning: 'Gold safe-haven bid on conflict escalation' }] },
+8|   { headline: 'India-Pakistan exchange cross-border artillery fire in Kashmir', country: 'India', lat: 34.0837, lon: 74.7973, impactLevel: 'Critical', category: 'Geopolitical', summary: 'Heavy shelling along the Line of Control following terrorist attack. Nuclear-armed neighbours on highest alert in 5 years.', sentiment: 'Negative market sentiment', forexImpacts: [{ pair: 'USD/INR', direction: 1, magnitude: 'Large', movePercent: '+1.1%', reasoning: 'Rupee crash on war risk' }, { pair: 'USD/PKR', direction: 1, magnitude: 'Large', movePercent: '+2.3%', reasoning: 'Pakistan peso collapses amid conflict' }] },
+9|   { headline: 'Fed emergency cut 50bps as US bank failures trigger liquidity crisis', country: 'United States', lat: 38.8951, lon: -77.0364, impactLevel: 'Critical', category: 'Central Bank', summary: 'Federal Reserve slashes rates 50bp in emergency session after two regional banks collapse. S&P 500 futures halted limit-down.', sentiment: 'Negative market sentiment', forexImpacts: [{ pair: 'EUR/USD', direction: 1, magnitude: 'Large', movePercent: '+1.4%', reasoning: 'Dollar collapse on Fed crisis cut' }, { pair: 'USD/JPY', direction: -1, magnitude: 'Large', movePercent: '-1.8%', reasoning: 'Massive yen safe-haven surge' }] },
+10|   { headline: 'Chinese military encircles Taiwan with live-fire naval exercises', country: 'China', lat: 25.0330, lon: 121.5654, impactLevel: 'Critical', category: 'Geopolitical', summary: 'PLA Navy conducts unprecedented 72-hour blockade simulation around Taiwan Strait. Semiconductor stocks plunge 8% globally.', sentiment: 'Negative market sentiment', forexImpacts: [{ pair: 'USD/CNY', direction: 1, magnitude: 'Large', movePercent: '+0.9%', reasoning: 'Yuan pressure on capital flight risk' }, { pair: 'USD/TWD', direction: 1, magnitude: 'Large', movePercent: '+2.1%', reasoning: 'Taiwan dollar sold heavily' }] },
+11|   { headline: 'ECB raises rates 25bp citing persistent eurozone inflation', country: 'Germany', lat: 50.1109, lon: 8.6821, impactLevel: 'High', category: 'Central Bank', summary: 'European Central Bank delivered 25bp hike to 4.5%, signalling higher-for-longer. Euro strengthened; peripheral bond spreads tightened.', sentiment: 'Positive market sentiment', forexImpacts: [{ pair: 'EUR/USD', direction: 1, magnitude: 'Medium', movePercent: '+0.5%', reasoning: 'ECB hawkishness supports euro' }] },
+12|   { headline: 'Trump announces 60% tariff on all Chinese electronics imports', country: 'United States', lat: 40.7128, lon: -74.0060, impactLevel: 'High', category: 'Macro', summary: 'Trump White House unveiled sweeping 60% tariff on Chinese tech exports, escalating trade war. Apple and NVIDIA led tech selloff.', sentiment: 'Negative market sentiment', forexImpacts: [{ pair: 'USD/CNY', direction: 1, magnitude: 'Large', movePercent: '+0.7%', reasoning: 'Trade war pressure on yuan' }, { pair: 'AUD/USD', direction: -1, magnitude: 'Medium', movePercent: '-0.5%', reasoning: 'Australia trade exposure to China' }] },
+13|   { headline: 'Magnitude 7.8 earthquake strikes Istanbul, 2,000 feared dead', country: 'Turkey', lat: 41.0082, lon: 28.9784, impactLevel: 'High', category: 'Natural Disaster', summary: 'Major earthquake struck Istanbul at 3am local time. Turkey declared state of emergency; lira fell 4% on reconstruction cost fears.', sentiment: 'Negative market sentiment', forexImpacts: [{ pair: 'USD/TRY', direction: 1, magnitude: 'Large', movePercent: '+4.1%', reasoning: 'Lira collapses on disaster spending' }] },
+14|   { headline: 'Saudi Arabia extends voluntary oil production cut by 6 months', country: 'Saudi Arabia', lat: 24.6877, lon: 46.7219, impactLevel: 'High', category: 'Macro', summary: 'Riyadh announced 1mb/d voluntary cut extension through Q2, pushing Brent above $95. Inflation outlook worsened in oil-importing nations.', sentiment: 'Negative market sentiment', forexImpacts: [{ pair: 'USD/NOK', direction: -1, magnitude: 'Medium', movePercent: '-0.6%', reasoning: 'Krone strengthens on oil price rise' }] },
+15|   { headline: 'North Korea fires ICBM over Japan into Pacific Ocean', country: 'North Korea', lat: 39.0392, lon: 125.7625, impactLevel: 'High', category: 'Geopolitical', summary: 'DPRK launched Hwasong-17 ICBM over Hokkaido, landing 200km inside Japanese EEZ. Yen spiked on safe-haven demand.', sentiment: 'Negative market sentiment', forexImpacts: [{ pair: 'USD/JPY', direction: -1, magnitude: 'Medium', movePercent: '-0.7%', reasoning: 'Yen safe-haven surge on DPRK launch' }, { pair: 'USD/KRW', direction: 1, magnitude: 'Medium', movePercent: '+0.8%', reasoning: 'Won weakens on Korea peninsula tension' }] },
+16|   { headline: 'Brazil central bank cuts Selic rate to 10.5% amid easing cycle', country: 'Brazil', lat: -15.7975, lon: -47.8919, impactLevel: 'Medium', category: 'Central Bank', summary: 'Banco do Brasil reduced benchmark rate 50bp in unanimous decision. Real weakened slightly as carry-trade appeal diminished.', sentiment: 'Neutral market sentiment', forexImpacts: [{ pair: 'USD/BRL', direction: 1, magnitude: 'Small', movePercent: '+0.3%', reasoning: 'Real softens on lower carry yield' }] },
+17|   { headline: 'UK inflation rises to 4.2%, above BOE 2% target for 14th month', country: 'United Kingdom', lat: 51.5074, lon: -0.1278, impactLevel: 'Medium', category: 'Macro', summary: 'UK CPI surprised to the upside at 4.2%, forcing Bank of England to delay expected rate cuts. Sterling rallied on higher-for-longer bets.', sentiment: 'Positive market sentiment', forexImpacts: [{ pair: 'GBP/USD', direction: 1, magnitude: 'Medium', movePercent: '+0.4%', reasoning: 'Cable rises on sticky inflation' }] },
+18|   { headline: 'US imposes fresh sanctions on Iranian oil exports via third parties', country: 'Iran', lat: 35.6892, lon: 51.3890, impactLevel: 'Medium', category: 'Sanctions', summary: 'Treasury OFAC designated 5 Chinese shipping firms aiding Iranian oil exports. Oil prices rose 1.5% on supply tightening fears.', sentiment: 'Negative market sentiment', forexImpacts: [{ pair: 'USD/CNY', direction: 1, magnitude: 'Small', movePercent: '+0.2%', reasoning: 'Yuan pressure on secondary sanctions risk' }] },
+19|   { headline: 'Argentina peso devalued 30% as IMF deal reaches restructuring terms', country: 'Argentina', lat: -34.6037, lon: -58.3816, impactLevel: 'Medium', category: 'Macro', summary: 'Milei government devalued ARS 30% in surprise overnight move as IMF agreed $44B restructuring. Bond yields fell sharply.', sentiment: 'Positive market sentiment', forexImpacts: [{ pair: 'USD/ARS', direction: 1, magnitude: 'Large', movePercent: '+30%', reasoning: 'Official peso devaluation to IMF-agreed rate' }] },
+20|   { headline: 'Kenya floods displace 200,000; humanitarian crisis declared', country: 'Kenya', lat: -1.2921, lon: 36.8219, impactLevel: 'Medium', category: 'Natural Disaster', summary: 'Worst floods in 30 years hit Nairobi and the Rift Valley. World Bank activated $500M emergency facility; shilling weakened.', sentiment: 'Negative market sentiment', forexImpacts: [{ pair: 'USD/KES', direction: 1, magnitude: 'Small', movePercent: '+0.5%', reasoning: 'Shilling pressured on emergency spending' }] },
+21|   { headline: 'Reserve Bank of Australia holds rates at 4.35% for third meeting', country: 'Australia', lat: -33.8688, lon: 151.2093, impactLevel: 'Low', category: 'Central Bank', summary: 'RBA kept the cash rate unchanged as board assessed lagging inflation data. AUD was little changed as decision was fully priced.', sentiment: 'Neutral market sentiment', forexImpacts: [{ pair: 'AUD/USD', direction: 1, magnitude: 'Small', movePercent: '+0.1%', reasoning: 'Slight relief as no hike delivered' }] },
+22|   { headline: 'Japan-EU sign digital trade agreement at Tokyo summit', country: 'Japan', lat: 35.6762, lon: 139.6503, impactLevel: 'Low', category: 'Political', summary: 'Japan and EU finalised landmark digital trade rules covering AI, data flows and e-commerce. Minimal immediate market impact.', sentiment: 'Positive market sentiment', forexImpacts: [] },
+23|   { headline: 'Canada posts stronger-than-expected Q4 GDP at 2.8% annualised', country: 'Canada', lat: 45.4215, lon: -75.6972, impactLevel: 'Low', category: 'Macro', summary: 'Statistics Canada GDP beat consensus of 2.2%, reducing pressure for Bank of Canada rate cuts in Q2. Loonie firmed modestly.', sentiment: 'Positive market sentiment', forexImpacts: [{ pair: 'USD/CAD', direction: -1, magnitude: 'Small', movePercent: '-0.2%', reasoning: 'Loonie firms on strong GDP beat' }] },
+24|   { headline: 'Swiss National Bank holds rates at 1.0%; signals no near-term cuts', country: 'Switzerland', lat: 46.9481, lon: 7.4474, impactLevel: 'Low', category: 'Central Bank', summary: 'SNB left rates steady, noting inflation at 1.4% within target band. Franc moved marginally; decision in line with expectations.', sentiment: 'Neutral market sentiment', forexImpacts: [{ pair: 'EUR/CHF', direction: 1, magnitude: 'Small', movePercent: '+0.1%', reasoning: 'Slight franc softening on hold decision' }] },
+25|   { headline: 'Singapore expands MAS green bond framework for ASEAN issuers', country: 'Singapore', lat: 1.3521, lon: 103.8198, impactLevel: 'Low', category: 'Macro', summary: 'Monetary Authority of Singapore expanded green bond guidelines to include ASEAN sovereign issuers, attracting $2B in pipeline deals.', sentiment: 'Positive market sentiment', forexImpacts: [] },
+26| ]
+27| 
+28| // ── Category sanitizer — DB enforces strict check constraint ─────────────────
+29| const VALID_CATEGORIES = new Set([
+30|   'Geopolitical', 'Central Bank', 'Macro', 'Political',
+31|   'Crisis', 'Sanctions', 'Earnings', 'Natural Disaster',
+32| ])
+33| 
+34| function sanitizeCategory(raw: string): string {
+35|   if (VALID_CATEGORIES.has(raw)) return raw
+36|   const r = (raw || '').toLowerCase()
+37|   if (r.includes('bank') || r.includes('monetary') || r.includes('rate') || r.includes('fed') || r.includes('ecb') || r.includes('boj')) return 'Central Bank'
+38|   if (r.includes('war') || r.includes('military') || r.includes('conflict') || r.includes('geo') || r.includes('terror') || r.includes('nuclear')) return 'Geopolitical'
+39|   if (r.includes('sanction') || r.includes('embargo') || r.includes('tariff') || r.includes('trade')) return 'Sanctions'
+40|   if (r.includes('disaster') || r.includes('earthquake') || r.includes('flood') || r.includes('hurricane') || r.includes('natural')) return 'Natural Disaster'
+41|   if (r.includes('crisis') || r.includes('emergency') || r.includes('collapse')) return 'Crisis'
+42|   if (r.includes('politic') || r.includes('election') || r.includes('government') || r.includes('diplomatic')) return 'Political'
+43|   if (r.includes('earn') || r.includes('profit') || r.includes('corporate') || r.includes('stock')) return 'Earnings'
+44|   return 'Macro' // safe fallback
+45| }
+46| 
+47| let lastAttemptMs = 0
+48| let lastSuccessMs = 0
+49| let failureStreak = 0
+50| 
+51| const RETRY_GAP_MS   = 2 * 60 * 1000
+52| const REFRESH_GAP_MS = 4 * 60 * 60 * 1000
+53| const TARGET_EVENTS  = 20
+54| 
+55| export async function GET(request: NextRequest) {
+56|   const cronSecret  = request.headers.get('x-cron-secret')
+57|   const adminSecret = request.headers.get('x-admin-secret')
+58|   const isDev       = process.env.NODE_ENV === 'development'
+59|   const isForced    = request.nextUrl.searchParams.get('force') === '1'
+60| 
+61|   if (!isDev && cronSecret !== process.env.CRON_SECRET && adminSecret !== process.env.ADMIN_SECRET) {
+62|     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+63|   }
+64| 
+65|   const supabase = createAdminClient()
+66|   const nowMs    = Date.now()
+67|   const now      = new Date(nowMs)
+68| 
+69|   // ── Guard 1: 4-hour success cadence ──────────────────────────────────────
+70|   if (!isForced && lastSuccessMs > 0 && nowMs - lastSuccessMs < REFRESH_GAP_MS) {
+71|     const { count } = await supabase
+72|       .from('events')
+73|       .select('id', { count: 'exact', head: true })
+74|       .gte('expires_at', now.toISOString())
+75| 
+76|     if ((count ?? 0) >= TARGET_EVENTS) {
+77|       const nextIn = Math.round((REFRESH_GAP_MS - (nowMs - lastSuccessMs)) / 60_000)
+78|       return NextResponse.json({ success: true, skipped: true, message: `${count} events live. Next refresh in ~${nextIn}min` })
+79|     }
+80|   }
+81| 
+82|   // ── Guard 2: 2-minute retry gap (rate-limit safety) ───────────────────────
+83|   if (!isForced && lastAttemptMs > 0 && nowMs - lastAttemptMs < RETRY_GAP_MS) {
+84|     const waitSec = Math.round((RETRY_GAP_MS - (nowMs - lastAttemptMs)) / 1000)
+85|     return NextResponse.json({ success: true, skipped: true, message: `Rate guard — retry in ${waitSec}s (streak: ${failureStreak})` })
+86|   }
+87| 
+88|   // ── Build prompt ──────────────────────────────────────────────────────────
+89|   const prompt = `You are a real-time geopolitical and financial markets intelligence analyst. Today is ${now.toUTCString()}.
+90| 
+91| Generate exactly 20 current global news events from the last 48 hours that significantly impact financial markets and geopolitical stability.
+92| 
+93| EXACTLY 5 events per impact tier — no more, no less:
+94| • Critical (5): Active armed conflicts, financial system shocks, mass-casualty events
+95| • High (5): Central bank decisions, major geopolitical escalations, large natural disasters
+96| • Medium (5): Sanctions, significant political crises, major economic data releases
+97| • Low (5): Diplomatic meetings, minor market moves, routine policy announcements
+98| 
+99| For EACH event, produce this EXACT JSON object with ALL fields populated:
+100| {
+101|   "headline": "Specific, informative headline describing exactly what happened — aim for 60-90 characters",
+102|   "country": "Primary affected country full name",
+103|   "lat": 48.8566,
+104|   "lon": 2.3522,
+105|   "impactLevel": "Critical",
+106|   "category": "Geopolitical",
+107|   "summary": "2-3 sentences: what happened, why it matters for markets, and what traders should watch. Be specific with numbers/percentages where possible. Max 300 chars.",
+108|   "sentiment": "Negative market sentiment",
+109|   "forexImpacts": [
+110|     { "pair": "EUR/USD", "direction": -1, "magnitude": "Large", "movePercent": "-0.8%", "reasoning": "Risk-off flight from euro assets" },
+111|     { "pair": "USD/JPY", "direction": -1, "magnitude": "Medium", "movePercent": "-0.5%", "reasoning": "Yen safe-haven demand" }
+112|   ]
+113| }
+114| 
+115| CRITICAL RULES — violations will make the data useless:
+116| 1. headline: NEVER use generic phrases like 'Ukraine War Escalates' or 'Fed Rate Hike'. Write the SPECIFIC event: e.g. 'Ukraine Strikes Russian Black Sea Fleet HQ in Sevastopol' or 'Fed Holds Rates at 5.5% Amid Cooling Jobs Data'
+117| 2. lat/lon: CITY-level coordinates where the event is physically happening. Never use 0,0.
+118| 3. forexImpacts: Critical/High events MUST have 2-3 forex pairs. Medium events: 1-2 pairs. Low events: 0-1 pairs. direction: 1 = pair price goes UP, -1 = goes DOWN
+119| 4. Geographic spread: events must span at least 5 different continents/regions
+120| 5. No two events at the same location
+121| 6. Use REAL ongoing situations: Russia-Ukraine war, Israel-Gaza conflict, India-Pakistan tensions, Fed/ECB/BOJ policy, China-Taiwan, Trump tariffs, OPEC cuts, commodity prices, EM currency crises
+122| 
+123| Return ONLY a raw JSON array of exactly 20 objects. No markdown fences, no explanation, no preamble.`
+124| 
+125|   // Record attempt BEFORE API calls
+126|   lastAttemptMs = nowMs
+127|   let responseText = ''
+128|   let modelUsed    = ''
+129| 
+130|   // ── 1. Try Groq (primary — 14,400 RPD, no IP restrictions) ───────────────
+131|   const groqKey = process.env.GROQ_API_KEY
+132|   if (groqKey) {
+133|     const groqModels = ['llama-3.3-70b-versatile', 'llama3-70b-8192', 'mixtral-8x7b-32768']
+134|     for (const model of groqModels) {
+135|       try {
+136|         const res = await fetch('https://api.groq.com/openai/v1/chat/completions', {
+137|           method:  'POST',
+138|           headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${groqKey}` },
+139|           body: JSON.stringify({ model, messages: [{ role: 'user', content: prompt }], temperature: 0.4, max_tokens: 4096 }),
+140|           signal: AbortSignal.timeout(30_000),
+141|         })
+142|         if (!res.ok) { console.warn(`[Groq] ${model} HTTP ${res.status}`); continue }
+143|         const data = await res.json()
+144|         responseText = data?.choices?.[0]?.message?.content || ''
+145|         if (responseText) { modelUsed = `groq:${model}`; console.log(`[Groq] ✅ ${model} (${responseText.length} chars)`); break }
+146|       } catch (e: any) { console.warn(`[Groq] ${model} error: ${e?.message?.slice(0, 80)}`) }
+147|     }
+148|   }
+149| 
+150|   // ── 2. Try Gemini (fallback) ───────────────────────────────────────────────
+151|   const geminiKey = process.env.GEMINI_API_KEY
+152|   if (!responseText && geminiKey) {
+153|     const geminiModels = ['gemini-2.0-flash-lite', 'gemini-2.0-flash']
+154|     for (const model of geminiModels) {
+155|       try {
+156|         const url = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${geminiKey}`
+157|         const res = await fetch(url, {
+158|           method:  'POST',
+159|           headers: { 'Content-Type': 'application/json' },
+160|           body: JSON.stringify({ contents: [{ parts: [{ text: prompt }] }], generationConfig: { temperature: 0.4, maxOutputTokens: 4096 } }),
+161|           signal: AbortSignal.timeout(25_000),
+162|         })
+163|         if (!res.ok) { console.warn(`[Gemini] ${model} HTTP ${res.status}`); continue }
+164|         const data = await res.json()
+165|         responseText = data?.candidates?.[0]?.content?.parts?.[0]?.text || ''
+166|         if (responseText) { modelUsed = `gemini:${model}`; console.log(`[Gemini] ✅ ${model} (${responseText.length} chars)`); break }
+167|       } catch (e: any) { console.warn(`[Gemini] ${model} error: ${e?.message?.slice(0, 80)}`) }
+168|     }
+169|   }
+170| 
+171|   // ── 3. Seed fallback — globe is never empty ────────────────────────────────
+172|   if (!responseText) {
+173|     failureStreak++
+174|     console.warn(`[News] All AI providers failed (streak: ${failureStreak}). Inserting seed events.`)
+175|     await supabase.from('events').delete().eq('created_by', 'ai-auto')
+176|     const seedRows = SEED_EVENTS.map(e => ({
+177|       headline: e.headline, country: e.country, lat: e.lat, lon: e.lon,
+178|       impact_level: e.impactLevel, category: e.category, summary: e.summary,
+179|       sentiment: e.sentiment, forex_impacts: e.forexImpacts,
+180|       confidence_score: e.impactLevel === 'Critical' ? 90 : e.impactLevel === 'High' ? 80 : 70,
+181|       is_market_moving: e.impactLevel === 'Critical' || e.impactLevel === 'High',
+182|       published_at: now.toISOString(),
+183|       expires_at:   new Date(nowMs + 48 * 3_600_000).toISOString(),
+184|       source_url: null, created_by: 'ai-auto' as const,
+185|     }))
+186|     const { data: seeded } = await supabase.from('events').insert(seedRows).select('id')
+187|     console.log(`[News] 🌱 Seeded ${seeded?.length ?? 0} fallback events`)
+188|     return NextResponse.json({ success: true, seeded: seeded?.length ?? 0, failureStreak, retryInSec: Math.round(RETRY_GAP_MS / 1000) })
+189|   }
+190| 
+191|   // ── Parse JSON ────────────────────────────────────────────────────────────
+192|   let rawEvents: any[] = []
+193|   try {
+194|     const clean = responseText.replace(/```json\n?/g, '').replace(/```\n?/g, '').trim()
+195|     const match = clean.match(/\[[\s\S]*\]/)
+196|     if (match) rawEvents = JSON.parse(match[0])
+197|     if (!Array.isArray(rawEvents)) rawEvents = []
+198|   } catch {
+199|     failureStreak++
+200|     return NextResponse.json({ error: 'JSON parse failed', raw: responseText.slice(0, 200) }, { status: 500 })
+201|   }
+202| 
+203|   // ── Enforce 5 per tier ────────────────────────────────────────────────────
+204|   const TIERS = ['Critical', 'High', 'Medium', 'Low'] as const
+205|   const buckets: Record<string, any[]> = { Critical: [], High: [], Medium: [], Low: [] }
+206|   for (const e of rawEvents) {
+207|     const t = e.impactLevel as string
+208|     if (!buckets[t] || buckets[t].length >= 5) continue
+209|     if (!e.headline || !e.country || typeof e.lat !== 'number' || typeof e.lon !== 'number') continue
+210|     if (Math.abs(e.lat) < 0.01 && Math.abs(e.lon) < 0.01) continue
+211|     buckets[t].push(e)
+212|   }
+213|   const validated = TIERS.flatMap(t => buckets[t])
+214|   console.log(`[News] Parsed ${validated.length} events via ${modelUsed} (C:${buckets.Critical.length} H:${buckets.High.length} M:${buckets.Medium.length} L:${buckets.Low.length})`)
+215| 
+216|   if (validated.length === 0) {
+217|     failureStreak++
+218|     return NextResponse.json({ error: 'No valid events parsed', raw: responseText.slice(0, 200) }, { status: 500 })
+219|   }
+220| 
+221|   // ── Replace DB events ─────────────────────────────────────────────────────
+222|   await supabase.from('events').delete().eq('created_by', 'ai-auto')
+223|   const rows = validated.map(e => ({
+224|     headline: String(e.headline).slice(0, 100), country: String(e.country).slice(0, 100),
+225|     lat: Number(e.lat), lon: Number(e.lon), impact_level: e.impactLevel,
+226|     category: sanitizeCategory(e.category || 'Geopolitical'), summary: String(e.summary || '').slice(0, 500),
+227|     sentiment: String(e.sentiment || 'Neutral market sentiment'),
+228|     forex_impacts: Array.isArray(e.forexImpacts) ? e.forexImpacts : [],
+229|     confidence_score: e.impactLevel === 'Critical' ? 90 : e.impactLevel === 'High' ? 80 : 70,
+230|     is_market_moving: e.impactLevel === 'Critical' || e.impactLevel === 'High',
+231|     published_at: now.toISOString(), expires_at: new Date(nowMs + 48 * 3_600_000).toISOString(),
+232|     source_url: null, created_by: 'ai-auto' as const,
+233|   }))
+234| 
+235|   const { data: inserted, error: insertErr } = await supabase.from('events').insert(rows).select('id, headline, impact_level, country, lat, lon')
+236|   if (insertErr) { failureStreak++; return NextResponse.json({ error: insertErr.message }, { status: 500 }) }
+237| 
+238|   lastSuccessMs = Date.now()
+239|   failureStreak = 0
+240|   console.log(`[News] ✅ Inserted ${inserted?.length ?? 0} AI events via ${modelUsed}. Next refresh in 4h.`)
+241| 
+242|   return NextResponse.json({
+243|     success: true, model: modelUsed, created: inserted?.length ?? 0, nextRefreshIn: '4 hours',
+244|     tiers: { Critical: buckets.Critical.length, High: buckets.High.length, Medium: buckets.Medium.length, Low: buckets.Low.length },
+245|     events: inserted?.map((e: any) => ({ id: e.id, headline: e.headline, impactLevel: e.impact_level, country: e.country, lat: e.lat, lon: e.lon })),
+246|   })
+247| }
+248| 
+
+
+=== FILE: src\app\api\news\refresh\route.ts ===
+
+1| import { NextRequest, NextResponse } from 'next/server'
+2| import { createAdminClient } from '@/lib/supabase/server'
+3| import { fetchNewsDataEvents } from '@/lib/news/newsdata'
+4| 
+5| /**
+6|  * GET /api/news/refresh
+7|  * Insert fresh events from NewsData.io stamped with current time.
+8|  * OLD events are NOT deleted — they live until their expires_at (48h).
+9|  * This gives the globe a mix of fresh (minutes ago) and older (hours ago) events
+10|  * spread across the 48h window, exactly as the user wants.
+11|  *
+12|  * 1-hour cache guard: skips the NewsData.io API call if we already inserted
+13|  * events in the last 55 minutes (respects 200 req/day limit).
+14|  */
+15| export async function GET(request: NextRequest) {
+16|   const supabase = createAdminClient()
+17|   const now = new Date()
+18|   const oneHourAgo = new Date(now.getTime() - 55 * 60 * 1000).toISOString()
+19| 
+20|   // ── 1h cache guard ────────────────────────────────────────────────────────
+21|   const { count: recentCount } = await supabase
+22|     .from('events')
+23|     .select('id', { count: 'exact', head: true })
+24|     .eq('created_by', 'ai-auto')
+25|     .gte('created_at', oneHourAgo)
+26| 
+27|   if (recentCount && recentCount > 0) {
+28|     console.log(`[News Refresh] Skipping — ${recentCount} events inserted in last 55 min`)
+29|     return NextResponse.json({
+30|       success: true,
+31|       skipped: true,
+32|       message: `Cache active — ${recentCount} fresh events already in DB`,
+33|     })
+34|   }
+35| 
+36|   // ── Fetch fresh events from NewsData.io ───────────────────────────────────
+37|   console.log('[News Refresh] Fetching from NewsData.io...')
+38|   const newEvents = await fetchNewsDataEvents()
+39|   console.log(`[News Refresh] Got ${newEvents.length} events from NewsData.io`)
+40| 
+41|   if (newEvents.length === 0) {
+42|     return NextResponse.json({
+43|       success: true,
+44|       message: 'No events from NewsData.io (check NEWSDATA_API_KEY)',
+45|       created: 0,
+46|     })
+47|   }
+48| 
+49|   // ── Dedup: skip articles already in DB (check last 48h by source_url/headline) ──
+50|   const twoDaysAgo = new Date(now.getTime() - 48 * 60 * 60 * 1000).toISOString()
+51|   const { data: existingEvents } = await supabase
+52|     .from('events')
+53|     .select('source_url, headline')
+54|     .gte('created_at', twoDaysAgo)
+55| 
+56|   const existingUrls = new Set(
+57|     existingEvents?.map((e: any) => e.source_url).filter(Boolean) ?? []
+58|   )
+59|   const existingHeadlines = new Set(
+60|     existingEvents?.map((e: any) => e.headline.toLowerCase().slice(0, 50)) ?? []
+61|   )
+62| 
+63|   const toInsert = newEvents.filter((e) => {
+64|     if (e.sourceUrl && existingUrls.has(e.sourceUrl)) return false
+65|     if (existingHeadlines.has(e.headline.toLowerCase().slice(0, 50))) return false
+66|     if (Math.abs(e.lat) < 0.1 && Math.abs(e.lon) < 0.1) return false
+67|     return true
+68|   })
+69| 
+70|   console.log(`[News Refresh] ${toInsert.length} new events after dedup`)
+71| 
+72|   if (toInsert.length === 0) {
+73|     return NextResponse.json({
+74|       success: true,
+75|       message: 'All events already in database',
+76|       created: 0,
+77|     })
+78|   }
+79| 
+80|   // Cap at 20 per cycle
+81|   const capped = toInsert.slice(0, 20)
+82| 
+83|   // ── Insert with current timestamp ─────────────────────────────────────────
+84|   const rows = capped.map((e) => ({
+85|     headline: e.headline,
+86|     country: e.country,
+87|     lat: e.lat,
+88|     lon: e.lon,
+89|     impact_level: e.impactLevel,
+90|     category: e.category,
+91|     summary: e.summary,
+92|     sentiment: e.sentiment,
+93|     forex_impacts: e.forexImpacts,
+94|     confidence_score: e.confidenceScore,
+95|     is_market_moving: e.isMarketMoving,
+96|     published_at: e.publishedAt, // stamped with NOW by newsdata.ts
+97|     expires_at: e.expiresAt,
+98|     source_url: e.sourceUrl || null,
+99|     created_by: 'ai-auto' as const,
+100|   }))
+101| 
+102|   const { data: inserted, error: insertErr } = await supabase
+103|     .from('events')
+104|     .insert(rows)
+105|     .select('id, headline, impact_level')
+106| 
+107|   if (insertErr) {
+108|     console.error('[News Refresh] Insert error:', insertErr)
+109|     return NextResponse.json({ error: insertErr.message }, { status: 500 })
+110|   }
+111| 
+112|   console.log(`[News Refresh] ✅ Inserted ${inserted?.length ?? 0} fresh events`)
+113| 
+114|   return NextResponse.json({
+115|     success: true,
+116|     message: `Inserted ${inserted?.length ?? 0} fresh events`,
+117|     created: inserted?.length ?? 0,
+118|     events: inserted?.map((e: any) => ({
+119|       id: e.id,
+120|       headline: e.headline,
+121|       impactLevel: e.impact_level,
+122|     })),
+123|   })
+124| }
+125| 
+
+
+=== FILE: src\app\api\rss\poll\route.ts ===
+
+1| import { NextRequest, NextResponse } from 'next/server'
+2| import { createAdminClient } from '@/lib/supabase/server'
+3| import { parseMultipleFeeds, filterNewItems, deduplicateItems } from '@/lib/rss/parser'
+4| import { DEFAULT_RSS_SOURCES } from '@/lib/rss/sources'
+5| import { analyzeWithGemini } from '@/lib/gemini/client'
+6| 
+7| /**
+8|  * GET /api/rss/poll
+9|  * Poll RSS feeds → analyze with Gemini → store events.
+10|  *
+11|  * Guards:
+12|  * - Skips if events were created < 4 hours ago (saves Gemini quota)
+13|  * - Gracefully returns 200 (not 500) when Gemini is rate limited
+14|  * - Confidence score stored as integer 0-100 (matches DB schema)
+15|  */
+16| export async function GET(request: NextRequest) {
+17|   try {
+18|     const cronSecret = request.headers.get('x-cron-secret')
+19|     const adminSecret = request.headers.get('x-admin-secret')
+20|     const isDev = process.env.NODE_ENV === 'development'
+21| 
+22|     if (!isDev && cronSecret !== process.env.CRON_SECRET && adminSecret !== process.env.ADMIN_SECRET) {
+23|       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+24|     }
+25| 
+26|     const supabase = createAdminClient()
+27|     const now = new Date()
+28| 
+29|     // ── 1-hour cache guard — skip Gemini if we already have recent events ──
+30|     const oneHourAgo = new Date(now.getTime() - 1 * 60 * 60 * 1000).toISOString()
+31|     const { data: recent, count } = await supabase
+32|       .from('events')
+33|       .select('id, created_at', { count: 'exact' })
+34|       .gte('created_at', oneHourAgo)
+35|       .limit(1)
+36| 
+37|     if (count && count > 0 && recent?.[0]) {
+38|       const ageMin = Math.round((now.getTime() - new Date(recent[0].created_at).getTime()) / 60_000)
+39|       console.log(`[RSS Poll] Skipping — events created ${ageMin}min ago (1h cache active)`)
+40|       return NextResponse.json({
+41|         success: true,
+42|         skipped: true,
+43|         message: `Events created ${ageMin}min ago — Gemini skipped (1h cache).`,
+44|       })
+45|     }
+46| 
+47|     // ── Fetch RSS feeds ────────────────────────────────────────────────────
+48|     const { data: dbSources } = await supabase
+49|       .from('rss_sources')
+50|       .select('*')
+51|       .eq('is_active', true)
+52| 
+53|     const sources = dbSources?.length
+54|       ? dbSources.map((s: any) => ({ name: s.name, url: s.url }))
+55|       : DEFAULT_RSS_SOURCES
+56| 
+57|     console.log(`[RSS Poll] Polling ${sources.length} sources...`)
+58|     const feeds = await parseMultipleFeeds(sources.map((s: { url: string }) => s.url))
+59|     console.log(`[RSS Poll] Parsed ${feeds.length} feeds`)
+60| 
+61|     let allItems = feeds.flatMap((f) => f.items)
+62|     allItems = filterNewItems(allItems, new Date(now.getTime() - 6 * 60 * 60 * 1000))
+63|     allItems = deduplicateItems(allItems)
+64| 
+65|     if (allItems.length === 0) {
+66|       return NextResponse.json({ success: true, message: 'No new items', stats: { created: 0 } })
+67|     }
+68| 
+69|     // Top 12 most recent
+70|     const items = allItems
+71|       .sort((a, b) => new Date(b.pubDate).getTime() - new Date(a.pubDate).getTime())
+72|       .slice(0, 12)
+73| 
+74|     console.log(`[RSS Poll] Analyzing ${items.length} items with Gemini...`)
+75| 
+76|     // ── Gemini analysis ────────────────────────────────────────────────────
+77|     const headlines = items.map((it, i) => `${i + 1}. ${it.title}`).join('\n')
+78| 
+79|     const prompt = `You are a financial and geopolitical news analyst. Analyze these headlines and extract the 3-5 most market-moving global events.
+80| 
+81| HEADLINES:
+82| ${headlines}
+83| 
+84| Return ONLY a valid JSON array (no markdown, no explanation). Each element:
+85| {
+86|   "headline": "concise title max 90 chars",
+87|   "country": "primary country name",
+88|   "lat": number,
+89|   "lon": number,
+90|   "impactLevel": "Critical" | "High" | "Medium" | "Low",
+91|   "category": "Geopolitical" | "Central Bank" | "Macro" | "Political" | "Crisis" | "Sanctions" | "Earnings" | "Natural Disaster",
+92|   "summary": "2-3 sentences on market impact, max 250 chars",
+93|   "sentiment": "one sentence market sentiment, max 150 chars",
+94|   "confidenceScore": number 0-100,
+95|   "isMarketMoving": boolean,
+96|   "forexImpacts": [{"pair":"EUR/USD","direction":1,"magnitude":"Large","movePercent":"+0.5%","reasoning":"brief reason"}]
+97| }
+98| 
+99| Return [] if no significant events. No markdown, no extra text.`
+100| 
+101|     let analysisText = ''
+102|     try {
+103|       analysisText = await analyzeWithGemini(prompt)
+104|     } catch (err: any) {
+105|       // Gemini rate limited — return gracefully, don't crash
+106|       const isRateLimit = err?.message?.includes('rate limit') || err?.message?.includes('quota') || err?.message?.includes('429')
+107|       console.warn(`[RSS Poll] Gemini unavailable: ${err?.message?.slice(0, 100)}`)
+108|       return NextResponse.json({
+109|         success: true,
+110|         skipped: true,
+111|         message: isRateLimit
+112|           ? 'Gemini rate limited — will retry next cycle'
+113|           : `Gemini error: ${err?.message?.slice(0, 100)}`,
+114|         stats: { feeds: feeds.length, items: items.length, created: 0 },
+115|       })
+116|     }
+117| 
+118|     // ── Parse Gemini response ──────────────────────────────────────────────
+119|     let events: any[] = []
+120|     try {
+121|       const clean = analysisText
+122|         .replace(/```json\n?/g, '')
+123|         .replace(/```\n?/g, '')
+124|         .trim()
+125|       // Find the JSON array in the response
+126|       const match = clean.match(/\[[\s\S]*\]/)
+127|       if (match) {
+128|         events = JSON.parse(match[0])
+129|       }
+130|       if (!Array.isArray(events)) events = []
+131|     } catch {
+132|       console.error('[RSS Poll] Failed to parse Gemini JSON:', analysisText.slice(0, 200))
+133|       return NextResponse.json({ success: true, message: 'Could not parse AI response', stats: { created: 0 } })
+134|     }
+135| 
+136|     if (events.length === 0) {
+137|       return NextResponse.json({ success: true, message: 'No significant events found', stats: { created: 0 } })
+138|     }
+139| 
+140|     // ── Deduplicate against last 48h (matches event retention window) ──────
+141|     const { data: existing } = await supabase
+142|       .from('events')
+143|       .select('headline')
+144|       .gte('published_at', new Date(now.getTime() - 48 * 60 * 60 * 1000).toISOString())
+145| 
+146|     const existingSet = new Set((existing || []).map((e: any) => e.headline.toLowerCase().slice(0, 50)))
+147|     const unique = events.filter((e) => !existingSet.has((e.headline || '').toLowerCase().slice(0, 50)))
+148| 
+149|     if (unique.length === 0) {
+150|       return NextResponse.json({ success: true, message: 'All events already exist', stats: { created: 0 } })
+151|     }
+152| 
+153|     // ── Insert ─────────────────────────────────────────────────────────────
+154|     const rows = unique.map((e) => ({
+155|       headline: String(e.headline || '').slice(0, 100),
+156|       country: String(e.country || 'Unknown'),
+157|       lat: Number(e.lat) || 0,
+158|       lon: Number(e.lon) || 0,
+159|       impact_level: e.impactLevel || 'Medium',
+160|       category: e.category || 'Geopolitical',
+161|       summary: String(e.summary || '').slice(0, 500),
+162|       sentiment: String(e.sentiment || '').slice(0, 200),
+163|       forex_impacts: Array.isArray(e.forexImpacts) ? e.forexImpacts : [],
+164|       confidence_score: Math.min(100, Math.max(0, Math.round(Number(e.confidenceScore) || 75))),
+165|       is_market_moving: Boolean(e.isMarketMoving),
+166|       published_at: now.toISOString(),
+167|       expires_at: new Date(now.getTime() + 48 * 60 * 60 * 1000).toISOString(),
+168|       created_by: 'ai-auto' as const,
+169|     }))
+170| 
+171|     const { data: inserted, error: insertErr } = await supabase
+172|       .from('events')
+173|       .insert(rows)
+174|       .select()
+175| 
+176|     if (insertErr) {
+177|       console.error('[RSS Poll] Insert error:', insertErr)
+178|       return NextResponse.json({ error: 'Failed to save events', details: insertErr.message }, { status: 500 })
+179|     }
+180| 
+181|     console.log(`[RSS Poll] ✅ Created ${inserted?.length ?? 0} events`)
+182|     return NextResponse.json({
+183|       success: true,
+184|       message: `Created ${inserted?.length ?? 0} events`,
+185|       stats: { feeds: feeds.length, items: items.length, created: inserted?.length ?? 0 },
+186|       events: inserted?.map((e: any) => ({ id: e.id, headline: e.headline, impactLevel: e.impact_level })),
+187|     })
+188|   } catch (error) {
+189|     console.error('[RSS Poll] Fatal error:', error)
+190|     return NextResponse.json({ error: 'RSS poll failed', details: error instanceof Error ? error.message : 'Unknown' }, { status: 500 })
+191|   }
+192| }
+193| 
+
+
+=== FILE: src\app\api\rss\trigger\route.ts ===
+
+1| import { NextRequest, NextResponse } from 'next/server'
+2| 
+3| /**
+4|  * GET /api/rss/trigger
+5|  * Manually trigger a news poll (no auth required — just fires the poll)
+6|  * Used by the frontend to kick off a poll when the page loads with no events
+7|  */
+8| export async function GET(request: NextRequest) {
+9|   try {
+10|     const adminSecret = process.env.ADMIN_SECRET || ''
+11|     const appUrl = process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000'
+12| 
+13|     // Fire the poll in the background
+14|     const pollUrl = `${appUrl}/api/rss/poll`
+15| 
+16|     // Non-blocking: don't await, just trigger
+17|     fetch(pollUrl, {
+18|       headers: { 'x-admin-secret': adminSecret },
+19|     }).catch((err) => {
+20|       console.error('[RSS Trigger] Failed to trigger poll:', err)
+21|     })
+22| 
+23|     return NextResponse.json({
+24|       success: true,
+25|       message: 'News poll triggered. Events will appear within 1-2 minutes.',
+26|     })
+27|   } catch (error) {
+28|     return NextResponse.json(
+29|       { error: 'Failed to trigger poll' },
+30|       { status: 500 }
+31|     )
+32|   }
+33| }
+34| 
+
+
+=== FILE: src\app\error.tsx ===
+
+1| 'use client'
+2| 
+3| import { useEffect } from 'react'
+4| 
+5| export default function Error({
+6|   error,
+7|   reset,
+8| }: {
+9|   error: Error & { digest?: string }
+10|   reset: () => void
+11| }) {
+12|   useEffect(() => {
+13|     console.error('[App Error]', error)
+14|   }, [error])
+15| 
+16|   return (
+17|     <div
+18|       className="flex h-screen w-screen flex-col items-center justify-center gap-6"
+19|       style={{ background: '#050a14', color: '#f1f0e8' }}
+20|     >
+21|       <h1 className="font-display text-2xl font-bold text-impact-critical">
+22|         Something went wrong
+23|       </h1>
+24|       <p className="max-w-md text-center text-sm text-text-muted">
+25|         {error.message || 'An unexpected error occurred.'}
+26|       </p>
+27|       <button
+28|         onClick={reset}
+29|         className="rounded-lg bg-impact-medium px-6 py-2 text-sm font-medium text-white hover:bg-impact-medium/80"
+30|       >
+31|         Try again
+32|       </button>
+33|     </div>
+34|   )
+35| }
+36| 
+
+
+=== FILE: src\app\layout.tsx ===
+
+1| import type { Metadata, Viewport } from "next";
+2| import {
+3|   Inter,
+4|   Space_Grotesk,
+5|   DM_Sans,
+6|   JetBrains_Mono,
+7| } from "next/font/google";
+8| import "./globals.css";
+9| 
+10| const inter = Inter({
+11|   variable: "--font-inter",
+12|   subsets: ["latin"],
+13|   display: "swap",
+14| });
+15| 
+16| const spaceGrotesk = Space_Grotesk({
+17|   variable: "--font-display",
+18|   subsets: ["latin"],
+19|   display: "swap",
+20| });
+21| 
+22| const dmSans = DM_Sans({
+23|   variable: "--font-sans",
+24|   subsets: ["latin"],
+25|   display: "swap",
+26| });
+27| 
+28| const jetbrainsMono = JetBrains_Mono({
+29|   variable: "--font-mono",
+30|   subsets: ["latin"],
+31|   display: "swap",
+32| });
+33| 
+34| export const metadata: Metadata = {
+35|   title: "ImpactGlobe — Real-time Geopolitical Risk Monitor",
+36|   description:
+37|     "Track global news events and their forex impact in real time. Interactive 3D globe with live environmental data, powered by AI. 100% free.",
+38|   keywords: [
+39|     "geopolitical risk",
+40|     "forex impact",
+41|     "global events",
+42|     "3D globe",
+43|     "real-time news",
+44|     "environmental data",
+45|     "air quality",
+46|     "earthquakes",
+47|     "wildfires",
+48|     "market intelligence",
+49|   ],
+50|   authors: [{ name: "ImpactGlobe" }],
+51|   openGraph: {
+52|     title: "ImpactGlobe — Real-time Geopolitical Risk Monitor",
+53|     description:
+54|       "Track global news events and their forex impact in real time on an interactive 3D globe.",
+55|     type: "website",
+56|     locale: "en_US",
+57|     siteName: "ImpactGlobe",
+58|   },
+59|   twitter: {
+60|     card: "summary_large_image",
+61|     title: "ImpactGlobe — Real-time Geopolitical Risk Monitor",
+62|     description:
+63|       "Track global news events and their forex impact in real time.",
+64|   },
+65|   robots: {
+66|     index: true,
+67|     follow: true,
+68|   },
+69| };
+70| 
+71| export const viewport: Viewport = {
+72|   width: "device-width",
+73|   initialScale: 1,
+74|   maximumScale: 5,
+75| };
+76| 
+77| export default function RootLayout({
+78|   children,
+79| }: Readonly<{
+80|   children: React.ReactNode;
+81| }>) {
+82|   return (
+83|     <html
+84|       lang="en"
+85|       className={`${inter.variable} ${spaceGrotesk.variable} ${dmSans.variable} ${jetbrainsMono.variable} h-full antialiased`}
+86|     >
+87|       <body
+88|         className="h-full overflow-hidden"
+89|         style={{ background: "#050a14", color: "#f1f0e8", margin: 0 }}
+90|       >
+91|         {children}
+92|       </body>
+93|     </html>
+94|   );
+95| }
+96| 

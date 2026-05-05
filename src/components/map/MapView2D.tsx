@@ -4,6 +4,13 @@ import { useEffect, useRef, useCallback, useState } from "react";
 import type { GlobeEvent, EnvLayerData } from "@/store/types";
 import type { HoveredEnvPoint } from "@/store/useGlobeStore";
 import { useGlobeStore } from "@/store/useGlobeStore";
+import {
+  WIND_STOPS, WIND_MAX,
+  TEMP_STOPS, TEMP_MIN, TEMP_RANGE,
+  AQI_STOPS, AQI_MAX,
+  SEA_STOPS, SEA_MIN, SEA_RANGE,
+  gradientColor
+} from "@/components/globe/heatmap.utils";
 
 const IMPACT_COLORS: Record<string, string> = {
   Critical: "#ff2d55", High: "#ff9f0a", Medium: "#ffd60a", Low: "#34c759",
@@ -20,52 +27,7 @@ type RGB = [number, number, number];
 
 function lerp(a: number, b: number, t: number) { return a + (b - a) * t; }
 
-// ── Color ramps — IDENTICAL to heatmap.utils.ts on the 3D globe ─────────
-// gradientColor maps a 0-1 normalised value through a set of equally-spaced
-// colour stops (same algorithm as the 3D renderer).
-function gradientColor(t: number, stops: RGB[]): RGB {
-  const clamped = Math.max(0, Math.min(1, t));
-  const seg = clamped * (stops.length - 1);
-  const idx = Math.min(Math.floor(seg), stops.length - 2);
-  const frac = seg - idx;
-  const a = stops[idx], b = stops[idx + 1];
-  return [
-    Math.round(a[0] + (b[0] - a[0]) * frac),
-    Math.round(a[1] + (b[1] - a[1]) * frac),
-    Math.round(a[2] + (b[2] - a[2]) * frac),
-  ];
-}
-
-// Wind: 0 → 38 m/s (Beaufort-based, same as 3D globe)
-const WIND_STOPS: RGB[]  = [
-  [20, 60, 220], [0, 160, 255], [0, 210, 180],
-  [80, 220, 50], [255, 230, 0], [255, 140, 0],
-  [240, 40, 20], [140, 0, 180],
-];
-const WIND_MAX = 38;
-
-// Temperature: -40 → 45°C (ERA5/Windy palette, same as 3D globe)
-const TEMP_STOPS: RGB[] = [
-  [100, 0, 200], [0, 40, 230], [30, 120, 255], [140, 200, 255],
-  [230, 240, 255], [255, 250, 180], [255, 180, 40], [255, 60, 0], [180, 0, 0],
-];
-const TEMP_MIN   = -40;
-const TEMP_RANGE = 85;   // 45 - (-40)
-
-// AQI: 0 → 500 (US EPA, same as 3D globe)
-const AQI_STOPS: RGB[] = [
-  [0, 228, 0], [255, 255, 0], [255, 126, 0],
-  [255, 0, 0], [143, 63, 151], [126, 0, 35],
-];
-const AQI_MAX = 500;
-
-// Sea temp: -2 → 32°C (NOAA/Copernicus, same as 3D globe)
-const SEA_STOPS: RGB[] = [
-  [200, 230, 255], [0, 60, 200], [0, 140, 230], [0, 210, 210],
-  [0, 200, 120], [80, 210, 0], [255, 220, 0], [255, 120, 0], [220, 10, 10],
-];
-const SEA_MIN   = -2;
-const SEA_RANGE = 34;   // 32 - (-2)
+// Map a raw scalar value to the correct RGB via the same normalisation as 3D
 
 // Map a raw scalar value to the correct RGB via the same normalisation as 3D
 function layerColor(layer: string, val: number): RGB {
@@ -312,7 +274,7 @@ export default function MapView2D({ events, activeEnvLayer, envLayerData, onEven
       });
     });
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [events, activeEnvLayer, pulsingIcon]);
+  }, [events, activeEnvLayer, pulsingIcon, mapReady]);
 
   // ── Windy-style pixel heatmap + hover tooltip ─────────────────────────────
   // Depends on mapReady so it re-runs when Leaflet finishes async init
