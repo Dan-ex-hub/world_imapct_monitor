@@ -47,6 +47,7 @@ interface GeoJsonGeometry {
 }
 interface GeoJsonFeature {
   type: string;
+  properties: { NAME?: string; ADMIN?: string; [key: string]: unknown };
   geometry: GeoJsonGeometry;
 }
 interface GeoJsonCollection {
@@ -65,7 +66,9 @@ const STAR_RADIUS = 300;
 const AUTO_ROTATE_RESUME_MS = 4000;
 const SUN_UPDATE_INTERVAL_MS = 60_000;
 
-const EARTH_TEXTURE_URL =
+const EARTH_DAY_URL =
+  "https://unpkg.com/three-globe/example/img/earth-day.jpg";
+const EARTH_NIGHT_URL =
   "https://unpkg.com/three-globe/example/img/earth-night.jpg";
 const COUNTRY_BORDERS_URL =
   "https://raw.githubusercontent.com/nvkelso/natural-earth-vector/master/geojson/ne_110m_admin_0_countries.geojson";
@@ -118,7 +121,8 @@ const GlobeRenderer = forwardRef<GlobeRef, GlobeRendererProps>(
     );
     const sunIntervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
     const dirLightRef = useRef<THREE.DirectionalLight | null>(null);
-    const fillLightRef = useRef<THREE.PointLight | null>(null);
+    // Sun direction uniform — shared with the earth ShaderMaterial
+    const sunUniformRef = useRef<{ value: THREE.Vector3 }>({ value: new THREE.Vector3(1, 0, 0) });
 
     // FlyTo animation ref
     const flyToAnimRef = useRef<{
@@ -170,36 +174,73 @@ const GlobeRenderer = forwardRef<GlobeRef, GlobeRendererProps>(
       return new THREE.Points(geometry, material);
     }, []);
 
-    // ─── Create earth sphere ─────────────────────────────────────────────
+    // ─── Create earth sphere (day texture, reliable Phong lighting) ────────
     const createEarth = useCallback((): THREE.Mesh => {
       const geometry = new THREE.SphereGeometry(GLOBE_RADIUS, 64, 64);
-      // Start with fallback solid color
       const material = new THREE.MeshPhongMaterial({
         color: new THREE.Color(0x112040),
-        shininess: 6,
+        shininess: 8,
         specular: new THREE.Color(0x1a3a6e),
       });
-
-      // Load earth night texture asynchronously
       const loader = new THREE.TextureLoader();
-      loader.load(
-        EARTH_TEXTURE_URL,
-        (texture) => {
-          texture.colorSpace = THREE.SRGBColorSpace;
-          texture.anisotropy = 4;
-          material.map = texture;
-          material.color.set(0xffffff); // Reset color so texture shows properly
-          material.needsUpdate = true;
-        },
-        undefined,
-        (err) => {
-          console.warn(
-            "Earth texture failed to load, using fallback color:",
-            err,
-          );
-        },
-      );
+      loader.load(EARTH_DAY_URL, (texture) => {
+        texture.colorSpace = THREE.SRGBColorSpace;
+        texture.anisotropy = 4;
+        material.map = texture;
+        material.color.set(0xffffff);
+        material.needsUpdate = true;
+      });
+      return new THREE.Mesh(geometry, material);
+    }, []);
 
+    // ─── City lights — night-only shader ──────────────────────────────────
+    // nightFactor=1 on dark side, 0 on day side — discard keeps day perfectly clean
+    const createCityLights = useCallback((): THREE.Mesh => {
+      const geometry = new THREE.SphereGeometry(GLOBE_RADIUS * 1.001, 64, 64);
+      const nightTex: { value: THREE.Texture | null } = { value: null };
+      const material = new THREE.ShaderMaterial({
+        uniforms: {
+          nightTexture: nightTex,
+          sunDirection: sunUniformRef.current,
+        },
+        vertexShader: /* glsl */`
+          varying vec3 vWorldNormal;
+          varying vec2 vUv;
+          void main() {
+            vUv = uv;
+            vWorldNormal = normalize(mat3(modelMatrix) * normal);
+            gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
+          }
+        `,
+        fragmentShader: /* glsl */`
+          uniform sampler2D nightTexture;
+          uniform vec3 sunDirection;
+          varying vec3 vWorldNormal;
+          varying vec2 vUv;
+          void main() {
+            float cosAngle = dot(vWorldNormal, normalize(sunDirection));
+            // nightFactor: 1.0 = full night, 0.0 = full day
+            float nightFactor = smoothstep(0.20, -0.20, cosAngle);
+            if (nightFactor <= 0.01) discard;
+            vec4 city = texture2D(nightTexture, vUv);
+            // Amplify 3.5x and tint warm golden (street light color)
+            vec3 warm = vec3(
+              city.r * 1.15,   // boost red for warm gold
+              city.g * 0.95,   // slight green
+              city.b * 0.55    // cut blue — street lights are not blue
+            ) * 3.5;
+            gl_FragColor = vec4(warm * nightFactor, nightFactor);
+          }
+        `,
+        transparent: true,
+        depthWrite: false,
+        blending: THREE.AdditiveBlending,
+      });
+      const loader = new THREE.TextureLoader();
+      loader.load(EARTH_NIGHT_URL, (t) => {
+        t.colorSpace = THREE.SRGBColorSpace; t.anisotropy = 4;
+        nightTex.value = t; material.needsUpdate = true;
+      });
       return new THREE.Mesh(geometry, material);
     }, []);
 
@@ -216,7 +257,7 @@ const GlobeRenderer = forwardRef<GlobeRef, GlobeRendererProps>(
       return new THREE.Mesh(geometry, material);
     }, []);
 
-    // ─── Load country borders ────────────────────────────────────────────
+    // ─── Load country borders (borders only, no labels) ──────────────────
     const loadCountryBorders = useCallback((scene: THREE.Scene) => {
       fetch(COUNTRY_BORDERS_URL)
         .then((res) => res.json())
@@ -226,9 +267,7 @@ const GlobeRenderer = forwardRef<GlobeRef, GlobeRendererProps>(
             transparent: true,
             opacity: 0.4,
           });
-
           const bordersGroup = new THREE.Group();
-
           for (const feature of geojson.features) {
             const { geometry } = feature;
             const rings: number[][][] =
@@ -237,24 +276,17 @@ const GlobeRenderer = forwardRef<GlobeRef, GlobeRendererProps>(
                 : geometry.type === "MultiPolygon"
                   ? (geometry.coordinates as number[][][][]).flat()
                   : [];
-
             for (const ring of rings) {
               if (ring.length < 2) continue;
               const points: THREE.Vector3[] = [];
               for (const coord of ring) {
-                points.push(
-                  latLonToVector3(coord[1], coord[0], GLOBE_RADIUS * 1.001),
-                );
+                points.push(latLonToVector3(coord[1], coord[0], GLOBE_RADIUS * 1.001));
               }
-              const lineGeo = new THREE.BufferGeometry().setFromPoints(points);
-              const lineSegments = new THREE.LineSegments(
-                lineGeo,
-                lineMaterial,
-              );
-              bordersGroup.add(lineSegments);
+              bordersGroup.add(new THREE.LineSegments(
+                new THREE.BufferGeometry().setFromPoints(points), lineMaterial
+              ));
             }
           }
-
           scene.add(bordersGroup);
         })
         .catch((err) => console.warn("Failed to load country borders:", err));
@@ -638,30 +670,26 @@ const GlobeRenderer = forwardRef<GlobeRef, GlobeRendererProps>(
       });
 
       // ── Lighting ──
-      // Deep space ambient
-      const ambientLight = new THREE.AmbientLight(0xffffff, 0.15);
+      // Near-zero ambient — space has no ambient light, only sun illumination
+      const ambientLight = new THREE.AmbientLight(0xffffff, 0.02);
       scene.add(ambientLight);
 
-      // Directional "sun" light
+      // Directional "sun" light — only illuminates the day side
       const sun = sunPosition(new Date());
       const sunPos = latLonToVector3(sun.lat, sun.lon, 50);
-      const dirLight = new THREE.DirectionalLight(0xffffff, 1.2);
+      // Initialize shader sun direction uniform
+      sunUniformRef.current.value.copy(sunPos.clone().normalize());
+      const dirLight = new THREE.DirectionalLight(0xfffaf0, 1.1);
       dirLight.position.copy(sunPos);
       scene.add(dirLight);
       dirLightRef.current = dirLight;
 
-      // Fill light opposite the sun
-      const fillLight = new THREE.PointLight(0x2244aa, 0.3);
-      fillLight.position.copy(sunPos.clone().negate());
-      scene.add(fillLight);
-      fillLightRef.current = fillLight;
-
-      // Update sun position every 60 seconds
+      // Update sun position + shader uniform every 60 seconds
       sunIntervalRef.current = setInterval(() => {
         const newSun = sunPosition(new Date());
         const newSunPos = latLonToVector3(newSun.lat, newSun.lon, 50);
         dirLight.position.copy(newSunPos);
-        fillLight.position.copy(newSunPos.clone().negate());
+        sunUniformRef.current.value.copy(newSunPos.clone().normalize());
       }, SUN_UPDATE_INTERVAL_MS);
 
       // ── Star field ──
@@ -672,6 +700,9 @@ const GlobeRenderer = forwardRef<GlobeRef, GlobeRendererProps>(
       const earth = createEarth();
       scene.add(earth);
       earthMeshRef.current = earth;
+
+      // ── City lights (night-only shader — golden glow on dark side only) ──
+      scene.add(createCityLights());
 
       // ── Atmosphere halo ──
       const atmosphere = createAtmosphere();
@@ -790,6 +821,7 @@ const GlobeRenderer = forwardRef<GlobeRef, GlobeRendererProps>(
     }, [
       createStarfield,
       createEarth,
+      createCityLights,
       createAtmosphere,
       loadCountryBorders,
       handleMouseMove,
@@ -799,7 +831,7 @@ const GlobeRenderer = forwardRef<GlobeRef, GlobeRendererProps>(
     ]);
 
     // ─── Sync events to markers when events change ───────────────────────
-    useEffect(() => {
+      useEffect(() => {
       syncEventMarkers(events);
     }, [events, syncEventMarkers]);
 
@@ -886,7 +918,7 @@ const GlobeRenderer = forwardRef<GlobeRef, GlobeRendererProps>(
       <div
         ref={containerRef}
         className="w-full h-full cursor-grab active:cursor-grabbing"
-        style={{ touchAction: "none" }}
+        style={{ touchAction: "none", position: "relative" }}
       />
     );
   },

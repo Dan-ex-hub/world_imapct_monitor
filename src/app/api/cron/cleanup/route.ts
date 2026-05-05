@@ -1,8 +1,9 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { createAdminClient } from '@/lib/supabase/server'
 
-const THREE_DAYS_MS = 3 * 24 * 60 * 60 * 1000
-const CLEANUP_INTERVAL_MS = 6 * 60 * 60 * 1000 // run at most every 6 hours
+const FORTY_EIGHT_HOURS_MS = 48 * 60 * 60 * 1000  // events retention window
+const SIX_HOURS_MS         =  6 * 60 * 60 * 1000  // env cache / dedup retention
+const CLEANUP_INTERVAL_MS  =  1 * 60 * 60 * 1000  // run at most every 1 hour
 
 // In-memory fallback for last run time (used if DB constraint blocks the marker row)
 let lastRunInMemory: Date | null = null
@@ -10,21 +11,21 @@ let lastRunInMemory: Date | null = null
 /**
  * GET /api/cron/cleanup
  *
- * Purges all data older than 3 days across every table.
+ * Purges all data older than 6 hours across every table to ensure fresh, real-time data.
  *
  * RESILIENT DESIGN — no fixed time dependency:
  *   - Tracks last successful run in env_data_cache (key: 'cleanup_last_run')
- *   - On every call, checks if 6+ hours have passed since last run
+ *   - On every call, checks if 1+ hours have passed since last run
  *   - If yes → purge. If no → skip (idempotent, safe to call frequently)
- *   - This means even if the server was offline at 3am, the cleanup
+ *   - This means even if the server was offline, the cleanup
  *     will fire on the next heartbeat after it comes back online.
  *
  * Called by:
- *   - Vercel cron: every 6 hours ("0 *\/6 * * *")
+ *   - Vercel cron: every hour
  *   - Dev heartbeat: every hour (minute === 0)
  *   - Manually: any time with admin/cron secret
  *
- * Tables cleaned (data older than 3 days):
+ * Tables cleaned (data older than 6 hours):
  *   events            → created_at
  *   event_dedup_log   → created_at
  *   env_data_cache    → fetched_at  (zone data: wind, temp, AQI, sea temp)
@@ -81,21 +82,24 @@ export async function GET(request: NextRequest) {
     }
   }
 
-  const cutoff = new Date(now.getTime() - THREE_DAYS_MS).toISOString()
+  // Events use a 48-hour retention window so playback always has 2 days of history.
+  const eventCutoff = new Date(now.getTime() - FORTY_EIGHT_HOURS_MS).toISOString()
+  // Env cache + dedup still use 6h — that data is refreshed frequently.
+  const envCutoff = new Date(now.getTime() - SIX_HOURS_MS).toISOString()
   const results: Record<string, { deleted?: number; error?: string }> = {}
 
-  console.log(`[Cleanup] Starting 3-day purge. Cutoff: ${cutoff}`)
+  console.log(`[Cleanup] Starting purge. Events cutoff: ${eventCutoff} | Env cutoff: ${envCutoff}`)
 
   // ── 1. Events ──────────────────────────────────────────────────────────────
   try {
     const { error, count } = await supabase
       .from('events')
       .delete({ count: 'exact' })
-      .lt('created_at', cutoff)
+      .lt('created_at', eventCutoff)
 
     if (error) throw error
     results.events = { deleted: count ?? 0 }
-    console.log(`[Cleanup] events: deleted ${count ?? 0}`)
+    console.log(`[Cleanup] events: deleted ${count ?? 0} (older than 48h)`)
   } catch (e: any) {
     results.events = { error: e.message }
     console.error('[Cleanup] events:', e.message)
@@ -106,7 +110,7 @@ export async function GET(request: NextRequest) {
     const { error, count } = await supabase
       .from('event_dedup_log')
       .delete({ count: 'exact' })
-      .lt('created_at', cutoff)
+      .lt('created_at', envCutoff)
 
     if (error && error.message.includes('schema cache')) {
       results.event_dedup_log = { deleted: 0 } // table not created yet — skip silently
@@ -127,8 +131,8 @@ export async function GET(request: NextRequest) {
     const { error, count } = await supabase
       .from('env_data_cache')
       .delete({ count: 'exact' })
-      .lt('fetched_at', cutoff)
-      .neq('layer_type', 'cleanup_last_run') // never delete the marker row
+      .lt('fetched_at', envCutoff)
+      .neq('layer_type', 'cleanup_last_run')
 
     if (error) throw error
     results.env_data_cache = { deleted: count ?? 0 }
@@ -143,7 +147,7 @@ export async function GET(request: NextRequest) {
     const { error, count } = await supabase
       .from('aqi_history')
       .delete({ count: 'exact' })
-      .lt('recorded_at', cutoff)
+      .lt('recorded_at', envCutoff)
 
     if (error) throw error
     results.aqi_history = { deleted: count ?? 0 }
@@ -155,12 +159,12 @@ export async function GET(request: NextRequest) {
 
   // ── 5. Forex cache — reset stale sparklines ────────────────────────────────
   // Rows are upserted (never deleted), but sparkline arrays become stale.
-  // Reset any pair not updated in 3 days so it refetches fresh data.
+  // Reset any pair not updated in 6 hours so it refetches fresh data.
   try {
     const { error, count } = await supabase
       .from('forex_cache')
       .update({ sparkline_data: [] })
-      .lt('last_updated', cutoff)
+      .lt('last_updated', envCutoff)
 
     if (error) throw error
     results.forex_cache = { deleted: count ?? 0 }
@@ -176,7 +180,7 @@ export async function GET(request: NextRequest) {
   // Try to persist to DB (requires SQL migration to be run)
   const { error: markerError } = await supabase.from('env_data_cache').upsert({
     layer_type: 'cleanup_last_run',
-    data: { cutoff, results },
+    data: { eventCutoff, envCutoff, results },
     fetched_at: now.toISOString(),
     expires_at: new Date(now.getTime() + 7 * 24 * 60 * 60 * 1000).toISOString(),
   })
@@ -189,11 +193,12 @@ export async function GET(request: NextRequest) {
     .filter(([, r]) => r.error)
     .map(([t, r]) => `${t}: ${r.error}`)
 
-  console.log(`[Cleanup] ✅ Done. Total purged: ${totalDeleted} rows. Cutoff: ${cutoff}`)
+  console.log(`[Cleanup] ✅ Done. Total purged: ${totalDeleted} rows. Event cutoff: ${eventCutoff}`)
 
   return NextResponse.json({
     success: true,
-    cutoff,
+    eventCutoff,
+    envCutoff,
     totalDeleted,
     results,
     errors: errors.length > 0 ? errors : undefined,

@@ -11,6 +11,11 @@
       "comment": "Every 10 minutes. Polls 25+ RSS feeds, analyzes with Gemini AI (skips if last event < 4h old), creates globe ripple events."
     },
     {
+      "path": "/api/news/poll",
+      "schedule": "*/30 * * * *",
+      "comment": "Every 30 minutes. Fetches from NewsData.io (no AI needed). 48 calls/day, well under 200/day free limit."
+    },
+    {
       "path": "/api/env/earthquakes",
       "schedule": "*/5 * * * *",
       "comment": "Every 5 minutes. USGS earthquake feed — no API key, no rate limit."

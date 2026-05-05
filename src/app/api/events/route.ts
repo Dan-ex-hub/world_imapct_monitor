@@ -71,7 +71,7 @@ export async function GET(request: NextRequest) {
       summary: row.summary,
       sentiment: row.sentiment,
       forexImpacts: row.forex_impacts || [],
-      confidenceScore: Number(row.confidence_score) * 100, // Convert 0-1 to 0-100
+      confidenceScore: Number(row.confidence_score),
       isMarketMoving: row.is_market_moving,
       publishedAt: row.published_at,
       expiresAt: row.expires_at,

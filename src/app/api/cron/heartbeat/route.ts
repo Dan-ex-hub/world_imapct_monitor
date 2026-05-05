@@ -37,9 +37,12 @@ export async function GET(request: NextRequest) {
       shouldRun: true, // every minute
     },
     {
-      name: 'rss-poll',
-      url: `${appUrl}/api/rss/poll`,
-      shouldRun: minute % 10 === 0,
+      name: 'news-gemini',
+      url: `${appUrl}/api/news/gemini`,
+      // Fire every minute — the route's own 2-min retry gap and 4-hour
+      // success cadence control actual Gemini API call frequency.
+      // This lets retries land automatically without waiting an hour.
+      shouldRun: true,
     },
     {
       name: 'earthquakes',
@@ -69,8 +72,8 @@ export async function GET(request: NextRequest) {
     {
       name: 'cleanup',
       url: `${appUrl}/api/cron/cleanup`,
-      // Check every hour — the cleanup route itself decides if 6h have passed
-      shouldRun: minute === 0,
+      // Run every 30 minutes to keep data fresh
+      shouldRun: minute % 30 === 0,
     },
   ]
 

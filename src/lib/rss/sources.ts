@@ -37,22 +37,22 @@ export const DEFAULT_RSS_SOURCES: RSSSource[] = [
     priority: 5,
   },
 
-  // Associated Press (free RSS)
+  // Associated Press (working URLs)
   {
     name: 'Associated Press - Top News',
-    url: 'https://feeds.apnews.com/rss/apf-topnews',
+    url: 'https://apnews.com/rss/apf-topnews',
     category: 'general',
     priority: 5,
   },
   {
     name: 'Associated Press - World',
-    url: 'https://feeds.apnews.com/rss/apf-intlnews',
+    url: 'https://apnews.com/rss/apf-intlnews',
     category: 'geopolitical',
     priority: 5,
   },
   {
     name: 'Associated Press - Business',
-    url: 'https://feeds.apnews.com/rss/apf-business',
+    url: 'https://apnews.com/rss/apf-business',
     category: 'economic',
     priority: 5,
   },
@@ -109,16 +109,10 @@ export const DEFAULT_RSS_SOURCES: RSSSource[] = [
     priority: 4,
   },
 
-  // MarketWatch (free)
+  // MarketWatch (working feed only)
   {
     name: 'MarketWatch - Top Stories',
     url: 'https://feeds.content.dowjones.io/public/rss/mw_topstories',
-    category: 'economic',
-    priority: 4,
-  },
-  {
-    name: 'MarketWatch - Economy',
-    url: 'https://feeds.content.dowjones.io/public/rss/mw_economy',
     category: 'economic',
     priority: 4,
   },
@@ -176,18 +170,6 @@ export const DEFAULT_RSS_SOURCES: RSSSource[] = [
     url: 'https://www.ecb.europa.eu/rss/press.html',
     category: 'economic',
     priority: 5,
-  },
-  {
-    name: 'IMF - News',
-    url: 'https://www.imf.org/en/News/rss?language=eng',
-    category: 'economic',
-    priority: 4,
-  },
-  {
-    name: 'World Bank - News',
-    url: 'https://www.worldbank.org/en/news/rss',
-    category: 'economic',
-    priority: 3,
   },
 
   // ── TIER 5: Conflict & Crisis Monitoring ──────────────────────────────────

@@ -1,11 +1,12 @@
 "use client";
 
-import { useRef, useCallback, useEffect } from "react";
+import { useRef, useCallback, useEffect, useState } from "react";
+import dynamic from "next/dynamic";
 import AppShell from "@/components/layout/AppShell";
 import GlobeWrapper from "@/components/globe/GlobeWrapper";
 import { EventModal } from "@/components/ui/EventModal";
 import { TooltipOverlay } from "@/components/ui/TooltipOverlay";
-import { ForexPanel } from "@/components/ui/ForexPanel";
+import { NewsInsightPanel } from '@/components/ui/NewsInsightPanel'
 import { EnvDataPanel } from "@/components/ui/EnvDataPanel";
 import { NewsTicker } from "@/components/ui/NewsTicker";
 import { EnvLayerPanel } from "@/components/ui/EnvLayerPanel";
@@ -17,7 +18,19 @@ import type { GlobeRef } from "@/components/globe/GlobeRenderer";
 import type { GlobeEvent } from "@/store/types";
 import type { HoveredEnvPoint } from "@/store/useGlobeStore";
 
+// 2D map loaded client-side only (Leaflet requires window)
+const MapView2D = dynamic(() => import("@/components/map/MapView2D"), {
+  ssr: false,
+  loading: () => (
+    <div className="w-full h-full flex items-center justify-center"
+         style={{ background: "#050d1a", color: "#8aaccc", fontSize: 14 }}>
+      Loading 2D Map…
+    </div>
+  ),
+});
+
 export default function Home() {
+  const [viewMode, setViewMode] = useState<"globe" | "map">("globe");
   const globeRef = useRef<GlobeRef>(null);
   const newsEvents = useGlobeStore((s) => s.events);
   const setEvents = useGlobeStore((s) => s.setEvents);
@@ -36,7 +49,7 @@ export default function Home() {
 
   // ── Dev-mode cron heartbeat ──────────────────────────────────────────────
   // Vercel crons don't run locally. This fires every minute in development
-  // to simulate the cron schedule (forex rotation, RSS poll, env data refresh).
+  // to simulate the cron schedule (forex rotation, env data refresh, etc.).
   useEffect(() => {
     if (process.env.NODE_ENV !== "development") return;
 
@@ -50,12 +63,13 @@ export default function Home() {
     return () => clearInterval(interval);
   }, []);
 
-  // Trigger RSS poll when no events are loaded (cron won't run in dev)
+  // On first load with no events: trigger Gemini to generate 20 fresh events.
+  // The heartbeat handles hourly refreshes after that.
   useEffect(() => {
     if (newsEvents.length === 0) {
-      fetch("/api/rss/trigger").catch(() => {});
+      fetch("/api/news/gemini").catch(() => {});
     }
-  }, [newsEvents.length]);
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   // ── Apply filters to news events ──────────────────────────────────────────
   // When categories or impact levels are selected, only events matching ALL
@@ -122,8 +136,77 @@ export default function Home() {
     }
 
     if (activeEnvLayer === "none") {
-      // Apply all active filters to news events
-      return applyFilters(newsEvents);
+      // Filter out events with invalid coordinates (0,0 = Gulf of Guinea)
+      const validEvents = applyFilters(newsEvents).filter(
+        (e) => !(Math.abs(e.lat) < 0.1 && Math.abs(e.lon) < 0.1)
+      )
+
+      // ── Pick 5 per tier spread across the 0–47h window ─────────────────
+      // Instead of always taking the 5 newest, we divide 47 hours into 5 buckets
+      // and pick one event per bucket. This gives the globe events from "just now"
+      // AND from several hours ago, covering different regions at different times.
+      // Any unfilled buckets fall back to newest-available.
+      const spreadPick = (tier: GlobeEvent[]): GlobeEvent[] => {
+        const MAX = 5
+        if (tier.length <= MAX) return tier
+
+        const now = Date.now()
+        const windowMs = 47 * 3_600_000            // 47h total window
+        const bucketMs  = windowMs / MAX            // ~9.4h per bucket
+        const picked: GlobeEvent[] = []
+        const usedIds = new Set<string>()
+
+        // bucket 0 = oldest end, bucket 4 = freshest end
+        for (let i = 0; i < MAX; i++) {
+          const bucketEnd   = now - (MAX - 1 - i) * bucketMs
+          const bucketStart = bucketEnd - bucketMs
+          const inBucket = tier
+            .filter(e => {
+              const t = new Date(e.publishedAt).getTime()
+              return t >= bucketStart && t < bucketEnd && !usedIds.has(e.id)
+            })
+            .sort((a, b) => new Date(b.publishedAt).getTime() - new Date(a.publishedAt).getTime())
+          if (inBucket.length > 0) {
+            picked.push(inBucket[0])
+            usedIds.add(inBucket[0].id)
+          }
+        }
+
+        // Fill any empty buckets with the newest events not yet selected
+        if (picked.length < MAX) {
+          const remaining = tier
+            .filter(e => !usedIds.has(e.id))
+            .sort((a, b) => new Date(b.publishedAt).getTime() - new Date(a.publishedAt).getTime())
+          picked.push(...remaining.slice(0, MAX - picked.length))
+        }
+
+        return picked
+      }
+
+      const tierEvents = (level: GlobeEvent['impactLevel']) =>
+        validEvents.filter(e => e.impactLevel === level)
+
+      const chosen = [
+        ...spreadPick(tierEvents('Critical')),
+        ...spreadPick(tierEvents('High')),
+        ...spreadPick(tierEvents('Medium')),
+        ...spreadPick(tierEvents('Low')),
+      ]
+
+      // ── Spread events from the same location so each shows as its own ripple ──
+      // Without jitter, multiple events from the same country stack on the same
+      // pixel and appear as one dot. Golden-angle spiral gives each a unique spot.
+      const seen = new Map<string, number>()
+      return chosen.map((e) => {
+        const key = `${Math.round(e.lat * 10)},${Math.round(e.lon * 10)}`
+        const idx = seen.get(key) ?? 0
+        seen.set(key, idx + 1)
+        if (idx === 0) return e
+
+        const angle  = (idx * 137.5 * Math.PI) / 180  // golden angle
+        const radius = 1.5 + idx * 0.8                 // grows per collision (°)
+        return { ...e, lat: e.lat + radius * Math.sin(angle), lon: e.lon + radius * Math.cos(angle) }
+      })
     }
 
     // Convert environmental data to GlobeEvent format
@@ -247,16 +330,62 @@ export default function Home() {
 
   return (
     <AppShell>
-      {/* 3D Globe — full viewport */}
-      <GlobeWrapper
-        ref={globeRef}
-        events={events}
-        onEventClick={handleEventClick}
-        onEventHover={handleEventHover}
-        onEnvHover={handleEnvHover}
-        activeEnvLayer={activeEnvLayer}
-        envLayerData={envLayerData}
-      />
+      {/* ── View mode toggle ── */}
+      <div style={{
+        position: "absolute", top: 80, left: 20, zIndex: 50,
+        display: "flex", gap: 0, borderRadius: 10,
+        overflow: "hidden",
+        border: "1px solid rgba(100,150,255,0.2)",
+        boxShadow: "0 4px 20px rgba(0,0,0,0.5)",
+        backdropFilter: "blur(12px)",
+      }}>
+        {(["globe", "map"] as const).map((mode) => (
+          <button
+            key={mode}
+            onClick={() => setViewMode(mode)}
+            style={{
+              padding: "7px 18px",
+              fontSize: 12, fontWeight: 700,
+              letterSpacing: "0.06em",
+              textTransform: "uppercase",
+              background: viewMode === mode
+                ? "rgba(59,130,246,0.35)"
+                : "rgba(5,13,26,0.85)",
+              color: viewMode === mode ? "#93c5fd" : "#4a6a8a",
+              border: "none", cursor: "pointer",
+              borderRight: mode === "globe" ? "1px solid rgba(100,150,255,0.15)" : "none",
+              transition: "all .2s",
+            }}
+          >
+            {mode === "globe" ? "🌍 Globe" : "🗺️ Map"}
+          </button>
+        ))}
+      </div>
+
+      {/* ── 3D Globe ── */}
+      {viewMode === "globe" && (
+        <GlobeWrapper
+          ref={globeRef}
+          events={events}
+          onEventClick={handleEventClick}
+          onEventHover={handleEventHover}
+          onEnvHover={handleEnvHover}
+          activeEnvLayer={activeEnvLayer}
+          envLayerData={envLayerData}
+        />
+      )}
+
+      {/* ── 2D Leaflet Map ── */}
+      {viewMode === "map" && (
+        <div className="absolute inset-0" style={{ zIndex: 1 }}>
+          <MapView2D
+            events={events}
+            activeEnvLayer={activeEnvLayer}
+            envLayerData={envLayerData}
+            onEventClick={handleEventClick}
+          />
+        </div>
+      )}
 
       {/* Gradient vignette overlay for depth */}
       <div
@@ -267,8 +396,8 @@ export default function Home() {
         }}
       />
 
-      {/* Right sidebar - show EnvDataPanel if env layer active, otherwise ForexPanel */}
-      {activeEnvLayer !== "none" ? <EnvDataPanel /> : <ForexPanel />}
+      {/* Right sidebar - show EnvDataPanel if env layer active, otherwise NewsInsightPanel */}
+      {activeEnvLayer !== "none" ? <EnvDataPanel /> : <NewsInsightPanel />}
 
       {/* Environmental layer controls */}
       <EnvLayerPanel />

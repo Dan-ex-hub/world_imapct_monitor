@@ -12,13 +12,16 @@ export function useRealtimeEvents() {
   useEffect(() => {
     const supabase = createClient();
 
-    // Fetch initial events
+    // Fetch events from the last 48h — this gives the globe a healthy spread
+    // from "just now" (freshly polled) to "47h ago" (older but still valid).
     const fetchInitial = async () => {
+      const fortyEightHoursAgo = new Date(Date.now() - 48 * 60 * 60 * 1000).toISOString();
       const { data, error } = await supabase
         .from("events")
         .select("*")
-        .gte("expires_at", new Date().toISOString())
-        .order("published_at", { ascending: false });
+        .gte("published_at", fortyEightHoursAgo)
+        .order("published_at", { ascending: false })
+        .limit(500);
 
       if (error) {
         console.error("[Realtime] fetch error:", error);
@@ -31,7 +34,9 @@ export function useRealtimeEvents() {
 
     fetchInitial();
 
-    // Subscribe to INSERT / UPDATE
+    // Subscribe to INSERT / UPDATE — new events arrive live
+    // Subscribe to DELETE — when /api/news/refresh clears stale rows,
+    //   they're removed from the store immediately (no "17h ago" ghost events)
     const channel = supabase
       .channel("events-channel")
       .on(
@@ -43,6 +48,18 @@ export function useRealtimeEvents() {
         "postgres_changes",
         { event: "UPDATE", schema: "public", table: "events" },
         (p) => addEvent(mapRow(p.new as any)),
+      )
+      .on(
+        "postgres_changes",
+        { event: "DELETE", schema: "public", table: "events" },
+        (p) => {
+          // Remove the deleted event from store
+          const deletedId = (p.old as any)?.id;
+          if (!deletedId) return;
+          setEvents(
+            useGlobeStore.getState().events.filter((e) => e.id !== deletedId)
+          );
+        },
       )
       .subscribe();
 
@@ -72,3 +89,4 @@ function mapRow(row: any): GlobeEvent {
     createdBy: row.created_by,
   };
 }
+

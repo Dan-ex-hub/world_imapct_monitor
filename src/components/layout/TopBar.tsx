@@ -26,11 +26,11 @@ export default function TopBar() {
         <FilterBar />
       </div>
 
-      {/* Event counter */}
+      {/* Event counter — total tracked vs displayed on globe */}
       <div className="flex items-center gap-2 rounded-lg bg-bg-card px-4 py-2 shrink-0">
         <div className="h-2 w-2 rounded-full bg-env-wind" />
         <span className="text-sm font-medium text-text-secondary">
-          {events.length} EVENTS TRACKED
+          {events.filter(e => !(Math.abs(e.lat) < 0.1 && Math.abs(e.lon) < 0.1)).length} EVENTS TRACKED
         </span>
       </div>
     </header>
