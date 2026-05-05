@@ -7,43 +7,43 @@
     },
     {
       "path": "/api/rss/poll",
-      "schedule": "*/10 * * * *",
-      "comment": "Every 10 minutes. Polls 25+ RSS feeds, analyzes with Gemini AI (skips if last event < 4h old), creates globe ripple events."
-    },
-    {
-      "path": "/api/news/poll",
-      "schedule": "*/30 * * * *",
-      "comment": "Every 30 minutes. Fetches from NewsData.io (no AI needed). 48 calls/day, well under 200/day free limit."
+      "schedule": "0 */6 * * *",
+      "comment": "Every 6 hours. Polls RSS feeds and analyzes with AI (News layer)."
     },
     {
       "path": "/api/env/earthquakes",
-      "schedule": "*/5 * * * *",
-      "comment": "Every 5 minutes. USGS earthquake feed — no API key, no rate limit."
+      "schedule": "0 */6 * * *",
+      "comment": "Every 6 hours. USGS earthquake feed."
     },
     {
       "path": "/api/env/wildfires",
-      "schedule": "*/15 * * * *",
-      "comment": "Every 15 minutes. NASA EONET wildfires."
+      "schedule": "0 */6 * * *",
+      "comment": "Every 6 hours. NASA EONET wildfires."
+    },
+    {
+      "path": "/api/env/storms",
+      "schedule": "0 */6 * * *",
+      "comment": "Every 6 hours. NASA EONET storms and hurricanes."
     },
     {
       "path": "/api/env/aqi",
-      "schedule": "*/30 * * * *",
-      "comment": "Every 30 minutes. Open-Meteo Air Quality — refreshes one zone per call."
+      "schedule": "0 0 * * *",
+      "comment": "Every 24 hours. Open-Meteo Air Quality heatmap."
     },
     {
       "path": "/api/env/weather",
-      "schedule": "0 * * * *",
-      "comment": "Every hour. Open-Meteo wind + temperature — refreshes one zone per call."
+      "schedule": "0 0 * * *",
+      "comment": "Every 24 hours. Open-Meteo wind and temperature heatmap."
     },
     {
       "path": "/api/env/sea-temp",
-      "schedule": "0 */6 * * *",
-      "comment": "Every 6 hours. Open-Meteo Marine sea surface temperature."
+      "schedule": "0 0 * * *",
+      "comment": "Every 24 hours. Open-Meteo Marine sea surface temperature heatmap."
     },
     {
       "path": "/api/cron/cleanup",
       "schedule": "0 */6 * * *",
-      "comment": "Every 6 hours. Purges data older than 3 days. The route itself tracks last run time and skips if <6h have passed — so it's safe to call frequently and resilient to server downtime."
+      "comment": "Every 6 hours. Purges all data older than 3 days (72 hours)."
     }
   ]
 }

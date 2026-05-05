@@ -12,14 +12,13 @@ export function useRealtimeEvents() {
   useEffect(() => {
     const supabase = createClient();
 
-    // Fetch events from the last 48h — this gives the globe a healthy spread
-    // from "just now" (freshly polled) to "47h ago" (older but still valid).
+    // Fetch events from the last 72h (3 days)
     const fetchInitial = async () => {
-      const fortyEightHoursAgo = new Date(Date.now() - 48 * 60 * 60 * 1000).toISOString();
+      const seventyTwoHoursAgo = new Date(Date.now() - 72 * 60 * 60 * 1000).toISOString();
       const { data, error } = await supabase
         .from("events")
         .select("*")
-        .gte("published_at", fortyEightHoursAgo)
+        .gte("published_at", seventyTwoHoursAgo)
         .order("published_at", { ascending: false })
         .limit(500);
 

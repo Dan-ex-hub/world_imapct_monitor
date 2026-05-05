@@ -1,9 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { createAdminClient } from '@/lib/supabase/server'
 
-const FORTY_EIGHT_HOURS_MS = 48 * 60 * 60 * 1000  // events retention window
-const SIX_HOURS_MS         =  6 * 60 * 60 * 1000  // env cache / dedup retention
-const CLEANUP_INTERVAL_MS  =  1 * 60 * 60 * 1000  // run at most every 1 hour
+const SEVENTY_TWO_HOURS_MS = 72 * 60 * 60 * 1000  // 3 days retention window
+const CLEANUP_INTERVAL_MS  =  6 * 60 * 60 * 1000  // run at most every 6 hours
 
 // In-memory fallback for last run time (used if DB constraint blocks the marker row)
 let lastRunInMemory: Date | null = null
@@ -25,7 +24,7 @@ let lastRunInMemory: Date | null = null
  *   - Dev heartbeat: every hour (minute === 0)
  *   - Manually: any time with admin/cron secret
  *
- * Tables cleaned (data older than 6 hours):
+ * Tables cleaned (data older than 72 hours):
  *   events            → created_at
  *   event_dedup_log   → created_at
  *   env_data_cache    → fetched_at  (zone data: wind, temp, AQI, sea temp)
@@ -82,10 +81,9 @@ export async function GET(request: NextRequest) {
     }
   }
 
-  // Events use a 48-hour retention window so playback always has 2 days of history.
-  const eventCutoff = new Date(now.getTime() - FORTY_EIGHT_HOURS_MS).toISOString()
-  // Env cache + dedup still use 6h — that data is refreshed frequently.
-  const envCutoff = new Date(now.getTime() - SIX_HOURS_MS).toISOString()
+  // All data uses a 72-hour (3 day) retention window
+  const eventCutoff = new Date(now.getTime() - SEVENTY_TWO_HOURS_MS).toISOString()
+  const envCutoff = new Date(now.getTime() - SEVENTY_TWO_HOURS_MS).toISOString()
   const results: Record<string, { deleted?: number; error?: string }> = {}
 
   console.log(`[Cleanup] Starting purge. Events cutoff: ${eventCutoff} | Env cutoff: ${envCutoff}`)
@@ -99,7 +97,7 @@ export async function GET(request: NextRequest) {
 
     if (error) throw error
     results.events = { deleted: count ?? 0 }
-    console.log(`[Cleanup] events: deleted ${count ?? 0} (older than 48h)`)
+    console.log(`[Cleanup] events: deleted ${count ?? 0} (older than 72h)`)
   } catch (e: any) {
     results.events = { error: e.message }
     console.error('[Cleanup] events:', e.message)
