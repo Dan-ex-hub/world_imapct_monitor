@@ -4,9 +4,9 @@
 World Impact Monitor is a real-time 3D and 2D geospatial visualization platform that tracks global events impacting financial markets, geopolitical stability, and the environment. It combines AI-driven news summarization with live environmental data layers to provide a holistic, unified view of the world's current state.
 
 ## Live Deployment
-🌍 **[Live Deployment Link](YOUR_DEPLOYMENT_LINK_HERE)**
+🌍 **[Live Deployment Link](https://world-imapct-monitor.vercel.app/)**
 
-*(Add your deployment link above once the project is live)*
+
 
 ---
 
@@ -46,10 +46,3 @@ Given the specific architecture of this project, **Vercel** is the most highly r
 2. **Serverless APIs**: The heavy lifting of external data fetching is isolated in Next.js Serverless Functions, ensuring the client UI remains fast and lightweight without paying for a constantly running 24/7 Node.js server.
 3. **Real-Time WebSockets**: Serverless platforms (like Vercel) are stateless and cannot hold persistent WebSocket connections. Supabase solves this natively by providing a persistent Postgres database with built-in real-time broadcasts that clients can subscribe to directly.
 
-### Deployment Steps:
-1. Push your local repository to GitHub.
-2. Create an account on [Vercel](https://vercel.com).
-3. Import your GitHub repository to a new Vercel project.
-4. Go to your project **Environment Variables** settings in Vercel and paste all variables from your `.env.local` (e.g., `NEXT_PUBLIC_SUPABASE_URL`, `SUPABASE_SERVICE_ROLE_KEY`, `GROQ_API_KEY`, `GEMINI_API_KEY`, `CRON_SECRET`, `ADMIN_SECRET`).
-5. Click **Deploy**. Vercel will automatically run `npm run build` and configure your cron schedules.
-6. Once deployed, grab the Vercel URL and paste it into the placeholder at the top of this README!
