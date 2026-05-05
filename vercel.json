@@ -2,28 +2,28 @@
   "crons": [
     {
       "path": "/api/forex/refresh",
-      "schedule": "* * * * *",
-      "comment": "Every minute. Rotation: minute%5 → pair index. Each pair updated once per 5 minutes. 288 calls/day × 2 credits = 576/day (under 800 free limit). Full cycle: 5 minutes."
+      "schedule": "0 0 * * *",
+      "comment": "Every 24 hours. Forex refresh."
     },
     {
       "path": "/api/rss/poll",
-      "schedule": "0 */6 * * *",
-      "comment": "Every 6 hours. Polls RSS feeds and analyzes with AI (News layer)."
+      "schedule": "0 0 * * *",
+      "comment": "Every 24 hours. Polls RSS feeds and analyzes with AI (News layer)."
     },
     {
       "path": "/api/env/earthquakes",
-      "schedule": "0 */6 * * *",
-      "comment": "Every 6 hours. USGS earthquake feed."
+      "schedule": "0 0 * * *",
+      "comment": "Every 24 hours. USGS earthquake feed."
     },
     {
       "path": "/api/env/wildfires",
-      "schedule": "0 */6 * * *",
-      "comment": "Every 6 hours. NASA EONET wildfires."
+      "schedule": "0 0 * * *",
+      "comment": "Every 24 hours. NASA EONET wildfires."
     },
     {
       "path": "/api/env/storms",
-      "schedule": "0 */6 * * *",
-      "comment": "Every 6 hours. NASA EONET storms and hurricanes."
+      "schedule": "0 0 * * *",
+      "comment": "Every 24 hours. NASA EONET storms and hurricanes."
     },
     {
       "path": "/api/env/aqi",
@@ -42,8 +42,8 @@
     },
     {
       "path": "/api/cron/cleanup",
-      "schedule": "0 */6 * * *",
-      "comment": "Every 6 hours. Purges all data older than 3 days (72 hours)."
+      "schedule": "0 0 * * *",
+      "comment": "Every 24 hours. Purges all data older than 3 days (72 hours)."
     }
   ]
 }
