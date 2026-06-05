@@ -13,16 +13,24 @@ import { analyzeWithGemini } from '@/lib/gemini/client'
  * - Gracefully returns 200 (not 500) when Gemini is rate limited
  * - Confidence score stored as integer 0-100 (matches DB schema)
  */
+export const maxDuration = 60
+
 export async function GET(request: NextRequest) {
+  const cronSecret = request.headers.get('x-cron-secret')
+  const adminSecret = request.headers.get('x-admin-secret')
+  // Vercel sends 'Authorization: Bearer <CRON_SECRET>' for cron jobs
+  const authHeader = request.headers.get('authorization')
+  const isDev = process.env.NODE_ENV === 'development'
+
+  const hasCronAuth = cronSecret === process.env.CRON_SECRET
+    || authHeader === `Bearer ${process.env.CRON_SECRET}`
+  const hasAdminAuth = adminSecret === process.env.ADMIN_SECRET
+
+  if (!isDev && !hasCronAuth && !hasAdminAuth) {
+    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+  }
+
   try {
-    const cronSecret = request.headers.get('x-cron-secret')
-    const adminSecret = request.headers.get('x-admin-secret')
-    const isDev = process.env.NODE_ENV === 'development'
-
-    if (!isDev && cronSecret !== process.env.CRON_SECRET && adminSecret !== process.env.ADMIN_SECRET) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
-    }
-
     const supabase = createAdminClient()
     const now = new Date()
 

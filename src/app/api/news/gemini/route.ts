@@ -30,14 +30,37 @@ const RETRY_GAP_MS   = 2 * 60 * 1000
 const REFRESH_GAP_MS = 4 * 60 * 60 * 1000
 const TARGET_EVENTS  = 20
 
+// Allow Vercel to run this for up to 60 seconds (AI calls can be slow)
+export const maxDuration = 60
+
 export async function GET(request: NextRequest) {
   const cronSecret  = request.headers.get('x-cron-secret')
   const adminSecret = request.headers.get('x-admin-secret')
+  // Vercel sends 'Authorization: Bearer <CRON_SECRET>' for cron jobs
+  const authHeader  = request.headers.get('authorization')
   const isDev       = process.env.NODE_ENV === 'development'
   const isForced    = request.nextUrl.searchParams.get('force') === '1'
 
-  if (!isDev && cronSecret !== process.env.CRON_SECRET && adminSecret !== process.env.ADMIN_SECRET) {
-    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+  // Auth check: allow cron/admin keys OR allow unauthenticated bootstrap calls
+  // (client fires this on first load when globe is empty — no auth headers sent)
+  const hasCronAuth  = cronSecret === process.env.CRON_SECRET
+    || authHeader === `Bearer ${process.env.CRON_SECRET}`
+  const hasAdminAuth = adminSecret === process.env.ADMIN_SECRET
+  const isAuthed     = isDev || hasCronAuth || hasAdminAuth
+
+  // Unauthenticated requests are allowed ONLY for the bootstrap case:
+  // check DB right now — if < TARGET_EVENTS live, let it through to fill the globe
+  if (!isAuthed) {
+    const supabaseCheck = createAdminClient()
+    const { count } = await supabaseCheck
+      .from('events')
+      .select('id', { count: 'exact', head: true })
+      .gte('expires_at', new Date().toISOString())
+    if ((count ?? 0) >= TARGET_EVENTS) {
+      // DB is full — just tell the client to read from Supabase directly
+      return NextResponse.json({ success: true, skipped: true, message: `${count} events live — read from Supabase` })
+    }
+    // DB is empty/sparse — fall through to generate events
   }
 
   const supabase = createAdminClient()
