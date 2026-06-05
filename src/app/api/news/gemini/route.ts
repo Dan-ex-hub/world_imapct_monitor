@@ -3,7 +3,6 @@ import { createAdminClient } from '@/lib/supabase/server'
 
 import { SEED_EVENTS } from '@/lib/news/seedData'
 
-// ── Category sanitizer — DB enforces strict check constraint ─────────────────
 const VALID_CATEGORIES = new Set([
   'Geopolitical', 'Central Bank', 'Macro', 'Political',
   'Crisis', 'Sanctions', 'Earnings', 'Natural Disaster',
@@ -19,7 +18,7 @@ function sanitizeCategory(raw: string): string {
   if (r.includes('crisis') || r.includes('emergency') || r.includes('collapse')) return 'Crisis'
   if (r.includes('politic') || r.includes('election') || r.includes('government') || r.includes('diplomatic')) return 'Political'
   if (r.includes('earn') || r.includes('profit') || r.includes('corporate') || r.includes('stock')) return 'Earnings'
-  return 'Macro' // safe fallback
+  return 'Macro'
 }
 
 let lastAttemptMs = 0
@@ -30,26 +29,20 @@ const RETRY_GAP_MS   = 2 * 60 * 1000
 const REFRESH_GAP_MS = 4 * 60 * 60 * 1000
 const TARGET_EVENTS  = 20
 
-// Allow Vercel to run this for up to 60 seconds (AI calls can be slow)
 export const maxDuration = 60
 
 export async function GET(request: NextRequest) {
   const cronSecret  = request.headers.get('x-cron-secret')
   const adminSecret = request.headers.get('x-admin-secret')
-  // Vercel sends 'Authorization: Bearer <CRON_SECRET>' for cron jobs
   const authHeader  = request.headers.get('authorization')
   const isDev       = process.env.NODE_ENV === 'development'
   const isForced    = request.nextUrl.searchParams.get('force') === '1'
 
-  // Auth check: allow cron/admin keys OR allow unauthenticated bootstrap calls
-  // (client fires this on first load when globe is empty — no auth headers sent)
   const hasCronAuth  = cronSecret === process.env.CRON_SECRET
     || authHeader === `Bearer ${process.env.CRON_SECRET}`
   const hasAdminAuth = adminSecret === process.env.ADMIN_SECRET
   const isAuthed     = isDev || hasCronAuth || hasAdminAuth
 
-  // Unauthenticated requests are allowed ONLY for the bootstrap case:
-  // check DB right now — if < TARGET_EVENTS live, let it through to fill the globe
   if (!isAuthed) {
     const supabaseCheck = createAdminClient()
     const { count } = await supabaseCheck
@@ -57,17 +50,14 @@ export async function GET(request: NextRequest) {
       .select('id', { count: 'exact', head: true })
       .gte('expires_at', new Date().toISOString())
     if ((count ?? 0) >= TARGET_EVENTS) {
-      // DB is full — just tell the client to read from Supabase directly
-      return NextResponse.json({ success: true, skipped: true, message: `${count} events live — read from Supabase` })
+      return NextResponse.json({ success: true, skipped: true, message: `${count} events live` })
     }
-    // DB is empty/sparse — fall through to generate events
   }
 
   const supabase = createAdminClient()
   const nowMs    = Date.now()
   const now      = new Date(nowMs)
 
-  // ── Guard 1: 4-hour success cadence ──────────────────────────────────────
   if (!isForced && lastSuccessMs > 0 && nowMs - lastSuccessMs < REFRESH_GAP_MS) {
     const { count } = await supabase
       .from('events')
@@ -80,13 +70,11 @@ export async function GET(request: NextRequest) {
     }
   }
 
-  // ── Guard 2: 2-minute retry gap (rate-limit safety) ───────────────────────
   if (!isForced && lastAttemptMs > 0 && nowMs - lastAttemptMs < RETRY_GAP_MS) {
     const waitSec = Math.round((RETRY_GAP_MS - (nowMs - lastAttemptMs)) / 1000)
     return NextResponse.json({ success: true, skipped: true, message: `Rate guard — retry in ${waitSec}s (streak: ${failureStreak})` })
   }
 
-  // ── Build prompt ──────────────────────────────────────────────────────────
   const prompt = `You are a real-time geopolitical and financial markets intelligence analyst. Today is ${now.toUTCString()}.
 
 Generate exactly 20 current global news events from the last 48 hours that significantly impact financial markets and geopolitical stability.
@@ -123,12 +111,10 @@ CRITICAL RULES — violations will make the data useless:
 
 Return ONLY a raw JSON array of exactly 20 objects. No markdown fences, no explanation, no preamble.`
 
-  // Record attempt BEFORE API calls
   lastAttemptMs = nowMs
   let responseText = ''
   let modelUsed    = ''
 
-  // ── 1. Try Groq (primary — 14,400 RPD, no IP restrictions) ───────────────
   const groqKey = process.env.GROQ_API_KEY
   if (groqKey) {
     const groqModels = ['llama-3.3-70b-versatile', 'llama3-70b-8192', 'mixtral-8x7b-32768']
@@ -148,7 +134,6 @@ Return ONLY a raw JSON array of exactly 20 objects. No markdown fences, no expla
     }
   }
 
-  // ── 2. Try Gemini (fallback) ───────────────────────────────────────────────
   const geminiKey = process.env.GEMINI_API_KEY
   if (!responseText && geminiKey) {
     const geminiModels = ['gemini-2.0-flash-lite', 'gemini-2.0-flash']
@@ -169,7 +154,6 @@ Return ONLY a raw JSON array of exactly 20 objects. No markdown fences, no expla
     }
   }
 
-  // ── 3. Seed fallback — globe is never empty ────────────────────────────────
   if (!responseText) {
     failureStreak++
     console.warn(`[News] All AI providers failed (streak: ${failureStreak}). Inserting seed events.`)
@@ -189,7 +173,6 @@ Return ONLY a raw JSON array of exactly 20 objects. No markdown fences, no expla
     return NextResponse.json({ success: true, seeded: seeded?.length ?? 0, failureStreak, retryInSec: Math.round(RETRY_GAP_MS / 1000) })
   }
 
-  // ── Parse JSON ────────────────────────────────────────────────────────────
   let rawEvents: any[] = []
   try {
     const clean = responseText.replace(/```json\n?/g, '').replace(/```\n?/g, '').trim()
@@ -201,7 +184,6 @@ Return ONLY a raw JSON array of exactly 20 objects. No markdown fences, no expla
     return NextResponse.json({ error: 'JSON parse failed', raw: responseText.slice(0, 200) }, { status: 500 })
   }
 
-  // ── Enforce 5 per tier ────────────────────────────────────────────────────
   const TIERS = ['Critical', 'High', 'Medium', 'Low'] as const
   const buckets: Record<string, any[]> = { Critical: [], High: [], Medium: [], Low: [] }
   for (const e of rawEvents) {
@@ -219,7 +201,6 @@ Return ONLY a raw JSON array of exactly 20 objects. No markdown fences, no expla
     return NextResponse.json({ error: 'No valid events parsed', raw: responseText.slice(0, 200) }, { status: 500 })
   }
 
-  // ── Replace DB events ─────────────────────────────────────────────────────
   await supabase.from('events').delete().eq('created_by', 'ai-auto')
   const rows = validated.map(e => ({
     headline: String(e.headline).slice(0, 100), country: String(e.country).slice(0, 100),
@@ -238,10 +219,10 @@ Return ONLY a raw JSON array of exactly 20 objects. No markdown fences, no expla
 
   lastSuccessMs = Date.now()
   failureStreak = 0
-  console.log(`[News] ✅ Inserted ${inserted?.length ?? 0} AI events via ${modelUsed}. Next refresh in 4h.`)
+  console.log(`[News] ✅ Inserted ${inserted?.length ?? 0} AI events via ${modelUsed}.`)
 
   return NextResponse.json({
-    success: true, model: modelUsed, created: inserted?.length ?? 0, nextRefreshIn: '4 hours',
+    success: true, model: modelUsed, created: inserted?.length ?? 0,
     tiers: { Critical: buckets.Critical.length, High: buckets.High.length, Medium: buckets.Medium.length, Low: buckets.Low.length },
     events: inserted?.map((e: any) => ({ id: e.id, headline: e.headline, impactLevel: e.impact_level, country: e.country, lat: e.lat, lon: e.lon })),
   })

@@ -4,21 +4,11 @@ import { parseMultipleFeeds, filterNewItems, deduplicateItems } from '@/lib/rss/
 import { DEFAULT_RSS_SOURCES } from '@/lib/rss/sources'
 import { analyzeWithGemini } from '@/lib/gemini/client'
 
-/**
- * GET /api/rss/poll
- * Poll RSS feeds → analyze with Gemini → store events.
- *
- * Guards:
- * - Skips if events were created < 4 hours ago (saves Gemini quota)
- * - Gracefully returns 200 (not 500) when Gemini is rate limited
- * - Confidence score stored as integer 0-100 (matches DB schema)
- */
 export const maxDuration = 60
 
 export async function GET(request: NextRequest) {
   const cronSecret = request.headers.get('x-cron-secret')
   const adminSecret = request.headers.get('x-admin-secret')
-  // Vercel sends 'Authorization: Bearer <CRON_SECRET>' for cron jobs
   const authHeader = request.headers.get('authorization')
   const isDev = process.env.NODE_ENV === 'development'
 
@@ -34,7 +24,6 @@ export async function GET(request: NextRequest) {
     const supabase = createAdminClient()
     const now = new Date()
 
-    // ── 1-hour cache guard — skip Gemini if we already have recent events ──
     const oneHourAgo = new Date(now.getTime() - 1 * 60 * 60 * 1000).toISOString()
     const { data: recent, count } = await supabase
       .from('events')
@@ -44,15 +33,10 @@ export async function GET(request: NextRequest) {
 
     if (count && count > 0 && recent?.[0]) {
       const ageMin = Math.round((now.getTime() - new Date(recent[0].created_at).getTime()) / 60_000)
-      console.log(`[RSS Poll] Skipping — events created ${ageMin}min ago (1h cache active)`)
-      return NextResponse.json({
-        success: true,
-        skipped: true,
-        message: `Events created ${ageMin}min ago — Gemini skipped (1h cache).`,
-      })
+      console.log(`[RSS Poll] Skipping — events created ${ageMin}min ago`)
+      return NextResponse.json({ success: true, skipped: true, message: `Events created ${ageMin}min ago.` })
     }
 
-    // ── Fetch RSS feeds ────────────────────────────────────────────────────
     const { data: dbSources } = await supabase
       .from('rss_sources')
       .select('*')
@@ -74,14 +58,12 @@ export async function GET(request: NextRequest) {
       return NextResponse.json({ success: true, message: 'No new items', stats: { created: 0 } })
     }
 
-    // Top 12 most recent
     const items = allItems
       .sort((a, b) => new Date(b.pubDate).getTime() - new Date(a.pubDate).getTime())
       .slice(0, 12)
 
     console.log(`[RSS Poll] Analyzing ${items.length} items with Gemini...`)
 
-    // ── Gemini analysis ────────────────────────────────────────────────────
     const headlines = items.map((it, i) => `${i + 1}. ${it.title}`).join('\n')
 
     const prompt = `You are a financial and geopolitical news analyst. Analyze these headlines and extract the 3-5 most market-moving global events.
@@ -110,27 +92,19 @@ Return [] if no significant events. No markdown, no extra text.`
     try {
       analysisText = await analyzeWithGemini(prompt)
     } catch (err: any) {
-      // Gemini rate limited — return gracefully, don't crash
       const isRateLimit = err?.message?.includes('rate limit') || err?.message?.includes('quota') || err?.message?.includes('429')
       console.warn(`[RSS Poll] Gemini unavailable: ${err?.message?.slice(0, 100)}`)
       return NextResponse.json({
         success: true,
         skipped: true,
-        message: isRateLimit
-          ? 'Gemini rate limited — will retry next cycle'
-          : `Gemini error: ${err?.message?.slice(0, 100)}`,
+        message: isRateLimit ? 'Gemini rate limited — will retry next cycle' : `Gemini error: ${err?.message?.slice(0, 100)}`,
         stats: { feeds: feeds.length, items: items.length, created: 0 },
       })
     }
 
-    // ── Parse Gemini response ──────────────────────────────────────────────
     let events: any[] = []
     try {
-      const clean = analysisText
-        .replace(/```json\n?/g, '')
-        .replace(/```\n?/g, '')
-        .trim()
-      // Find the JSON array in the response
+      const clean = analysisText.replace(/```json\n?/g, '').replace(/```\n?/g, '').trim()
       const match = clean.match(/\[[\s\S]*\]/)
       if (match) {
         events = JSON.parse(match[0])
@@ -145,7 +119,6 @@ Return [] if no significant events. No markdown, no extra text.`
       return NextResponse.json({ success: true, message: 'No significant events found', stats: { created: 0 } })
     }
 
-    // ── Deduplicate against last 48h (matches event retention window) ──────
     const { data: existing } = await supabase
       .from('events')
       .select('headline')
@@ -158,7 +131,6 @@ Return [] if no significant events. No markdown, no extra text.`
       return NextResponse.json({ success: true, message: 'All events already exist', stats: { created: 0 } })
     }
 
-    // ── Insert ─────────────────────────────────────────────────────────────
     const rows = unique.map((e) => ({
       headline: String(e.headline || '').slice(0, 100),
       country: String(e.country || 'Unknown'),
@@ -176,10 +148,7 @@ Return [] if no significant events. No markdown, no extra text.`
       created_by: 'ai-auto' as const,
     }))
 
-    const { data: inserted, error: insertErr } = await supabase
-      .from('events')
-      .insert(rows)
-      .select()
+    const { data: inserted, error: insertErr } = await supabase.from('events').insert(rows).select()
 
     if (insertErr) {
       console.error('[RSS Poll] Insert error:', insertErr)
