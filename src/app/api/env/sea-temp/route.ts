@@ -3,6 +3,7 @@ import { after } from 'next/server'
 import { createAdminClient } from '@/lib/supabase/server'
 import { getSeaTempForZone } from '@/lib/env/seatemp'
 import { getZoneForType, getCurrentZoneForType, GLOBE_ZONES } from '@/lib/env/zones'
+import { interpolateToGrid, gridToJSON } from '@/lib/env/gridInterpolator'
 import type { EnvLayerData, SeaTempPoint } from '@/store/types'
 
 /**
@@ -91,11 +92,17 @@ export async function GET() {
       }
     })
 
+    // ── Pre-interpolate to dense grid (server-side IDW) ──────────────────
+    const seaTempGrid = allSeaPoints.length > 0
+      ? gridToJSON(interpolateToGrid(allSeaPoints.map(p => ({ lat: p.lat, lon: p.lon, value: p.tempC }))))
+      : undefined
+
     // ── Respond immediately with what we have ─────────────────────────────
     const seaData: EnvLayerData = {
       type: 'sea_temp',
       updatedAt: now.toISOString(),
       seaTemp: allSeaPoints,
+      seaTempGrid,
     }
 
     return NextResponse.json(

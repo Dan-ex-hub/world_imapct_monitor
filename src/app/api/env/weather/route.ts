@@ -4,6 +4,7 @@ import { createAdminClient } from '@/lib/supabase/server'
 import { getWindGridForZone, getTempAnomaliesForZone } from '@/lib/env/openmeteo'
 import { getWindGridForZoneWeatherAPI, getTempAnomaliesForZoneWeatherAPI } from '@/lib/env/weatherapi'
 import { getZoneForType, getCurrentZoneForType, GLOBE_ZONES } from '@/lib/env/zones'
+import { interpolateToGrid, gridToJSON } from '@/lib/env/gridInterpolator'
 import type { EnvLayerData, WindPoint, TempAnomalyPoint } from '@/store/types'
 
 /**
@@ -155,11 +156,33 @@ export async function GET() {
       }
     })
 
-    // ── Respond immediately with what we have ─────────────────────────────
+    // ── Pre-interpolate to dense grids (server-side IDW) ─────────────
+    // Runs ~50ms per grid. Clients receive a complete 360x181 grid and
+    // render via bilinear sampling — zero client-side IDW needed.
+    const windGrid = allWindPoints.length > 0
+      ? gridToJSON(interpolateToGrid(allWindPoints.map(p => ({ lat: p.lat, lon: p.lon, value: p.speed }))))
+      : undefined
+    const tempGrid = allTempPoints.length > 0
+      ? gridToJSON(interpolateToGrid(allTempPoints.map(p => ({ lat: p.lat, lon: p.lon, value: p.anomalyC }))))
+      : undefined
+
+    console.log(`[Weather] Built grids: wind=${windGrid ? 'yes' : 'no'}, temp=${tempGrid ? 'yes' : 'no'}`)
+
+    // ── Respond immediately with what we have ─────────────────────
     return NextResponse.json(
       {
-        wind: { type: 'wind', updatedAt: now.toISOString(), wind: allWindPoints } as EnvLayerData,
-        temperature_anomaly: { type: 'temperature_anomaly', updatedAt: now.toISOString(), tempAnomalies: allTempPoints } as EnvLayerData,
+        wind: {
+          type: 'wind',
+          updatedAt: now.toISOString(),
+          wind: allWindPoints,
+          windGrid,
+        } as EnvLayerData,
+        temperature_anomaly: {
+          type: 'temperature_anomaly',
+          updatedAt: now.toISOString(),
+          tempAnomalies: allTempPoints,
+          tempGrid,
+        } as EnvLayerData,
         meta: {
           windCoverage: `${windCoverage}%`,
           tempCoverage: `${tempCoverage}%`,

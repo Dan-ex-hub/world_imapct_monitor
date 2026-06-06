@@ -44,6 +44,30 @@ function layerColor(layer: string, val: number): RGB {
 type ValGrid = { vals: (number | null)[]; GW: number; GH: number; step: number; layer: string };
 
 function buildValGrid(layer: string, data: EnvLayerData | null): ValGrid | null {
+  if (!data) return null;
+
+  // ── PREFERRED PATH: Use server-side pre-interpolated grid ──────────────
+  // When the API returns a dense grid, use it directly — no BFS, no blur,
+  // just hand it to the sampling code as-is. Much faster and more accurate.
+  const serverGrid = (() => {
+    if (layer === "wind" && data.windGrid) return data.windGrid;
+    if (layer === "temperature_anomaly" && data.tempGrid) return data.tempGrid;
+    if (layer === "aqi" && data.aqiGrid) return data.aqiGrid;
+    if (layer === "sea_temp" && data.seaTempGrid) return data.seaTempGrid;
+    return null;
+  })();
+
+  if (serverGrid) {
+    // Convert server grid to ValGrid format.
+    // Server grid: row-major, row 0 = lat +90, col 0 = lon -180, 1° resolution.
+    // ValGrid step = 1 (1° per cell) to match server grid resolution.
+    const GW = serverGrid.width;   // 360
+    const GH = serverGrid.height;  // 181
+    return { vals: serverGrid.values, GW, GH, step: 1, layer };
+  }
+
+  // ── FALLBACK: Build from sparse points + BFS flood-fill ────────────────
+  // Used when the API hasn't returned a grid yet (first load, cache miss).
   const step = 1.5;
   const GW = Math.ceil(360 / step) + 1;
   const GH = Math.ceil(180 / step) + 1;
@@ -54,8 +78,6 @@ function buildValGrid(layer: string, data: EnvLayerData | null): ValGrid | null 
     const j = Math.round((90 - lat)  / step);
     if (i >= 0 && i < GW && j >= 0 && j < GH) vals[j * GW + i] = v;
   };
-
-  if (!data) return null;
 
   if (layer === "wind" && data.wind) {
     data.wind.forEach((p) => put(p.lat, p.lon, p.speed ?? 0));
@@ -69,17 +91,16 @@ function buildValGrid(layer: string, data: EnvLayerData | null): ValGrid | null 
     return null;
   }
 
-  // BFS flood-fill with hop limit — prevents extrapolation beyond ~30°
-  // when only partial zone data is loaded.
-  const MAX_BFS_HOPS = 20; // ~30° at 1.5° step
-  const hops = new Uint16Array(vals.length); // hop count per cell (0 = original data)
+  // BFS flood-fill with hop limit
+  const MAX_BFS_HOPS = 20;
+  const hops = new Uint16Array(vals.length);
   const queue: number[] = [];
   for (let k = 0; k < vals.length; k++) if (vals[k] !== null) queue.push(k);
   let head = 0;
   const dirs = [-1, 1, -GW, GW];
   while (head < queue.length) {
     const k = queue[head++];
-    if (hops[k] >= MAX_BFS_HOPS) continue; // stop propagating beyond limit
+    if (hops[k] >= MAX_BFS_HOPS) continue;
     for (const d of dirs) {
       const nk = k + d;
       if (nk >= 0 && nk < vals.length && vals[nk] === null) {

@@ -124,6 +124,18 @@ export interface SeaTempPoint {
   tempC: number; // Sea surface temperature in Celsius
 }
 
+/** Pre-interpolated dense grid from server-side IDW */
+export interface EnvGrid {
+  /** Row-major flat array: grid[row * width + col]. null = no data. */
+  values: (number | null)[];
+  width: number;   // 360
+  height: number;  // 181
+  latMin: number;  // -90
+  latMax: number;  // +90
+  lonMin: number;  // -180
+  lonMax: number;  // +179
+}
+
 export interface EnvLayerData {
   type: EnvLayerType;
   updatedAt: string;
@@ -134,6 +146,11 @@ export interface EnvLayerData {
   storms?: StormEvent[];
   tempAnomalies?: TempAnomalyPoint[];
   seaTemp?: SeaTempPoint[];
+  // Pre-interpolated grids (server-side IDW) — used for rendering
+  windGrid?: EnvGrid;
+  tempGrid?: EnvGrid;
+  aqiGrid?: EnvGrid;
+  seaTempGrid?: EnvGrid;
 }
 
 export interface Filters {

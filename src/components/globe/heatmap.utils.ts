@@ -29,6 +29,7 @@ import type {
   AQIPoint,
   SeaTempPoint,
   EnvLayerData,
+  EnvGrid,
 } from "@/store/types";
 
 // --- Constants ---------------------------------------------------------------
@@ -325,6 +326,83 @@ function blurSeamless(
   return out;
 }
 
+// --- Grid-based renderer (server pre-interpolated) ---------------------------
+
+/**
+ * Render a heatmap texture from a pre-interpolated server grid.
+ * This is the PRIMARY path when the API returns a grid — it just does
+ * bilinear sampling of the dense grid into the 2048x1024 texture.
+ * Zero IDW computation, ~10x faster than the IDW path.
+ *
+ * Grid layout (from server):
+ *   - Row 0 = lat +90, Row H-1 = lat -90
+ *   - Col 0 = lon -180, Col W-1 = lon +179
+ *   - null values = no data -> transparent pixels
+ */
+function renderFromGrid(
+  grid: EnvGrid,
+  colorFn: (v: number) => [number, number, number],
+  blurPx: number,
+): HTMLCanvasElement {
+  const imgData = new ImageData(W, H);
+  const buf = imgData.data;
+
+  const gw = grid.width;   // 360
+  const gh = grid.height;  // 181
+  const vals = grid.values;
+
+  for (let py = 0; py < H; py++) {
+    // Pixel y -> latitude: py=0 -> lat=90, py=H-1 -> lat=-90
+    const lat = 90 - (py / H) * 180;
+    // Latitude -> fractional grid row: lat=90 -> row=0, lat=-90 -> row=180
+    const frow = (90 - lat) / (180 / (gh - 1));
+    const row0 = Math.min(Math.floor(frow), gh - 2);
+    const row1 = row0 + 1;
+    const trow = frow - row0;
+
+    for (let px = 0; px < W; px++) {
+      // Pixel x -> longitude: px=0 -> lon=-180, px=W-1 -> lon=+180
+      const lon = (px / W) * 360 - 180;
+      // Longitude -> fractional grid col: lon=-180 -> col=0, lon=+179 -> col=359
+      const fcol = (lon - grid.lonMin) / ((grid.lonMax - grid.lonMin + 1) / gw);
+      const col0 = Math.min(Math.max(Math.floor(fcol), 0), gw - 2);
+      const col1 = col0 + 1;
+      const tcol = fcol - col0;
+
+      // Read four corners
+      const v00 = vals[row0 * gw + col0];
+      const v10 = vals[row0 * gw + col1];
+      const v01 = vals[row1 * gw + col0];
+      const v11 = vals[row1 * gw + col1];
+
+      // If any corner is null (no data), leave pixel transparent
+      if (v00 === null || v10 === null || v01 === null || v11 === null) {
+        continue;
+      }
+
+      // Bilinear interpolation
+      const val =
+        v00 * (1 - tcol) * (1 - trow) +
+        v10 * tcol * (1 - trow) +
+        v01 * (1 - tcol) * trow +
+        v11 * tcol * trow;
+
+      const [r, g, b] = colorFn(val);
+      const i = (py * W + px) * 4;
+      buf[i] = r;
+      buf[i + 1] = g;
+      buf[i + 2] = b;
+      buf[i + 3] = 215;
+    }
+  }
+
+  const canvas = document.createElement("canvas");
+  canvas.width = W;
+  canvas.height = H;
+  canvas.getContext("2d")!.putImageData(imgData, 0, 0);
+  return blurSeamless(canvas, blurPx);
+}
+
 // --- Heatmap pipelines -------------------------------------------------------
 
 /**
@@ -564,24 +642,63 @@ export function findNearestSeaTempPoint(
 
 // --- Dispatcher --------------------------------------------------------------
 
+/**
+ * Create a heatmap texture for the given layer.
+ * PREFERS server-side pre-interpolated grids (zero client IDW).
+ * Falls back to client-side IDW only when no grid is available.
+ */
 export function createHeatmapTexture(
   layerType: string,
   layerData: EnvLayerData | null,
 ): HTMLCanvasElement | null {
   if (!layerData) return null;
+
   switch (layerType) {
     case "wind":
+      // Prefer server grid
+      if (layerData.windGrid) {
+        return renderFromGrid(
+          layerData.windGrid,
+          (v) => gradientColor(Math.max(0, v) / WIND_MAX, WIND_STOPS),
+          14,
+        );
+      }
       return layerData.wind?.length ? createWindHeatmap(layerData.wind) : null;
+
     case "temperature_anomaly":
+      if (layerData.tempGrid) {
+        return renderFromGrid(
+          layerData.tempGrid,
+          (v) => gradientColor(Math.max(0, v - TEMP_MIN) / TEMP_RANGE, TEMP_STOPS),
+          18,
+        );
+      }
       return layerData.tempAnomalies?.length
         ? createTempAnomalyHeatmap(layerData.tempAnomalies)
         : null;
+
     case "aqi":
+      if (layerData.aqiGrid) {
+        return renderFromGrid(
+          layerData.aqiGrid,
+          (v) => gradientColor(Math.max(0, v) / AQI_MAX, AQI_STOPS),
+          16,
+        );
+      }
       return layerData.aqi?.length ? createAQIHeatmap(layerData.aqi) : null;
+
     case "sea_temp":
+      if (layerData.seaTempGrid) {
+        return renderFromGrid(
+          layerData.seaTempGrid,
+          (v) => gradientColor(Math.max(0, v - SEA_MIN) / SEA_RANGE, SEA_STOPS),
+          18,
+        );
+      }
       return layerData.seaTemp?.length
         ? createSeaTempHeatmap(layerData.seaTemp)
         : null;
+
     default:
       return null;
   }

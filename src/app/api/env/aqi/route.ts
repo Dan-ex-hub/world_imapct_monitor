@@ -3,6 +3,7 @@ import { after } from 'next/server'
 import { createAdminClient } from '@/lib/supabase/server'
 import { getAQIForZone } from '@/lib/env/openaq'
 import { getZoneForType, getCurrentZoneForType, GLOBE_ZONES } from '@/lib/env/zones'
+import { interpolateToGrid, gridToJSON } from '@/lib/env/gridInterpolator'
 import type { EnvLayerData, AQIPoint } from '@/store/types'
 
 /**
@@ -92,11 +93,17 @@ export async function GET() {
       }
     })
 
+    // ── Pre-interpolate to dense grid (server-side IDW) ──────────────────
+    const aqiGrid = allAqiPoints.length > 0
+      ? gridToJSON(interpolateToGrid(allAqiPoints.map(p => ({ lat: p.lat, lon: p.lon, value: p.aqi }))))
+      : undefined
+
     // ── Respond immediately with what we have ─────────────────────────────
     const aqiData: EnvLayerData = {
       type: 'aqi',
       updatedAt: now.toISOString(),
       aqi: allAqiPoints,
+      aqiGrid,
     }
 
     return NextResponse.json(
