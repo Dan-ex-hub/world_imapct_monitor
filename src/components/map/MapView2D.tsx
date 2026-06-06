@@ -59,11 +59,12 @@ function buildValGrid(layer: string, data: EnvLayerData | null): ValGrid | null 
 
   if (serverGrid) {
     // Convert server grid to ValGrid format.
-    // Server grid: row-major, row 0 = lat +90, col 0 = lon -180, 1° resolution.
-    // ValGrid step = 1 (1° per cell) to match server grid resolution.
-    const GW = serverGrid.width;   // 360
-    const GH = serverGrid.height;  // 181
-    return { vals: serverGrid.values, GW, GH, step: 1, layer };
+    // Server grid: row-major, row 0 = lat +90, col 0 = lon -180.
+    // Compute step dynamically from grid dimensions.
+    const GW = serverGrid.width;
+    const GH = serverGrid.height;
+    const gridStep = 360 / GW; // degrees per cell (e.g., 2 for 180-wide grid)
+    return { vals: serverGrid.values, GW, GH, step: gridStep, layer };
   }
 
   // ── FALLBACK: Build from sparse points + BFS flood-fill ────────────────

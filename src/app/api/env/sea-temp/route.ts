@@ -93,9 +93,17 @@ export async function GET() {
     })
 
     // ── Pre-interpolate to dense grid (server-side IDW) ──────────────────
-    const seaTempGrid = allSeaPoints.length > 0
-      ? gridToJSON(interpolateToGrid(allSeaPoints.map(p => ({ lat: p.lat, lon: p.lon, value: p.tempC }))))
-      : undefined
+    let seaTempGrid
+    try {
+      const t0 = Date.now()
+      seaTempGrid = allSeaPoints.length > 0
+        ? gridToJSON(interpolateToGrid(allSeaPoints.map(p => ({ lat: p.lat, lon: p.lon, value: p.tempC }))))
+        : undefined
+      console.log(`[SeaTemp] Grid: ${Date.now() - t0}ms (${allSeaPoints.length} pts)`)
+    } catch (err) {
+      console.error('[SeaTemp] Grid interpolation failed:', err)
+      seaTempGrid = undefined
+    }
 
     // ── Respond immediately with what we have ─────────────────────────────
     const seaData: EnvLayerData = {

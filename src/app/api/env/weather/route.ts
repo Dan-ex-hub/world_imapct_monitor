@@ -157,16 +157,23 @@ export async function GET() {
     })
 
     // ── Pre-interpolate to dense grids (server-side IDW) ─────────────
-    // Runs ~50ms per grid. Clients receive a complete 360x181 grid and
-    // render via bilinear sampling — zero client-side IDW needed.
-    const windGrid = allWindPoints.length > 0
-      ? gridToJSON(interpolateToGrid(allWindPoints.map(p => ({ lat: p.lat, lon: p.lon, value: p.speed }))))
-      : undefined
-    const tempGrid = allTempPoints.length > 0
-      ? gridToJSON(interpolateToGrid(allTempPoints.map(p => ({ lat: p.lat, lon: p.lon, value: p.anomalyC }))))
-      : undefined
-
-    console.log(`[Weather] Built grids: wind=${windGrid ? 'yes' : 'no'}, temp=${tempGrid ? 'yes' : 'no'}`)
+    let windGrid, tempGrid
+    try {
+      const t0 = Date.now()
+      windGrid = allWindPoints.length > 0
+        ? gridToJSON(interpolateToGrid(allWindPoints.map(p => ({ lat: p.lat, lon: p.lon, value: p.speed }))))
+        : undefined
+      const t1 = Date.now()
+      tempGrid = allTempPoints.length > 0
+        ? gridToJSON(interpolateToGrid(allTempPoints.map(p => ({ lat: p.lat, lon: p.lon, value: p.anomalyC }))))
+        : undefined
+      const t2 = Date.now()
+      console.log(`[Weather] Grids: wind=${t1 - t0}ms (${allWindPoints.length} pts), temp=${t2 - t1}ms (${allTempPoints.length} pts)`)
+    } catch (err) {
+      console.error('[Weather] Grid interpolation failed, serving raw points:', err)
+      windGrid = undefined
+      tempGrid = undefined
+    }
 
     // ── Respond immediately with what we have ─────────────────────
     return NextResponse.json(

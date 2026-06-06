@@ -94,9 +94,17 @@ export async function GET() {
     })
 
     // ── Pre-interpolate to dense grid (server-side IDW) ──────────────────
-    const aqiGrid = allAqiPoints.length > 0
-      ? gridToJSON(interpolateToGrid(allAqiPoints.map(p => ({ lat: p.lat, lon: p.lon, value: p.aqi }))))
-      : undefined
+    let aqiGrid
+    try {
+      const t0 = Date.now()
+      aqiGrid = allAqiPoints.length > 0
+        ? gridToJSON(interpolateToGrid(allAqiPoints.map(p => ({ lat: p.lat, lon: p.lon, value: p.aqi }))))
+        : undefined
+      console.log(`[AQI] Grid: ${Date.now() - t0}ms (${allAqiPoints.length} pts)`)
+    } catch (err) {
+      console.error('[AQI] Grid interpolation failed:', err)
+      aqiGrid = undefined
+    }
 
     // ── Respond immediately with what we have ─────────────────────────────
     const aqiData: EnvLayerData = {

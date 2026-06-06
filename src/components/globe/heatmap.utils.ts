@@ -347,15 +347,19 @@ function renderFromGrid(
   const imgData = new ImageData(W, H);
   const buf = imgData.data;
 
-  const gw = grid.width;   // 360
-  const gh = grid.height;  // 181
+  const gw = grid.width;
+  const gh = grid.height;
   const vals = grid.values;
+
+  // Compute step sizes from the grid metadata
+  const lonStep = 360 / gw;       // degrees per column (e.g., 2 for 180-wide grid)
+  const latStep = 180 / (gh - 1); // degrees per row (e.g., 2 for 91-tall grid)
 
   for (let py = 0; py < H; py++) {
     // Pixel y -> latitude: py=0 -> lat=90, py=H-1 -> lat=-90
     const lat = 90 - (py / H) * 180;
-    // Latitude -> fractional grid row: lat=90 -> row=0, lat=-90 -> row=180
-    const frow = (90 - lat) / (180 / (gh - 1));
+    // Latitude -> fractional grid row
+    const frow = (90 - lat) / latStep;
     const row0 = Math.min(Math.floor(frow), gh - 2);
     const row1 = row0 + 1;
     const trow = frow - row0;
@@ -363,8 +367,8 @@ function renderFromGrid(
     for (let px = 0; px < W; px++) {
       // Pixel x -> longitude: px=0 -> lon=-180, px=W-1 -> lon=+180
       const lon = (px / W) * 360 - 180;
-      // Longitude -> fractional grid col: lon=-180 -> col=0, lon=+179 -> col=359
-      const fcol = (lon - grid.lonMin) / ((grid.lonMax - grid.lonMin + 1) / gw);
+      // Longitude -> fractional grid column
+      const fcol = (lon + 180) / lonStep;
       const col0 = Math.min(Math.max(Math.floor(fcol), 0), gw - 2);
       const col1 = col0 + 1;
       const tcol = fcol - col0;
