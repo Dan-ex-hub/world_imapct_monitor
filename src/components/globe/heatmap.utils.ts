@@ -1,21 +1,22 @@
 /**
- * Heatmap texture generation — IDW scalar field interpolation
+ * Heatmap texture generation -- IDW scalar field interpolation
  *
- * APPROACH (same as Windy, Copernicus, NOAA):
+ * APPROACH:
  *   1. Build a coarse value grid using Inverse Distance Weighting (IDW)
  *      interpolation from the sparse data points.
  *   2. Map each interpolated value through an absolute colour scale.
- *   3. Write RGBA pixels directly into an ImageData buffer — no canvas
+ *   3. Write RGBA pixels directly into an ImageData buffer -- no canvas
  *      compositing, no alpha blending between blobs.  Each pixel gets exactly
  *      the colour matching its interpolated value.
  *   4. Apply a single Gaussian blur pass on the 3-wide tiled canvas to
- *      smooth the field without introducing seams at lon = ±180.
+ *      smooth the field without introducing seams at lon = +/-180.
  *
- * This means:
- *   - 11 m/s wind → teal/green, NOT purple
- *   - 37°C        → red/orange
- *   - AQI 159     → red
- *   - No colour mixing from overlapping blobs (there are no blobs)
+ * DISTANCE CALCULATION (geographic, NOT pixel):
+ *   All IDW distances are computed in lat/lon degree space with cos(lat)
+ *   correction for longitude. This correctly handles:
+ *     - Pole convergence (lon lines merge -> cos(lat) -> 0)
+ *     - Antimeridian wrapping (shortest path around +/-180)
+ *     - Consistent max-influence radius at all latitudes
  *
  * COORDINATE SYSTEM (equirectangular, Three.js SphereGeometry UV):
  *   pixel x = (lon + 180) / 360 * W
@@ -30,25 +31,24 @@ import type {
   EnvLayerData,
 } from "@/store/types";
 
-// ─── Constants ────────────────────────────────────────────────────────────────
+// --- Constants ---------------------------------------------------------------
 
 const W = 2048; // texture width  (equirectangular)
 const H = 1024; // texture height
 
 /**
- * IDW grid resolution — we compute the interpolated value on a downsampled
+ * IDW grid resolution -- we compute the interpolated value on a downsampled
  * grid, then upsample with bilinear interpolation for smooth output.
  *
- * IDW_STEP = 8  →  256×128 = 32,768 cells
- * With ~2800 wind points: 32,768 × 2800 = ~92M ops — fast enough for a
+ * IDW_STEP = 8  ->  256x128 = 32,768 cells
+ * With ~2800 wind points: 32,768 x 2800 = ~92M ops -- fast enough for a
  * one-time texture build on modern hardware (~200ms).
- * K = 4 nearest neighbours is sufficient for smooth IDW on a regular grid.
  */
 const IDW_STEP = 8; // pixel downsampling factor
 const IDW_GW = Math.ceil(W / IDW_STEP) + 1; // +1 so bilinear can always read [gx+1]
 const IDW_GH = Math.ceil(H / IDW_STEP) + 1;
 
-// ─── Colour helpers ───────────────────────────────────────────────────────────
+// --- Colour helpers ----------------------------------------------------------
 
 function lerp3(
   a: [number, number, number],
@@ -72,51 +72,49 @@ export function gradientColor(
   return lerp3(stops[idx], stops[idx + 1], seg - idx);
 }
 
-// ─── Coordinate helpers ───────────────────────────────────────────────────────
 
-/** lat/lon → full-res pixel (clamped so ghost points outside ±180/±90 stay on canvas) */
-function toPixel(lat: number, lon: number): [number, number] {
-  const clampedLon = Math.max(-180, Math.min(180, lon));
-  const clampedLat = Math.max(-90, Math.min(90, lat));
-  return [((clampedLon + 180) / 360) * W, ((90 - clampedLat) / 180) * H];
-}
-
-// ─── IDW interpolation ────────────────────────────────────────────────────────
+// --- IDW interpolation (geographic space) ------------------------------------
 
 /**
- * Extended point type that carries optional wind direction & speed
- * for anisotropic distance weighting on the wind layer.
+ * Point type for IDW -- stores geographic coords for distance calculations
+ * and pixel coords only for the output texture mapping.
  */
 interface IDWPoint {
-  px: number;
-  py: number;
+  lat: number;  // geographic latitude  (for distance calc)
+  lon: number;  // geographic longitude (for distance calc)
   value: number;
-  /** Meteorological degrees (0=N, 90=E, 180=S, 270=W) — wind layer only */
+  /** Meteorological degrees (0=N, 90=E, 180=S, 270=W) -- wind layer only */
   direction?: number;
-  /** m/s — higher speed = more elongation along wind axis */
+  /** m/s -- higher speed = more elongation along wind axis */
   speed?: number;
 }
 
 /**
- * Build a W/IDW_STEP × H/IDW_STEP Float32Array of interpolated values using
- * Inverse Distance Weighting.
+ * Build a W/IDW_STEP x H/IDW_STEP Float32Array of interpolated values using
+ * Inverse Distance Weighting in GEOGRAPHIC (lat/lon) space.
  *
- * Key fixes:
- *   - Longitudinal wrapping: dx uses shortest-path distance across the
- *     texture seam at x=0 / x=W (the antimeridian, lon=±180°) so points
- *     near the boundary correctly influence each other.
- *   - Max influence radius: grid cells farther than ~30° from the nearest
- *     data point are set to NaN (rendered transparent) to prevent nonsensical
- *     extrapolation when only partial zone data is loaded.
- *   - Power p=3: sharper falloff, less blobbing vs. p=2.
- *   - K=8: more neighbours for smoother field.
- *   - Wind anisotropy: when useAnisotropy=true the distance metric is
- *     stretched along the wind bearing.
+ * All distance calculations use lat/lon with cos(lat) correction for
+ * longitude. This solves three problems at once:
+ *
+ *   1. POLE CONVERGENCE -- In equirectangular pixel space, two points at
+ *      lat=85 that are only 5 degrees apart appear 500+ pixels apart.
+ *      In geographic space with cos(lat) correction, the effective distance
+ *      correctly shrinks because cos(85) = 0.087.
+ *
+ *   2. ANTIMERIDIAN WRAPPING -- Handled naturally by checking if |dlon| > 180
+ *      and subtracting 360. No pixel-space hacks needed.
+ *
+ *   3. MAX INFLUENCE -- A 30-degree radius in geographic space works
+ *      consistently at all latitudes.
  */
 
-// Max influence radius in full-res pixels (~30° longitude ≈ 170 px on a 2048-wide texture)
-const MAX_INFLUENCE_PX = Math.round(W * 30 / 360); // ~170 px
-const MAX_INFLUENCE_D2 = MAX_INFLUENCE_PX * MAX_INFLUENCE_PX;
+// Max influence radius in degrees (~30 degrees great-circle distance)
+const MAX_INFLUENCE_DEG = 30;
+const MAX_INFLUENCE_D2 = MAX_INFLUENCE_DEG * MAX_INFLUENCE_DEG;
+
+// Pre-computed conversion: grid pixel -> geographic coordinates
+const DEG_PER_PX_LON = 360 / W;   // 1 pixel = 0.176 degrees longitude
+const DEG_PER_PX_LAT = 180 / H;   // 1 pixel = 0.176 degrees latitude
 
 function buildIDWGrid(
   points: IDWPoint[],
@@ -134,23 +132,32 @@ function buildIDWGrid(
   }
 
   for (let gy = 0; gy < IDW_GH; gy++) {
+    // Convert grid-cell y -> latitude (north=+90 at gy=0, south=-90 at gy max)
+    const cellLat = 90 - (gy * IDW_STEP) * DEG_PER_PX_LAT;
+    // cos(lat) correction factor for longitude distances at this latitude
+    const cosLat = Math.cos(cellLat * Math.PI / 180);
+
     for (let gx = 0; gx < IDW_GW; gx++) {
-      const cx = gx * IDW_STEP;
-      const cy = gy * IDW_STEP;
+      // Convert grid-cell x -> longitude (-180 at gx=0, +180 at gx max)
+      const cellLon = (gx * IDW_STEP) * DEG_PER_PX_LON - 180;
 
       const bestD = new Float32Array(KMAX).fill(Infinity);
       const bestV = new Float32Array(KMAX);
       let exactVal = NaN;
 
       for (let i = 0; i < points.length; i++) {
-        // ── Wraparound-aware dx ──────────────────────────────
-        // Use the shorter of the direct or wrap-around distance
-        // so the antimeridian (lon=±180°) doesn't create a seam.
-        let dx = cx - points[i].px;
-        if (dx > W / 2) dx -= W;
-        else if (dx < -W / 2) dx += W;
+        const dlat = cellLat - points[i].lat;
 
-        const dy = cy - points[i].py;
+        // Shortest-path longitude difference (handles antimeridian wrapping)
+        let dlon = cellLon - points[i].lon;
+        if (dlon > 180) dlon -= 360;
+        else if (dlon < -180) dlon += 360;
+
+        // Apply cos(lat) correction: 1 degree of longitude at 60N = 0.5 degrees effective.
+        // Use average of cell and point latitudes for the correction factor.
+        const ptCosLat = Math.cos(points[i].lat * Math.PI / 180);
+        const avgCosLat = (cosLat + ptCosLat) * 0.5;
+        const dlonCorrected = dlon * avgCosLat;
 
         let d2: number;
 
@@ -161,21 +168,24 @@ function buildIDWGrid(
           (points[i].speed as number) > 1
         ) {
           // Anisotropic distance: elongate influence ellipse along wind bearing
+          // Convert meteorological degrees -> math radians
           const rad = ((270 - (points[i].direction as number)) * Math.PI) / 180;
           const cosA = Math.cos(rad);
           const sinA = Math.sin(rad);
 
-          const dParallel = dx * cosA + dy * sinA;
-          const dPerp     = -dx * sinA + dy * cosA;
+          // Rotate into wind-aligned frame (using corrected longitude)
+          const dParallel = dlonCorrected * cosA + dlat * sinA;
+          const dPerp = -dlonCorrected * sinA + dlat * cosA;
 
           const elongation = Math.min(1 + (points[i].speed as number) / 10, 4);
 
           d2 = (dParallel / elongation) ** 2 + dPerp ** 2;
         } else {
-          d2 = dx * dx + dy * dy;
+          d2 = dlat * dlat + dlonCorrected * dlonCorrected;
         }
 
-        if (d2 < 1) {
+        // Exact hit threshold: ~0.1 degree
+        if (d2 < 0.01) {
           exactVal = points[i].value;
           break;
         }
@@ -183,6 +193,7 @@ function buildIDWGrid(
         if (d2 < bestD[KMAX - 1]) {
           bestD[KMAX - 1] = d2;
           bestV[KMAX - 1] = points[i].value;
+          // Insertion sort (ascending) to keep smallest distances first
           for (let j = KMAX - 1; j > 0 && bestD[j] < bestD[j - 1]; j--) {
             let tmp = bestD[j];
             bestD[j] = bestD[j - 1];
@@ -199,8 +210,7 @@ function buildIDWGrid(
         continue;
       }
 
-      // ── Max influence check ────────────────────────────────
-      // If the nearest data point is beyond ~30°, mark as no-data
+      // Max influence check -- if nearest point is > 30 degrees away, mark as no-data
       if (bestD[0] > MAX_INFLUENCE_D2) {
         grid[gy * IDW_GW + gx] = NaN;
         continue;
@@ -222,11 +232,11 @@ function buildIDWGrid(
   return grid;
 }
 
-// ─── Raster rendering ─────────────────────────────────────────────────────────
+// --- Raster rendering --------------------------------------------------------
 
 /**
  * Convert an IDW value grid into full-resolution RGBA using bilinear
- * interpolation between grid cells — avoids the blocky nearest-neighbour
+ * interpolation between grid cells -- avoids the blocky nearest-neighbour
  * artefacts that would otherwise show at IDW_STEP=8.
  */
 function renderGrid(
@@ -257,7 +267,7 @@ function renderGrid(
       // If ANY corner is NaN (no data), make this pixel transparent.
       // This prevents color bleeding from data regions into no-data areas.
       if (isNaN(v00) || isNaN(v10) || isNaN(v01) || isNaN(v11)) {
-        // Leave pixel at [0,0,0,0] — fully transparent
+        // Leave pixel at [0,0,0,0] -- fully transparent
         continue;
       }
 
@@ -279,11 +289,11 @@ function renderGrid(
   return imgData;
 }
 
-// ─── Seam-safe blur ───────────────────────────────────────────────────────────
+// --- Seam-safe blur ----------------------------------------------------------
 
 /**
  * Tile the canvas 3-wide before blurring so the Gaussian kernel has real
- * neighbour data at the lon=±180 seam.  Only the centre tile is returned.
+ * neighbour data at the lon=+/-180 seam. Only the centre tile is returned.
  */
 function blurSeamless(
   src: HTMLCanvasElement,
@@ -315,7 +325,7 @@ function blurSeamless(
   return out;
 }
 
-// ─── Heatmap pipelines ────────────────────────────────────────────────────────
+// --- Heatmap pipelines -------------------------------------------------------
 
 /**
  * Standard heatmap pipeline (temp, AQI, sea-temp).
@@ -328,10 +338,12 @@ function makeHeatmap(
 ): HTMLCanvasElement {
   if (!rawPoints.length) return document.createElement("canvas");
 
-  const points = rawPoints.map((p) => {
-    const [px, py] = toPixel(p.lat, p.lon);
-    return { px, py, value: p.value };
-  });
+  // IDWPoints carry lat/lon for geographic distance calculations
+  const points: IDWPoint[] = rawPoints.map((p) => ({
+    lat: p.lat,
+    lon: p.lon,
+    value: p.value,
+  }));
 
   const grid = buildIDWGrid(points, 8, 3, false);
 
@@ -346,7 +358,7 @@ function makeHeatmap(
 
 /**
  * Wind-specific heatmap pipeline with anisotropic IDW.
- * K=8, p=3, anisotropy=ON — influence stretches downwind.
+ * K=8, p=3, anisotropy=ON -- influence stretches downwind.
  */
 function makeWindHeatmap(
   rawPoints: { lat: number; lon: number; value: number; direction: number; speed: number }[],
@@ -355,10 +367,14 @@ function makeWindHeatmap(
 ): HTMLCanvasElement {
   if (!rawPoints.length) return document.createElement("canvas");
 
-  const points: IDWPoint[] = rawPoints.map((p) => {
-    const [px, py] = toPixel(p.lat, p.lon);
-    return { px, py, value: p.value, direction: p.direction, speed: p.speed };
-  });
+  // IDWPoints carry lat/lon + wind direction/speed for anisotropy
+  const points: IDWPoint[] = rawPoints.map((p) => ({
+    lat: p.lat,
+    lon: p.lon,
+    value: p.value,
+    direction: p.direction,
+    speed: p.speed,
+  }));
 
   const grid = buildIDWGrid(points, 8, 3, true);
 
@@ -371,66 +387,66 @@ function makeWindHeatmap(
   return blurSeamless(canvas, blurPx);
 }
 
-// ─── Colour scales (all absolute, not dataset-relative) ───────────────────────
+// --- Colour scales (all absolute, not dataset-relative) ----------------------
 //
 // Each scale uses physically meaningful fixed breakpoints so the colour at
 // every pixel matches what you'd see on Windy / NOAA / Copernicus.
 
-// Wind: 0 → 38 m/s   (Beaufort-based)
+// Wind: 0 -> 38 m/s   (Beaufort-based)
 export const WIND_STOPS: [number, number, number][] = [
-  [20, 60, 220], //  0 m/s – deep blue (calm)
-  [0, 160, 255], //  5 m/s – sky blue
-  [0, 210, 180], // 10 m/s – teal
-  [80, 220, 50], // 15 m/s – yellow-green
-  [255, 230, 0], // 20 m/s – yellow
-  [255, 140, 0], // 25 m/s – orange
-  [240, 40, 20], // 30 m/s – red
-  [140, 0, 180], // 38 m/s – purple (hurricane)
+  [20, 60, 220], //  0 m/s - deep blue (calm)
+  [0, 160, 255], //  5 m/s - sky blue
+  [0, 210, 180], // 10 m/s - teal
+  [80, 220, 50], // 15 m/s - yellow-green
+  [255, 230, 0], // 20 m/s - yellow
+  [255, 140, 0], // 25 m/s - orange
+  [240, 40, 20], // 30 m/s - red
+  [140, 0, 180], // 38 m/s - purple (hurricane)
 ];
 export const WIND_MAX = 38;
 
-// Temperature: -40 → 45°C  (ERA5/Windy palette)
+// Temperature: -40 -> 45 C  (ERA5/Windy palette)
 export const TEMP_STOPS: [number, number, number][] = [
-  [100, 0, 200], // -40°C – deep violet
-  [0, 40, 230], // -20°C – blue
-  [30, 120, 255], // -10°C – cornflower
-  [140, 200, 255], //  -2°C – ice blue
-  [230, 240, 255], //   5°C – near-white
-  [255, 250, 180], //  15°C – pale yellow
-  [255, 180, 40], //  25°C – amber
-  [255, 60, 0], //  35°C – red-orange
-  [180, 0, 0], //  45°C – deep red
+  [100, 0, 200], // -40 C - deep violet
+  [0, 40, 230], // -20 C - blue
+  [30, 120, 255], // -10 C - cornflower
+  [140, 200, 255], //  -2 C - ice blue
+  [230, 240, 255], //   5 C - near-white
+  [255, 250, 180], //  15 C - pale yellow
+  [255, 180, 40], //  25 C - amber
+  [255, 60, 0], //  35 C - red-orange
+  [180, 0, 0], //  45 C - deep red
 ];
 export const TEMP_MIN = -40;
 export const TEMP_RANGE = 85; // 45 - (-40)
 
-// AQI: 0 → 500  (US EPA absolute breakpoints)
+// AQI: 0 -> 500  (US EPA absolute breakpoints)
 export const AQI_STOPS: [number, number, number][] = [
-  [0, 228, 0], //   0 – Good
-  [255, 255, 0], // 100 – Moderate
-  [255, 126, 0], // 200 – Unhealthy for Sensitive
-  [255, 0, 0], // 300 – Unhealthy
-  [143, 63, 151], // 400 – Very Unhealthy
-  [126, 0, 35], // 500 – Hazardous
+  [0, 228, 0], //   0 - Good
+  [255, 255, 0], // 100 - Moderate
+  [255, 126, 0], // 200 - Unhealthy for Sensitive
+  [255, 0, 0], // 300 - Unhealthy
+  [143, 63, 151], // 400 - Very Unhealthy
+  [126, 0, 35], // 500 - Hazardous
 ];
 export const AQI_MAX = 500;
 
-// Sea temperature: -2 → 32°C  (NOAA/Copernicus)
+// Sea temperature: -2 -> 32 C  (NOAA/Copernicus)
 export const SEA_STOPS: [number, number, number][] = [
-  [200, 230, 255], // -2°C – icy pale blue
-  [0, 60, 200], //  2°C – deep blue
-  [0, 140, 230], //  8°C – medium blue
-  [0, 210, 210], // 14°C – cyan
-  [0, 200, 120], // 18°C – teal-green
-  [80, 210, 0], // 22°C – green-yellow
-  [255, 220, 0], // 26°C – yellow
-  [255, 120, 0], // 29°C – orange
-  [220, 10, 10], // 32°C – red
+  [200, 230, 255], // -2 C - icy pale blue
+  [0, 60, 200], //  2 C - deep blue
+  [0, 140, 230], //  8 C - medium blue
+  [0, 210, 210], // 14 C - cyan
+  [0, 200, 120], // 18 C - teal-green
+  [80, 210, 0], // 22 C - green-yellow
+  [255, 220, 0], // 26 C - yellow
+  [255, 120, 0], // 29 C - orange
+  [220, 10, 10], // 32 C - red
 ];
 export const SEA_MIN = -2;
 export const SEA_RANGE = 34; // 32 - (-2)
 
-// ─── Public exports ───────────────────────────────────────────────────────────
+// --- Public exports ----------------------------------------------------------
 
 export function createWindHeatmap(data: WindPoint[]): HTMLCanvasElement {
   return makeWindHeatmap(
@@ -466,7 +482,7 @@ export function createSeaTempHeatmap(data: SeaTempPoint[]): HTMLCanvasElement {
   );
 }
 
-// ─── Nearest-point lookup (hover tooltip) ────────────────────────────────────
+// --- Nearest-point lookup (hover tooltip) ------------------------------------
 
 function dist2(lat1: number, lon1: number, lat2: number, lon2: number): number {
   const dlat = lat1 - lat2;
@@ -546,7 +562,7 @@ export function findNearestSeaTempPoint(
   return best;
 }
 
-// ─── Dispatcher ───────────────────────────────────────────────────────────────
+// --- Dispatcher --------------------------------------------------------------
 
 export function createHeatmapTexture(
   layerType: string,
