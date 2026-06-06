@@ -49,15 +49,15 @@ export function aqiCategory(aqi: number): AQIPoint["category"] {
 
 /**
  * Fetch AQI for a zone using Open-Meteo Air Quality API.
- * Uses a 10° grid — enough resolution for a heatmap overlay.
+ * Uses a 5° grid — denser than the original 10° for better heatmap accuracy.
  * Batches 10 points per request (same pattern as weather API).
  */
 export async function getAQIForZone(zone: GlobeZone): Promise<AQIPoint[]> {
   const points: AQIPoint[] = [];
-  const batchSize = 10;
+  const batchSize = 100;
 
-  // 10° resolution — coarser than wind but fine for AQI heatmap
-  const coords = generateZoneGrid(zone, 10);
+  // 5° resolution — denser grid for better AQI heatmap accuracy
+  const coords = generateZoneGrid(zone, 5);
 
   console.log(
     `[AQI] Fetching for zone: ${zone.name} (${coords.length} points)`,
@@ -85,12 +85,13 @@ export async function getAQIForZone(zone: GlobeZone): Promise<AQIPoint[]> {
         if (!current) return;
 
         const pm25 = current.pm2_5 ?? 0;
-        // Prefer european_aqi (0–500 continuous scale) when available;
-        // fall back to EPA conversion from PM2.5 otherwise.
+        // Prefer european_aqi when available; fall back to EPA conversion from PM2.5.
+        // european_aqi is 0–100 CAQI scale; multiply ×5 to approximate US EPA 0–500 range.
+        // IMPORTANT: european_aqi can exceed 100, so we clamp to 0–500 to prevent
+        // color scale overflow that would make everything appear "Hazardous".
         const eaqi = current.european_aqi ?? null;
-        const aqi = eaqi != null ? Math.round(eaqi * 5) : aqiFromPm25(pm25);
-        // european_aqi is 0–100 CAQI scale; multiply ×5 to map to US EPA 0–500 range
-        // so the same colour scale applies to all points uniformly.
+        const rawAqi = eaqi != null ? Math.round(eaqi * 5) : aqiFromPm25(pm25);
+        const aqi = Math.max(0, Math.min(500, rawAqi));
         if (aqi < 0) return; // skip missing data
 
         points.push({

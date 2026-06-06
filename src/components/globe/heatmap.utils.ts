@@ -74,29 +74,64 @@ export function gradientColor(
 
 // ─── Coordinate helpers ───────────────────────────────────────────────────────
 
-/** lat/lon → full-res pixel */
+/** lat/lon → full-res pixel (clamped so ghost points outside ±180/±90 stay on canvas) */
 function toPixel(lat: number, lon: number): [number, number] {
-  return [((lon + 180) / 360) * W, ((90 - lat) / 180) * H];
+  const clampedLon = Math.max(-180, Math.min(180, lon));
+  const clampedLat = Math.max(-90, Math.min(90, lat));
+  return [((clampedLon + 180) / 360) * W, ((90 - clampedLat) / 180) * H];
 }
 
 // ─── IDW interpolation ────────────────────────────────────────────────────────
 
 /**
+ * Extended point type that carries optional wind direction & speed
+ * for anisotropic distance weighting on the wind layer.
+ */
+interface IDWPoint {
+  px: number;
+  py: number;
+  value: number;
+  /** Meteorological degrees (0=N, 90=E, 180=S, 270=W) — wind layer only */
+  direction?: number;
+  /** m/s — higher speed = more elongation along wind axis */
+  speed?: number;
+}
+
+/**
  * Build a W/IDW_STEP × H/IDW_STEP Float32Array of interpolated values using
  * Inverse Distance Weighting.
  *
- * For each grid cell we find the K nearest data points (by squared pixel
- * distance) and weight them as 1/d².  Using pixel distance means the
- * influence of each point scales correctly with the projection.
- *
- * power = 2 gives smooth gradients; increase to sharpen local features.
+ * Key fixes:
+ *   - Longitudinal wrapping: dx uses shortest-path distance across the
+ *     texture seam at x=0 / x=W (the antimeridian, lon=±180°) so points
+ *     near the boundary correctly influence each other.
+ *   - Max influence radius: grid cells farther than ~30° from the nearest
+ *     data point are set to NaN (rendered transparent) to prevent nonsensical
+ *     extrapolation when only partial zone data is loaded.
+ *   - Power p=3: sharper falloff, less blobbing vs. p=2.
+ *   - K=8: more neighbours for smoother field.
+ *   - Wind anisotropy: when useAnisotropy=true the distance metric is
+ *     stretched along the wind bearing.
  */
+
+// Max influence radius in full-res pixels (~30° longitude ≈ 170 px on a 2048-wide texture)
+const MAX_INFLUENCE_PX = Math.round(W * 30 / 360); // ~170 px
+const MAX_INFLUENCE_D2 = MAX_INFLUENCE_PX * MAX_INFLUENCE_PX;
+
 function buildIDWGrid(
-  points: { px: number; py: number; value: number }[],
-  K = 4,
+  points: IDWPoint[],
+  K = 8,
+  p = 3,
+  useAnisotropy = false,
 ): Float32Array {
   const grid = new Float32Array(IDW_GW * IDW_GH);
   const KMAX = Math.min(K, points.length);
+
+  // If there are no data points at all, return an all-NaN grid
+  if (points.length === 0) {
+    grid.fill(NaN);
+    return grid;
+  }
 
   for (let gy = 0; gy < IDW_GH; gy++) {
     for (let gx = 0; gx < IDW_GW; gx++) {
@@ -108,19 +143,46 @@ function buildIDWGrid(
       let exactVal = NaN;
 
       for (let i = 0; i < points.length; i++) {
-        const dx = cx - points[i].px;
+        // ── Wraparound-aware dx ──────────────────────────────
+        // Use the shorter of the direct or wrap-around distance
+        // so the antimeridian (lon=±180°) doesn't create a seam.
+        let dx = cx - points[i].px;
+        if (dx > W / 2) dx -= W;
+        else if (dx < -W / 2) dx += W;
+
         const dy = cy - points[i].py;
-        const d2 = dx * dx + dy * dy;
+
+        let d2: number;
+
+        if (
+          useAnisotropy &&
+          points[i].direction !== undefined &&
+          points[i].speed !== undefined &&
+          (points[i].speed as number) > 1
+        ) {
+          // Anisotropic distance: elongate influence ellipse along wind bearing
+          const rad = ((270 - (points[i].direction as number)) * Math.PI) / 180;
+          const cosA = Math.cos(rad);
+          const sinA = Math.sin(rad);
+
+          const dParallel = dx * cosA + dy * sinA;
+          const dPerp     = -dx * sinA + dy * cosA;
+
+          const elongation = Math.min(1 + (points[i].speed as number) / 10, 4);
+
+          d2 = (dParallel / elongation) ** 2 + dPerp ** 2;
+        } else {
+          d2 = dx * dx + dy * dy;
+        }
 
         if (d2 < 1) {
           exactVal = points[i].value;
           break;
-        } // exact hit
+        }
 
         if (d2 < bestD[KMAX - 1]) {
           bestD[KMAX - 1] = d2;
           bestV[KMAX - 1] = points[i].value;
-          // Insertion sort (ascending) to keep smallest distances first
           for (let j = KMAX - 1; j > 0 && bestD[j] < bestD[j - 1]; j--) {
             let tmp = bestD[j];
             bestD[j] = bestD[j - 1];
@@ -137,15 +199,23 @@ function buildIDWGrid(
         continue;
       }
 
+      // ── Max influence check ────────────────────────────────
+      // If the nearest data point is beyond ~30°, mark as no-data
+      if (bestD[0] > MAX_INFLUENCE_D2) {
+        grid[gy * IDW_GW + gx] = NaN;
+        continue;
+      }
+
+      // IDW with power p (p=3: sharper peaks, less flat-zone bleeding)
       let sumW = 0,
         sumWV = 0;
       for (let k = 0; k < KMAX; k++) {
         if (bestD[k] === Infinity) break;
-        const w = 1 / bestD[k]; // power=2, but d2 already squared → w = 1/d²
+        const w = 1 / bestD[k] ** (p / 2);
         sumW += w;
         sumWV += w * bestV[k];
       }
-      grid[gy * IDW_GW + gx] = sumW > 0 ? sumWV / sumW : 0;
+      grid[gy * IDW_GW + gx] = sumW > 0 ? sumWV / sumW : NaN;
     }
   }
 
@@ -183,6 +253,14 @@ function renderGrid(
       const v10 = grid[gy0 * IDW_GW + gx1];
       const v01 = grid[gy1 * IDW_GW + gx0];
       const v11 = grid[gy1 * IDW_GW + gx1];
+
+      // If ANY corner is NaN (no data), make this pixel transparent.
+      // This prevents color bleeding from data regions into no-data areas.
+      if (isNaN(v00) || isNaN(v10) || isNaN(v01) || isNaN(v11)) {
+        // Leave pixel at [0,0,0,0] — fully transparent
+        continue;
+      }
+
       const val =
         v00 * (1 - tx) * (1 - ty) +
         v10 * tx * (1 - ty) +
@@ -237,8 +315,12 @@ function blurSeamless(
   return out;
 }
 
-// ─── Full pipeline ────────────────────────────────────────────────────────────
+// ─── Heatmap pipelines ────────────────────────────────────────────────────────
 
+/**
+ * Standard heatmap pipeline (temp, AQI, sea-temp).
+ * K=8, p=3, anisotropy=OFF.
+ */
 function makeHeatmap(
   rawPoints: { lat: number; lon: number; value: number }[],
   colorFn: (v: number) => [number, number, number],
@@ -246,23 +328,46 @@ function makeHeatmap(
 ): HTMLCanvasElement {
   if (!rawPoints.length) return document.createElement("canvas");
 
-  // Convert lat/lon to pixel coordinates
   const points = rawPoints.map((p) => {
     const [px, py] = toPixel(p.lat, p.lon);
     return { px, py, value: p.value };
   });
 
-  // Build IDW value grid
-  const grid = buildIDWGrid(points);
+  const grid = buildIDWGrid(points, 8, 3, false);
 
-  // Render grid → full-res RGBA canvas
   const canvas = document.createElement("canvas");
   canvas.width = W;
   canvas.height = H;
   const ctx = canvas.getContext("2d")!;
   ctx.putImageData(renderGrid(grid, colorFn), 0, 0);
 
-  // Blur with seam wrapping
+  return blurSeamless(canvas, blurPx);
+}
+
+/**
+ * Wind-specific heatmap pipeline with anisotropic IDW.
+ * K=8, p=3, anisotropy=ON — influence stretches downwind.
+ */
+function makeWindHeatmap(
+  rawPoints: { lat: number; lon: number; value: number; direction: number; speed: number }[],
+  colorFn: (v: number) => [number, number, number],
+  blurPx: number,
+): HTMLCanvasElement {
+  if (!rawPoints.length) return document.createElement("canvas");
+
+  const points: IDWPoint[] = rawPoints.map((p) => {
+    const [px, py] = toPixel(p.lat, p.lon);
+    return { px, py, value: p.value, direction: p.direction, speed: p.speed };
+  });
+
+  const grid = buildIDWGrid(points, 8, 3, true);
+
+  const canvas = document.createElement("canvas");
+  canvas.width = W;
+  canvas.height = H;
+  const ctx = canvas.getContext("2d")!;
+  ctx.putImageData(renderGrid(grid, colorFn), 0, 0);
+
   return blurSeamless(canvas, blurPx);
 }
 
@@ -328,8 +433,8 @@ export const SEA_RANGE = 34; // 32 - (-2)
 // ─── Public exports ───────────────────────────────────────────────────────────
 
 export function createWindHeatmap(data: WindPoint[]): HTMLCanvasElement {
-  return makeHeatmap(
-    data.map((p) => ({ lat: p.lat, lon: p.lon, value: p.speed })),
+  return makeWindHeatmap(
+    data.map((p) => ({ lat: p.lat, lon: p.lon, value: p.speed, direction: p.direction, speed: p.speed })),
     (v) => gradientColor(Math.max(0, v) / WIND_MAX, WIND_STOPS),
     14,
   );

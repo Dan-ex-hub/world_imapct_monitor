@@ -16,15 +16,15 @@ const BASE = 'https://marine-api.open-meteo.com/v1/marine'
 
 /**
  * Fetch sea surface temperature for a zone.
- * Uses a 10° grid (coarser than wind) — oceans are large, fewer points needed.
+ * Uses a 5° grid (denser than original 10°) — better ocean SST resolution.
  * Skips land points gracefully (marine API returns error for inland coords).
  */
 export async function getSeaTempForZone(zone: GlobeZone): Promise<SeaTempPoint[]> {
   const points: SeaTempPoint[] = []
-  const batchSize = 10
+  const batchSize = 100
 
-  // 10° resolution — enough for ocean coverage without hammering the API
-  const coords = generateZoneGrid(zone, 10)
+  // 5° resolution — denser grid for better SST heatmap accuracy
+  const coords = generateZoneGrid(zone, 5)
 
   console.log(`[SeaTemp] Fetching sea temp for zone: ${zone.name} (${coords.length} points)`)
 

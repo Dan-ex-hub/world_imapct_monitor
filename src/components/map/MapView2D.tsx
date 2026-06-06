@@ -44,7 +44,7 @@ function layerColor(layer: string, val: number): RGB {
 type ValGrid = { vals: (number | null)[]; GW: number; GH: number; step: number; layer: string };
 
 function buildValGrid(layer: string, data: EnvLayerData | null): ValGrid | null {
-  const step = 2.5;
+  const step = 1.5;
   const GW = Math.ceil(360 / step) + 1;
   const GH = Math.ceil(180 / step) + 1;
   const vals: (number | null)[] = new Array(GW * GH).fill(null);
@@ -69,27 +69,32 @@ function buildValGrid(layer: string, data: EnvLayerData | null): ValGrid | null 
     return null;
   }
 
-  // BFS flood-fill
+  // BFS flood-fill with hop limit — prevents extrapolation beyond ~30°
+  // when only partial zone data is loaded.
+  const MAX_BFS_HOPS = 20; // ~30° at 1.5° step
+  const hops = new Uint16Array(vals.length); // hop count per cell (0 = original data)
   const queue: number[] = [];
   for (let k = 0; k < vals.length; k++) if (vals[k] !== null) queue.push(k);
   let head = 0;
   const dirs = [-1, 1, -GW, GW];
   while (head < queue.length) {
     const k = queue[head++];
+    if (hops[k] >= MAX_BFS_HOPS) continue; // stop propagating beyond limit
     for (const d of dirs) {
       const nk = k + d;
       if (nk >= 0 && nk < vals.length && vals[nk] === null) {
         if (d === -1 && k % GW === 0) continue;
         if (d === 1 && k % GW === GW - 1) continue;
         vals[nk] = vals[k];
+        hops[nk] = hops[k] + 1;
         queue.push(nk);
       }
     }
   }
 
-  // Gaussian blur (6 passes) for smooth gradients
+  // Gaussian blur (8 passes) for smooth gradients
   let src = vals as number[];
-  for (let pass = 0; pass < 6; pass++) {
+  for (let pass = 0; pass < 8; pass++) {
     const dst = new Array<number>(GW * GH);
     for (let j = 0; j < GH; j++) {
       for (let i = 0; i < GW; i++) {
@@ -317,13 +322,21 @@ export default function MapView2D({ events, activeEnvLayer, envLayerData, onEven
         const pxData = img.data;
 
         const bounds = map.getBounds();
-        const north = bounds.getNorth(), south = bounds.getSouth();
         const west  = bounds.getWest(),  east  = bounds.getEast();
-        const latStep = (north - south) / H;
         const lonStep = (east - west) / W;
 
+        // Precompute per-row latitudes using Leaflet's Mercator projection
+        // instead of linear interpolation (which causes vertical misalignment).
+        // containerPointToLatLng respects the actual map projection (EPSG:3857).
+        const latRows = new Float64Array(H);
         for (let y = 0; y < H; y++) {
-          const lat = north - latStep * y;
+          const containerY = y * (fullH / H);
+          const latlng = map.containerPointToLatLng([0, containerY]);
+          latRows[y] = latlng.lat;
+        }
+
+        for (let y = 0; y < H; y++) {
+          const lat = latRows[y];
           if (lat < -85 || lat > 85) continue;
           const rowOff = y * W * 4;
           for (let x = 0; x < W; x++) {

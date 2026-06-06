@@ -12,10 +12,10 @@ export async function getWindGridForZone(
   zone: GlobeZone,
 ): Promise<WindPoint[]> {
   const points: WindPoint[] = [];
-  const batchSize = 10;
+  const batchSize = 100;
 
-  // Generate grid points for this zone at 5° resolution (balanced for API limits)
-  const coords = generateZoneGrid(zone, 5);
+  // Generate grid points for this zone at 2.5° resolution (denser grid for finer interpolation)
+  const coords = generateZoneGrid(zone, 2.5);
 
   console.log(
     `[OpenMeteo] Fetching wind for zone: ${zone.name} (${coords.length} points)`,
@@ -82,10 +82,10 @@ export async function getTempAnomaliesForZone(
   zone: GlobeZone,
 ): Promise<TempAnomalyPoint[]> {
   const points: TempAnomalyPoint[] = [];
-  const batchSize = 10;
+  const batchSize = 100;
 
-  // 5° resolution — matches wind grid so IDW interpolation has equal density
-  const coords = generateZoneGrid(zone, 5);
+  // 2.5° resolution — matches wind grid so IDW interpolation has equal density
+  const coords = generateZoneGrid(zone, 2.5);
 
   console.log(
     `[OpenMeteo] Fetching temperature for zone: ${zone.name} (${coords.length} points)`,
