@@ -1,7 +1,7 @@
 # World Impact Monitor
 
 ## Overview
-World Impact Monitor is a real-time 3D and 2D geospatial visualization platform that tracks global events impacting financial markets, geopolitical stability, and the environment. It combines AI-driven news summarization with live environmental data layers to provide a holistic, unified view of the world's current state.
+World Impact Monitor is a real-time 3D and 2D geospatial visualization platform that tracks global events impacting financial markets, geopolitical stability, and the environment. It combines AI-driven news summarization with live environmental data layers to provide a comprehensive, unified view of the world's current state.
 
 ## Live Deployment
 🌍 **[Live Deployment Link](https://world-imapct-monitor.vercel.app/)**
