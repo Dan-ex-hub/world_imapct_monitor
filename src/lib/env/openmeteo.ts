@@ -1,24 +1,31 @@
 import axios from "axios";
 import type { WindPoint, TempAnomalyPoint } from "@/store/types";
-import { type GlobeZone, generateZoneGrid } from "./zones";
+import {
+  type GlobeZone,
+  generateZoneGrid,
+  GRID_RESOLUTION,
+  GRID_BATCH_SIZE,
+} from "./zones";
 
 const BASE = "https://api.open-meteo.com/v1";
 
 /**
  * Fetch wind data for a specific zone only
- * Much faster than fetching entire globe at once
+ * 2.5° grid → 2,701 points per zone, batched at ≤1,000 points per request
+ * (exactly 3 batches: 1,000 + 1,000 + 701) to respect Open-Meteo's
+ * per-request limit while finishing well within serverless timeouts.
  */
 export async function getWindGridForZone(
   zone: GlobeZone,
 ): Promise<WindPoint[]> {
   const points: WindPoint[] = [];
-  const batchSize = 100;
+  const batchSize = GRID_BATCH_SIZE;
 
-  // Generate grid points for this zone at 2.5° resolution (denser grid for finer interpolation)
-  const coords = generateZoneGrid(zone, 2.5);
+  // 2.5° resolution — shared across ALL layers for a uniform, smooth globe
+  const coords = generateZoneGrid(zone, GRID_RESOLUTION);
 
   console.log(
-    `[OpenMeteo] Fetching wind for zone: ${zone.name} (${coords.length} points)`,
+    `[OpenMeteo] Fetching wind for zone: ${zone.name} (${coords.length} points, ${Math.ceil(coords.length / batchSize)} batches)`,
   );
 
   // Batch requests to avoid rate limiting
@@ -36,7 +43,7 @@ export async function getWindGridForZone(
           wind_speed_unit: "ms", // Force m/s — default is km/h which causes 3.6× inflation
           forecast_days: 1,
         },
-        timeout: 10000,
+        timeout: 15000,
       });
 
       // Handle single or multiple results
@@ -63,7 +70,7 @@ export async function getWindGridForZone(
       );
     }
 
-    // Delay between batches to respect rate limits (1 second = 60 requests/minute max)
+    // Delay between batches to respect rate limits (only 3 batches → ~2s total delay)
     if (i + batchSize < coords.length) {
       await new Promise((resolve) => setTimeout(resolve, 1000));
     }
@@ -82,16 +89,16 @@ export async function getTempAnomaliesForZone(
   zone: GlobeZone,
 ): Promise<TempAnomalyPoint[]> {
   const points: TempAnomalyPoint[] = [];
-  const batchSize = 100;
+  const batchSize = GRID_BATCH_SIZE;
 
-  // 5° resolution — matches sea temp and AQI grid density.
-  // At 2.5° each zone has 2,701 points (27 batches × 1s delay = 27s) which
-  // times out before reaching Arctic rows. At 5° it's 703 points (7 batches)
-  // completing in ~8s and covering the full globe including the poles.
-  const coords = generateZoneGrid(zone, 5);
+  // 2.5° resolution — matches wind, sea temp and AQI grid density.
+  // 2,701 points per zone batched at ≤1,000 → exactly 3 requests with two
+  // 1s delays (~4-6s per zone), covering the full globe including the poles
+  // without timing out.
+  const coords = generateZoneGrid(zone, GRID_RESOLUTION);
 
   console.log(
-    `[OpenMeteo] Fetching temperature for zone: ${zone.name} (${coords.length} points)`,
+    `[OpenMeteo] Fetching temperature for zone: ${zone.name} (${coords.length} points, ${Math.ceil(coords.length / batchSize)} batches)`,
   );
 
   for (let i = 0; i < coords.length; i += batchSize) {
@@ -107,7 +114,7 @@ export async function getTempAnomaliesForZone(
           current: "temperature_2m",
           forecast_days: 1,
         },
-        timeout: 10000,
+        timeout: 15000,
       });
 
       const results = Array.isArray(data) ? data : [data];
@@ -140,4 +147,3 @@ export async function getTempAnomaliesForZone(
   );
   return points;
 }
-

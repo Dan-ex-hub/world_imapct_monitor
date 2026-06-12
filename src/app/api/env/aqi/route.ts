@@ -2,17 +2,18 @@ import { NextResponse } from 'next/server'
 import { after } from 'next/server'
 import { createAdminClient } from '@/lib/supabase/server'
 import { getAQIForZone } from '@/lib/env/openaq'
-import { GLOBE_ZONES } from '@/lib/env/zones'
+import { GLOBE_ZONES, GRID_CACHE_VERSION, zoneCacheKey } from '@/lib/env/zones'
 import { interpolateToGrid, gridToJSON } from '@/lib/env/gridInterpolator'
 import type { EnvLayerData, AQIPoint } from '@/store/types'
 
 /**
  * GET /api/env/aqi
  * Always-complete strategy:
- * 1. Read all cached zones from Supabase
+ * 1. Read all cached zones from Supabase (versioned keys — only 2.5° data matches)
  * 2. If any zones are missing, fetch them NOW (in-request, parallel) before responding
  * 3. Respond with a fully-populated grid — client always gets 100% coverage
- * 4. Schedule background refresh of stale zones AFTER response is sent
+ * 4. Schedule background refresh of stale zones AFTER response is sent,
+ *    and purge legacy pre-v2 (5°) cache rows so stale data is never served
  */
 export async function GET() {
   try {
@@ -21,12 +22,13 @@ export async function GET() {
     const sixHoursAgo = new Date(now.getTime() - 21_600_000)
 
     // ── Step 1: Read ALL cached zones immediately ──────────────────────────
+    // Versioned key prefix (aqi_zone_v2_%) ignores any legacy 5° rows.
     const { data: allCachedZones } = await supabase
-      .from('env_data_cache').select('*').like('layer_type', 'aqi_zone_%')
+      .from('env_data_cache').select('*').like('layer_type', `aqi_zone_${GRID_CACHE_VERSION}_%`)
 
     // Find which zones are missing from cache
     const cachedIds = new Set((allCachedZones ?? []).map((z: any) => z.layer_type))
-    const missingZones = GLOBE_ZONES.filter(z => !cachedIds.has(`aqi_zone_${z.id}`))
+    const missingZones = GLOBE_ZONES.filter(z => !cachedIds.has(zoneCacheKey('aqi', z.id)))
 
     // ── Step 2: Fetch ALL missing zones NOW, in parallel, before responding ──
     const freshZones: { layer_type: string; data: any }[] = []
@@ -36,7 +38,7 @@ export async function GET() {
 
       await Promise.allSettled(
         missingZones.map(async (zone) => {
-          const key = `aqi_zone_${zone.id}`
+          const key = zoneCacheKey('aqi', zone.id)
           try {
             const points = await getAQIForZone(zone)
             if (points.length > 0) {
@@ -73,9 +75,14 @@ export async function GET() {
     after(async () => {
       try {
         const bgSupabase = createAdminClient()
+
+        // Purge legacy pre-v2 (5°) zone caches so stale low-resolution data
+        // can never be served again. Legacy keys: aqi_zone_zone-*
+        await bgSupabase.from('env_data_cache').delete().like('layer_type', 'aqi_zone_zone-%')
+
         const allZones = [...(allCachedZones ?? []), ...freshZones]
         const staleZones = GLOBE_ZONES.filter(z => {
-          const cached = allZones.find((c: any) => c.layer_type === `aqi_zone_${z.id}`)
+          const cached = allZones.find((c: any) => c.layer_type === zoneCacheKey('aqi', z.id))
           return cached && new Date((cached as any).fetched_at) < sixHoursAgo
         })
 
@@ -88,7 +95,7 @@ export async function GET() {
               const points = await getAQIForZone(zone)
               if (points.length > 0) {
                 await bgSupabase.from('env_data_cache').upsert({
-                  layer_type: `aqi_zone_${zone.id}`,
+                  layer_type: zoneCacheKey('aqi', zone.id),
                   data: { points, zone: zone.id },
                   fetched_at: now.toISOString(),
                   expires_at: new Date(now.getTime() + 21_600_000).toISOString(),
@@ -123,6 +130,7 @@ export async function GET() {
           coverage: `${Math.round(zonesLoaded / GLOBE_ZONES.length * 100)}%`,
           zonesLoaded,
           totalZones: GLOBE_ZONES.length,
+          gridResolution: 2.5,
           isPartial: false, // always complete now
         }
       },

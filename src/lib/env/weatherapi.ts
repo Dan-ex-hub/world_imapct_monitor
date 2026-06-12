@@ -2,11 +2,16 @@
  * Alternative weather API provider (WeatherAPI.com)
  * Free tier: 1 million calls/month
  * Requires API key but has generous free tier
+ *
+ * NOTE: WeatherAPI.com has no bulk/batch endpoint, so each grid point is a
+ * separate request. This provider is an EMERGENCY FALLBACK only, used when
+ * Open-Meteo fails entirely. It uses the same shared 2.5° grid so fallback
+ * data matches the resolution of every other layer.
  */
 
 import axios from 'axios'
 import type { WindPoint, TempAnomalyPoint } from '@/store/types'
-import { type GlobeZone, generateZoneGrid } from './zones'
+import { type GlobeZone, generateZoneGrid, GRID_RESOLUTION } from './zones'
 
 const WEATHERAPI_KEY = process.env.WEATHERAPI_KEY || ''
 const BASE = 'https://api.weatherapi.com/v1'
@@ -21,14 +26,14 @@ export async function getWindGridForZoneWeatherAPI(zone: GlobeZone): Promise<Win
   }
 
   const points: WindPoint[] = []
-  const coords = generateZoneGrid(zone, 10) // Coarser grid to save API calls
-  
+  const coords = generateZoneGrid(zone, GRID_RESOLUTION) // 2.5° — matches all layers
+
   console.log(`[WeatherAPI] Fetching wind for zone: ${zone.name} (${coords.length} points)`)
 
   // WeatherAPI allows bulk requests
   for (let i = 0; i < coords.length; i++) {
     const { lat, lon } = coords[i]
-    
+
     try {
       const { data } = await axios.get(`${BASE}/current.json`, {
         params: {
@@ -71,13 +76,13 @@ export async function getTempAnomaliesForZoneWeatherAPI(zone: GlobeZone): Promis
   }
 
   const points: TempAnomalyPoint[] = []
-  const coords = generateZoneGrid(zone, 5) // 5° resolution matches primary source
-  
+  const coords = generateZoneGrid(zone, GRID_RESOLUTION) // 2.5° — matches primary source
+
   console.log(`[WeatherAPI] Fetching temperature for zone: ${zone.name} (${coords.length} points)`)
 
   for (let i = 0; i < coords.length; i++) {
     const { lat, lon } = coords[i]
-    
+
     try {
       const { data } = await axios.get(`${BASE}/current.json`, {
         params: {
@@ -94,7 +99,7 @@ export async function getTempAnomaliesForZoneWeatherAPI(zone: GlobeZone): Promis
         const currentTemp = data.current.temp_c
         const avgTemp = 15 // Global average baseline (simplified)
         const anomaly = currentTemp - avgTemp
-        
+
         points.push({
           lat,
           lon,
