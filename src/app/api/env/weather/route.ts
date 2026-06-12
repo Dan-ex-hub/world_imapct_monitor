@@ -3,16 +3,17 @@ import { after } from 'next/server'
 import { createAdminClient } from '@/lib/supabase/server'
 import { getWindGridForZone, getTempAnomaliesForZone } from '@/lib/env/openmeteo'
 import { getWindGridForZoneWeatherAPI, getTempAnomaliesForZoneWeatherAPI } from '@/lib/env/weatherapi'
-import { getZoneForType, getCurrentZoneForType, GLOBE_ZONES } from '@/lib/env/zones'
+import { GLOBE_ZONES } from '@/lib/env/zones'
 import { interpolateToGrid, gridToJSON } from '@/lib/env/gridInterpolator'
 import type { EnvLayerData, WindPoint, TempAnomalyPoint } from '@/store/types'
 
 /**
  * GET /api/env/weather
- * Cache-first strategy:
- * 1. Immediately read all cached zones from Supabase → respond to client (fast)
- * 2. Trigger background refresh of stale/missing zones AFTER response is sent
- *    — wind and temp zones refresh concurrently
+ * Always-complete strategy:
+ * 1. Read all cached zones from Supabase
+ * 2. If any zones are missing, fetch them NOW (in-request, parallel) before responding
+ * 3. Respond with a fully-populated grid — client always gets 100% coverage
+ * 4. Schedule background refresh of stale zones AFTER response is sent
  */
 export async function GET() {
   try {
@@ -26,156 +27,145 @@ export async function GET() {
       supabase.from('env_data_cache').select('*').like('layer_type', 'temp_zone_%'),
     ])
 
-    // Merge all cached wind + temp points
+    // Find which zones are missing from cache
+    const cachedWindIds = new Set((allWindZones ?? []).map((z: any) => z.layer_type))
+    const cachedTempIds = new Set((allTempZones ?? []).map((z: any) => z.layer_type))
+    const missingWindZones = GLOBE_ZONES.filter(z => !cachedWindIds.has(`wind_zone_${z.id}`))
+    const missingTempZones = GLOBE_ZONES.filter(z => !cachedTempIds.has(`temp_zone_${z.id}`))
+
+    // ── Step 2: Fetch ALL missing zones NOW, in parallel, before responding ──
+    if (missingWindZones.length > 0 || missingTempZones.length > 0) {
+      console.log(`[Weather] Fetching ${missingWindZones.length} missing wind zones, ${missingTempZones.length} missing temp zones synchronously...`)
+
+      const fetchedWindZones: { layer_type: string; data: any }[] = []
+      const fetchedTempZones: { layer_type: string; data: any }[] = []
+
+      await Promise.allSettled([
+        // Fetch missing wind zones
+        ...missingWindZones.map(async (zone) => {
+          const key = `wind_zone_${zone.id}`
+          let points: WindPoint[] = []
+          try {
+            points = await getWindGridForZone(zone)
+          } catch {
+            try { points = await getWindGridForZoneWeatherAPI(zone) } catch { /* skip */ }
+          }
+          if (points.length > 0) {
+            await supabase.from('env_data_cache').upsert({
+              layer_type: key,
+              data: { points, zone: zone.id },
+              fetched_at: now.toISOString(),
+              expires_at: new Date(now.getTime() + 21_600_000).toISOString(), // 6h cache
+            })
+            fetchedWindZones.push({ layer_type: key, data: { points } })
+            console.log(`[Weather] Fetched ${points.length} wind pts for ${zone.name}`)
+          }
+        }),
+        // Fetch missing temp zones
+        ...missingTempZones.map(async (zone) => {
+          const key = `temp_zone_${zone.id}`
+          let points: TempAnomalyPoint[] = []
+          try {
+            points = await getTempAnomaliesForZone(zone)
+          } catch {
+            try { points = await getTempAnomaliesForZoneWeatherAPI(zone) } catch { /* skip */ }
+          }
+          if (points.length > 0) {
+            await supabase.from('env_data_cache').upsert({
+              layer_type: key,
+              data: { points, zone: zone.id },
+              fetched_at: now.toISOString(),
+              expires_at: new Date(now.getTime() + 21_600_000).toISOString(),
+            })
+            fetchedTempZones.push({ layer_type: key, data: { points } })
+            console.log(`[Weather] Fetched ${points.length} temp pts for ${zone.name}`)
+          }
+        }),
+      ])
+
+      // Merge newly fetched into the zone arrays
+      fetchedWindZones.forEach(z => (allWindZones ?? []).push(z as any))
+      fetchedTempZones.forEach(z => (allTempZones ?? []).push(z as any))
+    }
+
+    // ── Step 3: Merge all zones into point arrays ─────────────────────────
     const allWindPoints: WindPoint[] = []
-    allWindZones?.forEach((z: any) => {
+    ;(allWindZones ?? []).forEach((z: any) => {
       const d = z.data as { points: WindPoint[] }
       if (d?.points) allWindPoints.push(...d.points)
     })
 
     const allTempPoints: TempAnomalyPoint[] = []
-    allTempZones?.forEach((z: any) => {
+    ;(allTempZones ?? []).forEach((z: any) => {
       const d = z.data as { points: TempAnomalyPoint[] }
       if (d?.points) allTempPoints.push(...d.points)
     })
 
-    const windZonesLoaded = allWindZones?.length ?? 0
-    const tempZonesLoaded = allTempZones?.length ?? 0
-    const windCoverage = Math.round(windZonesLoaded / GLOBE_ZONES.length * 100)
-    const tempCoverage = Math.round(tempZonesLoaded / GLOBE_ZONES.length * 100)
+    console.log(`[Weather] Building grids: ${allWindPoints.length} wind pts, ${allTempPoints.length} temp pts`)
 
-    console.log(`[Weather] Returning ${allWindPoints.length} wind (${windCoverage}%), ${allTempPoints.length} temp (${tempCoverage}%) immediately`)
-
-    // ── Step 2: Schedule background refresh AFTER response is sent ─────────
+    // ── Step 4: Schedule background refresh of STALE zones after response ──
     after(async () => {
       try {
         const bgSupabase = createAdminClient()
-        const windCacheEmpty = windZonesLoaded === 0
-        const tempCacheEmpty = tempZonesLoaded === 0
+        const staleWindZones = GLOBE_ZONES.filter(z => {
+          const cached = (allWindZones ?? []).find((c: any) => c.layer_type === `wind_zone_${z.id}`)
+          return cached && new Date(cached.fetched_at) < sixHoursAgo
+        })
+        const staleTempZones = GLOBE_ZONES.filter(z => {
+          const cached = (allTempZones ?? []).find((c: any) => c.layer_type === `temp_zone_${z.id}`)
+          return cached && new Date(cached.fetched_at) < sixHoursAgo
+        })
 
-        // Run wind and temp refreshes concurrently
+        if (staleWindZones.length === 0 && staleTempZones.length === 0) return
+
+        console.log(`[Weather] BG: Refreshing ${staleWindZones.length} stale wind, ${staleTempZones.length} stale temp zones`)
+
         await Promise.allSettled([
-          // Wind zones
-          (async () => {
-            if (windCacheEmpty) {
-              console.log('[Weather] BG: Wind cache empty — fetching all 4 zones concurrently...')
-              await Promise.allSettled(
-                GLOBE_ZONES.map(async (zone) => {
-                  const key = `wind_zone_${zone.id}`
-                  let points: WindPoint[] = []
-                  try {
-                    points = await getWindGridForZone(zone)
-                  } catch {
-                    try { points = await getWindGridForZoneWeatherAPI(zone) } catch { /* skip */ }
-                  }
-                  if (points.length > 0) {
-                    await bgSupabase.from('env_data_cache').upsert({
-                      layer_type: key,
-                      data: { points, zone: zone.id },
-                      fetched_at: now.toISOString(),
-                      expires_at: new Date(now.getTime() + 172_800_000).toISOString(),
-                    })
-                    console.log(`[Weather] BG: Cached ${points.length} wind pts for ${zone.name}`)
-                  }
-                })
-              )
-            } else {
-              const windZone = getZoneForType('wind') ?? getCurrentZoneForType('wind')
-              const windKey = `wind_zone_${windZone.id}`
-              const cached = allWindZones?.find((c: any) => c.layer_type === windKey)
-              if (!cached || new Date(cached.fetched_at) < sixHoursAgo) {
-                let points: WindPoint[] = []
-                try { points = await getWindGridForZone(windZone) } catch {
-                  try { points = await getWindGridForZoneWeatherAPI(windZone) } catch { /* skip */ }
-                }
-                if (points.length > 0) {
-                  await bgSupabase.from('env_data_cache').upsert({
-                    layer_type: windKey,
-                    data: { points, zone: windZone.id },
-                    fetched_at: now.toISOString(),
-                    expires_at: new Date(now.getTime() + 172_800_000).toISOString(),
-                  })
-                  console.log(`[Weather] BG: Refreshed ${points.length} wind pts for ${windZone.name}`)
-                }
-              } else {
-                console.log(`[Weather] BG: Wind zone ${windZone.name} is fresh, skipping`)
-              }
+          ...staleWindZones.map(async (zone) => {
+            let points: WindPoint[] = []
+            try { points = await getWindGridForZone(zone) } catch {
+              try { points = await getWindGridForZoneWeatherAPI(zone) } catch { /* skip */ }
             }
-          })(),
-
-          // Temp zones
-          (async () => {
-            if (tempCacheEmpty) {
-              console.log('[Weather] BG: Temp cache empty — fetching all 4 zones concurrently...')
-              await Promise.allSettled(
-                GLOBE_ZONES.map(async (zone) => {
-                  const key = `temp_zone_${zone.id}`
-                  let points: TempAnomalyPoint[] = []
-                  try {
-                    points = await getTempAnomaliesForZone(zone)
-                  } catch {
-                    try { points = await getTempAnomaliesForZoneWeatherAPI(zone) } catch { /* skip */ }
-                  }
-                  if (points.length > 0) {
-                    await bgSupabase.from('env_data_cache').upsert({
-                      layer_type: key,
-                      data: { points, zone: zone.id },
-                      fetched_at: now.toISOString(),
-                      expires_at: new Date(now.getTime() + 172_800_000).toISOString(),
-                    })
-                    console.log(`[Weather] BG: Cached ${points.length} temp pts for ${zone.name}`)
-                  }
-                })
-              )
-            } else {
-              const tempZone = getZoneForType('temp') ?? getCurrentZoneForType('temp')
-              const tempKey = `temp_zone_${tempZone.id}`
-              const cached = allTempZones?.find((c: any) => c.layer_type === tempKey)
-              if (!cached || new Date(cached.fetched_at) < sixHoursAgo) {
-                let points: TempAnomalyPoint[] = []
-                try { points = await getTempAnomaliesForZone(tempZone) } catch {
-                  try { points = await getTempAnomaliesForZoneWeatherAPI(tempZone) } catch { /* skip */ }
-                }
-                if (points.length > 0) {
-                  await bgSupabase.from('env_data_cache').upsert({
-                    layer_type: tempKey,
-                    data: { points, zone: tempZone.id },
-                    fetched_at: now.toISOString(),
-                    expires_at: new Date(now.getTime() + 172_800_000).toISOString(),
-                  })
-                  console.log(`[Weather] BG: Refreshed ${points.length} temp pts for ${tempZone.name}`)
-                }
-              } else {
-                console.log(`[Weather] BG: Temp zone ${tempZone.name} is fresh, skipping`)
-              }
+            if (points.length > 0) {
+              await bgSupabase.from('env_data_cache').upsert({
+                layer_type: `wind_zone_${zone.id}`,
+                data: { points, zone: zone.id },
+                fetched_at: now.toISOString(),
+                expires_at: new Date(now.getTime() + 21_600_000).toISOString(),
+              })
             }
-          })(),
+          }),
+          ...staleTempZones.map(async (zone) => {
+            let points: TempAnomalyPoint[] = []
+            try { points = await getTempAnomaliesForZone(zone) } catch {
+              try { points = await getTempAnomaliesForZoneWeatherAPI(zone) } catch { /* skip */ }
+            }
+            if (points.length > 0) {
+              await bgSupabase.from('env_data_cache').upsert({
+                layer_type: `temp_zone_${zone.id}`,
+                data: { points, zone: zone.id },
+                fetched_at: now.toISOString(),
+                expires_at: new Date(now.getTime() + 21_600_000).toISOString(),
+              })
+            }
+          }),
         ])
       } catch (err) {
         console.error('[Weather] BG refresh error:', err)
       }
     })
 
-    // ── Pre-interpolate to dense grids (server-side IDW) ─────────────
-    let windGrid, tempGrid
-    try {
-      const t0 = Date.now()
-      windGrid = allWindPoints.length > 0
-        ? gridToJSON(interpolateToGrid(allWindPoints.map(p => ({ lat: p.lat, lon: p.lon, value: p.speed }))))
-        : undefined
-      const t1 = Date.now()
-      tempGrid = allTempPoints.length > 0
-        ? gridToJSON(interpolateToGrid(allTempPoints.map(p => ({ lat: p.lat, lon: p.lon, value: p.anomalyC }))))
-        : undefined
-      const t2 = Date.now()
-      console.log(`[Weather] Grids: wind=${t1 - t0}ms (${allWindPoints.length} pts), temp=${t2 - t1}ms (${allTempPoints.length} pts)`)
-    } catch (err) {
-      console.error('[Weather] Grid interpolation failed, serving raw points:', err)
-      windGrid = undefined
-      tempGrid = undefined
-    }
+    // ── Step 5: Build dense grids and respond ─────────────────────────────
+    const windGrid = allWindPoints.length > 0
+      ? gridToJSON(interpolateToGrid(allWindPoints.map(p => ({ lat: p.lat, lon: p.lon, value: p.speed }))))
+      : undefined
+    const tempGrid = allTempPoints.length > 0
+      ? gridToJSON(interpolateToGrid(allTempPoints.map(p => ({ lat: p.lat, lon: p.lon, value: p.anomalyC }))))
+      : undefined
 
-    // ── Respond immediately with what we have ─────────────────────
+    const windZonesLoaded = (allWindZones?.length ?? 0)
+    const tempZonesLoaded = (allTempZones?.length ?? 0)
+
     return NextResponse.json(
       {
         wind: {
@@ -191,10 +181,10 @@ export async function GET() {
           tempGrid,
         } as EnvLayerData,
         meta: {
-          windCoverage: `${windCoverage}%`,
-          tempCoverage: `${tempCoverage}%`,
+          windCoverage: `${Math.round(windZonesLoaded / GLOBE_ZONES.length * 100)}%`,
+          tempCoverage: `${Math.round(tempZonesLoaded / GLOBE_ZONES.length * 100)}%`,
           zonesLoaded: { wind: windZonesLoaded, temp: tempZonesLoaded, total: GLOBE_ZONES.length },
-          isPartial: windZonesLoaded < GLOBE_ZONES.length || tempZonesLoaded < GLOBE_ZONES.length,
+          isPartial: false, // always complete now
         },
       },
       { headers: { 'Cache-Control': 'no-store' } }

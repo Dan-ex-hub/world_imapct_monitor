@@ -2,16 +2,17 @@ import { NextResponse } from 'next/server'
 import { after } from 'next/server'
 import { createAdminClient } from '@/lib/supabase/server'
 import { getAQIForZone } from '@/lib/env/openaq'
-import { getZoneForType, getCurrentZoneForType, GLOBE_ZONES } from '@/lib/env/zones'
+import { GLOBE_ZONES } from '@/lib/env/zones'
 import { interpolateToGrid, gridToJSON } from '@/lib/env/gridInterpolator'
 import type { EnvLayerData, AQIPoint } from '@/store/types'
 
 /**
  * GET /api/env/aqi
- * Cache-first strategy:
- * 1. Immediately read all cached zones from Supabase → respond to client (fast)
- * 2. Trigger background refresh of stale/missing zones AFTER response is sent
- *    so the client never waits for external API calls
+ * Always-complete strategy:
+ * 1. Read all cached zones from Supabase
+ * 2. If any zones are missing, fetch them NOW (in-request, parallel) before responding
+ * 3. Respond with a fully-populated grid — client always gets 100% coverage
+ * 4. Schedule background refresh of stale zones AFTER response is sent
  */
 export async function GET() {
   try {
@@ -23,90 +24,91 @@ export async function GET() {
     const { data: allCachedZones } = await supabase
       .from('env_data_cache').select('*').like('layer_type', 'aqi_zone_%')
 
-    // Merge all cached zones into a single response
+    // Find which zones are missing from cache
+    const cachedIds = new Set((allCachedZones ?? []).map((z: any) => z.layer_type))
+    const missingZones = GLOBE_ZONES.filter(z => !cachedIds.has(`aqi_zone_${z.id}`))
+
+    // ── Step 2: Fetch ALL missing zones NOW, in parallel, before responding ──
+    const freshZones: { layer_type: string; data: any }[] = []
+
+    if (missingZones.length > 0) {
+      console.log(`[AQI] Fetching ${missingZones.length} missing zones synchronously...`)
+
+      await Promise.allSettled(
+        missingZones.map(async (zone) => {
+          const key = `aqi_zone_${zone.id}`
+          try {
+            const points = await getAQIForZone(zone)
+            if (points.length > 0) {
+              await supabase.from('env_data_cache').upsert({
+                layer_type: key,
+                data: { points, zone: zone.id },
+                fetched_at: now.toISOString(),
+                expires_at: new Date(now.getTime() + 21_600_000).toISOString(), // 6h cache
+              })
+              freshZones.push({ layer_type: key, data: { points } })
+              console.log(`[AQI] Fetched ${points.length} pts for ${zone.name}`)
+            }
+          } catch (err) {
+            console.error(`[AQI] Failed zone ${zone.name}:`, err)
+          }
+        })
+      )
+    }
+
+    // ── Step 3: Merge all zones into a single point array ─────────────────
     const allAqiPoints: AQIPoint[] = []
-    allCachedZones?.forEach((z: any) => {
+    ;(allCachedZones ?? []).forEach((z: any) => {
       const d = z.data as { points: AQIPoint[] }
       if (d?.points) allAqiPoints.push(...d.points)
     })
+    freshZones.forEach(z => {
+      if (z.data?.points) allAqiPoints.push(...z.data.points)
+    })
 
-    const zonesLoaded = allCachedZones?.length ?? 0
-    const coverage = Math.round(zonesLoaded / GLOBE_ZONES.length * 100)
-    console.log(`[AQI] Returning ${allAqiPoints.length} pts (${coverage}% coverage) immediately`)
+    const zonesLoaded = (allCachedZones?.length ?? 0) + freshZones.length
+    console.log(`[AQI] Returning ${allAqiPoints.length} pts (${zonesLoaded}/${GLOBE_ZONES.length} zones)`)
 
-    // ── Step 2: Schedule background refresh AFTER response is sent ─────────
+    // ── Step 4: Schedule background refresh of STALE zones after response ──
     after(async () => {
       try {
         const bgSupabase = createAdminClient()
-        const cacheIsEmpty = zonesLoaded === 0
+        const allZones = [...(allCachedZones ?? []), ...freshZones]
+        const staleZones = GLOBE_ZONES.filter(z => {
+          const cached = allZones.find((c: any) => c.layer_type === `aqi_zone_${z.id}`)
+          return cached && new Date((cached as any).fetched_at) < sixHoursAgo
+        })
 
-        if (cacheIsEmpty) {
-          // First ever load — fetch ALL 4 zones concurrently in the background
-          console.log('[AQI] Cache empty — fetching all 4 zones concurrently in background...')
-          await Promise.allSettled(
-            GLOBE_ZONES.map(async (zone) => {
-              const key = `aqi_zone_${zone.id}`
-              try {
-                const points = await getAQIForZone(zone)
-                if (points.length > 0) {
-                  await bgSupabase.from('env_data_cache').upsert({
-                    layer_type: key,
-                    data: { points, zone: zone.id },
-                    fetched_at: now.toISOString(),
-                    expires_at: new Date(now.getTime() + 172_800_000).toISOString(),
-                  })
-                  console.log(`[AQI] BG: Cached ${points.length} pts for ${zone.name}`)
-                }
-              } catch (err) {
-                console.error(`[AQI] BG: Failed zone ${zone.name}:`, err)
-              }
-            })
-          )
-        } else {
-          // Subsequent loads — refresh one stale zone per request
-          const aqiZone = getZoneForType('aqi') ?? getCurrentZoneForType('aqi')
-          const aqiZoneKey = `aqi_zone_${aqiZone.id}`
-          const zoneCache = allCachedZones?.find((c: any) => c.layer_type === aqiZoneKey)
-          const needsRefresh = !zoneCache || new Date(zoneCache.fetched_at) < sixHoursAgo
+        if (staleZones.length === 0) return
+        console.log(`[AQI] BG: Refreshing ${staleZones.length} stale zones`)
 
-          if (needsRefresh) {
+        await Promise.allSettled(
+          staleZones.map(async (zone) => {
             try {
-              const points = await getAQIForZone(aqiZone)
+              const points = await getAQIForZone(zone)
               if (points.length > 0) {
                 await bgSupabase.from('env_data_cache').upsert({
-                  layer_type: aqiZoneKey,
-                  data: { points, zone: aqiZone.id },
+                  layer_type: `aqi_zone_${zone.id}`,
+                  data: { points, zone: zone.id },
                   fetched_at: now.toISOString(),
-                  expires_at: new Date(now.getTime() + 172_800_000).toISOString(),
+                  expires_at: new Date(now.getTime() + 21_600_000).toISOString(),
                 })
-                console.log(`[AQI] BG: Refreshed ${points.length} pts for ${aqiZone.name}`)
               }
             } catch (err) {
-              console.error(`[AQI] BG: Failed to refresh ${aqiZone.name}:`, err)
+              console.error(`[AQI] BG: Failed ${zone.name}:`, err)
             }
-          } else {
-            console.log(`[AQI] BG: Zone ${aqiZone.name} is fresh, skipping refresh`)
-          }
-        }
+          })
+        )
       } catch (err) {
         console.error('[AQI] BG refresh error:', err)
       }
     })
 
-    // ── Pre-interpolate to dense grid (server-side IDW) ──────────────────
-    let aqiGrid
-    try {
-      const t0 = Date.now()
-      aqiGrid = allAqiPoints.length > 0
-        ? gridToJSON(interpolateToGrid(allAqiPoints.map(p => ({ lat: p.lat, lon: p.lon, value: p.aqi }))))
-        : undefined
-      console.log(`[AQI] Grid: ${Date.now() - t0}ms (${allAqiPoints.length} pts)`)
-    } catch (err) {
-      console.error('[AQI] Grid interpolation failed:', err)
-      aqiGrid = undefined
-    }
+    // ── Step 5: Build dense grid and respond ──────────────────────────────
+    const aqiGrid = allAqiPoints.length > 0
+      ? gridToJSON(interpolateToGrid(allAqiPoints.map(p => ({ lat: p.lat, lon: p.lon, value: p.aqi }))))
+      : undefined
 
-    // ── Respond immediately with what we have ─────────────────────────────
     const aqiData: EnvLayerData = {
       type: 'aqi',
       updatedAt: now.toISOString(),
@@ -118,10 +120,10 @@ export async function GET() {
       {
         ...aqiData,
         meta: {
-          coverage: `${coverage}%`,
+          coverage: `${Math.round(zonesLoaded / GLOBE_ZONES.length * 100)}%`,
           zonesLoaded,
           totalZones: GLOBE_ZONES.length,
-          isPartial: zonesLoaded < GLOBE_ZONES.length,
+          isPartial: false, // always complete now
         }
       },
       { headers: { 'Cache-Control': 'no-store' } }

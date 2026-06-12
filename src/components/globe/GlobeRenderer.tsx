@@ -867,6 +867,8 @@ const GlobeRenderer = forwardRef<GlobeRef, GlobeRendererProps>(
           }
 
           const texture = new THREE.CanvasTexture(canvas);
+          texture.wrapS = THREE.RepeatWrapping;
+          texture.wrapT = THREE.ClampToEdgeWrapping;
           texture.needsUpdate = true;
           heatmapTextureRef.current = texture;
 
