@@ -21,6 +21,37 @@ export const GLOBE_ZONES: GlobeZone[] = [
 ]
 
 /**
+ * Shared grid fetch settings for ALL environmental layers
+ * (wind, temperature, AQI, sea temp).
+ *
+ * 2.5° resolution per zone:
+ *   73 lat rows (-90 … +90) × 37 lon cols (90° span) = 2,701 points
+ *
+ * Batched at ≤1,000 points per request → exactly 3 batches per zone
+ * (1,000 + 1,000 + 701), respecting Open-Meteo's per-request coordinate
+ * limit while completing in ~4-6s per zone (2 × 1s inter-batch delays
+ * + request time) — safely within serverless timeouts.
+ */
+export const GRID_RESOLUTION = 2.5
+export const GRID_BATCH_SIZE = 1000
+
+/**
+ * Cache version — bump whenever the grid resolution changes.
+ * Versioned cache keys guarantee that data baked at an older resolution
+ * (the previous 5° grid) is NEVER served again: old keys simply stop
+ * matching and every zone re-fetches fresh 2.5° data on the next request.
+ * Legacy rows are purged in the background by the API routes.
+ *
+ * v2 = 2.5° grid (legacy unversioned keys were 5°/10°).
+ */
+export const GRID_CACHE_VERSION = 'v2'
+
+/** Build a versioned Supabase cache key, e.g. wind_zone_v2_zone-1 */
+export function zoneCacheKey(prefix: string, zoneId: string): string {
+  return `${prefix}_zone_${GRID_CACHE_VERSION}_${zoneId}`
+}
+
+/**
  * Staggered zone rotation — each data type gets its own minute offset
  * so they never all fire at the same time and hammer the API.
  *
@@ -33,12 +64,13 @@ export const GLOBE_ZONES: GlobeZone[] = [
  * Sea temp zone | -  -  -  1  -  -  -  2  -  -  -  3  -  -  -  4
  *
  * Open-Meteo free tier: 600 req/min, 5000/hr, 10000/day
- * Wind:     ~65 req/zone × 4 zones = 260 req/cycle (every 16 min) = ~23,400/day ← needs caching!
- * Temp:     ~26 req/zone × 4 zones = 104 req/cycle                = ~9,360/day
- * Sea temp: ~26 req/zone × 4 zones = 104 req/cycle                = ~9,360/day
- * AQI:      OpenAQ — 1 req/zone (no rate limit issues)
+ * At 2.5° each zone is 2,701 points → 3 batched requests per zone:
+ * Wind:     3 req/zone × 4 zones = 12 req/cycle
+ * Temp:     3 req/zone × 4 zones = 12 req/cycle
+ * Sea temp: 3 req/zone × 4 zones = 12 req/cycle
+ * AQI:      3 req/zone × 4 zones = 12 req/cycle
  *
- * With 6-hour cache per zone, actual API calls drop to ~4 per day per layer. ✅
+ * With 6-hour cache per zone, actual API calls stay at ~12/day per layer. ✅
  */
 export type EnvDataType = 'wind' | 'temp' | 'aqi' | 'sea_temp'
 
@@ -96,7 +128,7 @@ export function isPointInZone(lat: number, lon: number, zone: GlobeZone): boolea
 
 export function generateZoneGrid(
   zone: GlobeZone,
-  resolution = 10
+  resolution = GRID_RESOLUTION
 ): Array<{ lat: number; lon: number }> {
   const points: Array<{ lat: number; lon: number }> = []
   const crossesMeridian = zone.lonMin > zone.lonMax

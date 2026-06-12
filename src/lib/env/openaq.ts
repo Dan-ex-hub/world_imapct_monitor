@@ -7,12 +7,18 @@
  * Open-Meteo provides equivalent PM2.5 + AQI data for free with no key.
  *
  * Rate limits: same as Open-Meteo weather (600 req/min, 5000/hr, 10000/day)
- * With 6-hour zone caching, actual calls ≈ 4/day. ✅
+ * 2.5° grid = 2,701 points per zone → 3 batched requests per zone.
+ * With 6-hour zone caching, actual calls ≈ 12/day. ✅
  */
 
 import axios from "axios";
 import type { AQIPoint } from "@/store/types";
-import { type GlobeZone, generateZoneGrid } from "./zones";
+import {
+  type GlobeZone,
+  generateZoneGrid,
+  GRID_RESOLUTION,
+  GRID_BATCH_SIZE,
+} from "./zones";
 
 const BASE = "https://air-quality-api.open-meteo.com/v1/air-quality";
 
@@ -49,18 +55,18 @@ export function aqiCategory(aqi: number): AQIPoint["category"] {
 
 /**
  * Fetch AQI for a zone using Open-Meteo Air Quality API.
- * Uses a 5° grid — denser than the original 10° for better heatmap accuracy.
- * Batches 10 points per request (same pattern as weather API).
+ * Uses the shared 2.5° grid (2,701 points per zone), batched at ≤1,000
+ * points per request (exactly 3 batches) for better heatmap accuracy.
  */
 export async function getAQIForZone(zone: GlobeZone): Promise<AQIPoint[]> {
   const points: AQIPoint[] = [];
-  const batchSize = 100;
+  const batchSize = GRID_BATCH_SIZE;
 
-  // 5° resolution — denser grid for better AQI heatmap accuracy
-  const coords = generateZoneGrid(zone, 5);
+  // 2.5° resolution — matches all other layers for a uniform, smooth globe
+  const coords = generateZoneGrid(zone, GRID_RESOLUTION);
 
   console.log(
-    `[AQI] Fetching for zone: ${zone.name} (${coords.length} points)`,
+    `[AQI] Fetching for zone: ${zone.name} (${coords.length} points, ${Math.ceil(coords.length / batchSize)} batches)`,
   );
 
   for (let i = 0; i < coords.length; i += batchSize) {
@@ -76,7 +82,7 @@ export async function getAQIForZone(zone: GlobeZone): Promise<AQIPoint[]> {
           current: "pm2_5,european_aqi",
           forecast_days: 1,
         },
-        timeout: 12000,
+        timeout: 15000,
       });
 
       const results = Array.isArray(data) ? data : [data];
@@ -117,4 +123,3 @@ export async function getAQIForZone(zone: GlobeZone): Promise<AQIPoint[]> {
   console.log(`[AQI] Fetched ${points.length} points for ${zone.name}`);
   return points;
 }
-
