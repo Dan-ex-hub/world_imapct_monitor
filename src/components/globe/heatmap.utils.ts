@@ -73,6 +73,90 @@ export function gradientColor(
   return lerp3(stops[idx], stops[idx + 1], seg - idx);
 }
 
+// --- Value-anchored colour scales ---------------------------------------------
+//
+// IMPORTANT: the physical breakpoints of these scales are NOT evenly spaced
+// (e.g. wind: 0, 5, 10, 15, 20, 25, 30, 38 m/s -- the last segment spans
+// 8 m/s, not 5). The old code normalised the raw value to 0-1 and fed it to
+// gradientColor(), which assumes EVENLY spaced stops -- so every rendered
+// colour drifted off the legend (12 m/s rendered ~teal instead of the
+// teal->green blend the scale defines). colorForValue() interpolates by the
+// actual breakpoint values, so the rendered colour exactly matches the
+// legend/scale at every data value.
+
+export interface ScaleStop {
+  value: number;
+  color: [number, number, number];
+}
+
+/** Piecewise-linear colour lookup anchored at physical breakpoint values. */
+export function colorForValue(
+  value: number,
+  scale: ScaleStop[],
+): [number, number, number] {
+  if (!Number.isFinite(value) || value <= scale[0].value) {
+    return scale[0].color;
+  }
+  const last = scale[scale.length - 1];
+  if (value >= last.value) return last.color;
+  for (let i = 0; i < scale.length - 1; i++) {
+    const a = scale[i];
+    const b = scale[i + 1];
+    if (value <= b.value) {
+      const t = (value - a.value) / (b.value - a.value);
+      return lerp3(a.color, b.color, t);
+    }
+  }
+  return last.color;
+}
+
+// Wind: Beaufort-based breakpoints in m/s
+export const WIND_SCALE: ScaleStop[] = [
+  { value: 0, color: [20, 60, 220] }, // deep blue (calm)
+  { value: 5, color: [0, 160, 255] }, // sky blue
+  { value: 10, color: [0, 210, 180] }, // teal
+  { value: 15, color: [80, 220, 50] }, // yellow-green
+  { value: 20, color: [255, 230, 0] }, // yellow
+  { value: 25, color: [255, 140, 0] }, // orange
+  { value: 30, color: [240, 40, 20] }, // red
+  { value: 38, color: [140, 0, 180] }, // purple (hurricane)
+];
+
+// Temperature: ERA5/Windy palette breakpoints in deg C
+export const TEMP_SCALE: ScaleStop[] = [
+  { value: -40, color: [100, 0, 200] }, // deep violet
+  { value: -20, color: [0, 40, 230] }, // blue
+  { value: -10, color: [30, 120, 255] }, // cornflower
+  { value: -2, color: [140, 200, 255] }, // ice blue
+  { value: 5, color: [230, 240, 255] }, // near-white
+  { value: 15, color: [255, 250, 180] }, // pale yellow
+  { value: 25, color: [255, 180, 40] }, // amber
+  { value: 35, color: [255, 60, 0] }, // red-orange
+  { value: 45, color: [180, 0, 0] }, // deep red
+];
+
+// AQI: US EPA absolute breakpoints
+export const AQI_SCALE: ScaleStop[] = [
+  { value: 0, color: [0, 228, 0] }, // Good
+  { value: 100, color: [255, 255, 0] }, // Moderate
+  { value: 200, color: [255, 126, 0] }, // Unhealthy for Sensitive
+  { value: 300, color: [255, 0, 0] }, // Unhealthy
+  { value: 400, color: [143, 63, 151] }, // Very Unhealthy
+  { value: 500, color: [126, 0, 35] }, // Hazardous
+];
+
+// Sea temperature: NOAA/Copernicus breakpoints in deg C
+export const SEA_SCALE: ScaleStop[] = [
+  { value: -2, color: [200, 230, 255] }, // icy pale blue
+  { value: 2, color: [0, 60, 200] }, // deep blue
+  { value: 8, color: [0, 140, 230] }, // medium blue
+  { value: 14, color: [0, 210, 210] }, // cyan
+  { value: 18, color: [0, 200, 120] }, // teal-green
+  { value: 22, color: [80, 210, 0] }, // green-yellow
+  { value: 26, color: [255, 220, 0] }, // yellow
+  { value: 29, color: [255, 120, 0] }, // orange
+  { value: 32, color: [220, 10, 10] }, // red
+];
 
 // --- IDW interpolation (geographic space) ------------------------------------
 
@@ -81,8 +165,8 @@ export function gradientColor(
  * and pixel coords only for the output texture mapping.
  */
 interface IDWPoint {
-  lat: number;  // geographic latitude  (for distance calc)
-  lon: number;  // geographic longitude (for distance calc)
+  lat: number; // geographic latitude  (for distance calc)
+  lon: number; // geographic longitude (for distance calc)
   value: number;
   /** Meteorological degrees (0=N, 90=E, 180=S, 270=W) -- wind layer only */
   direction?: number;
@@ -114,8 +198,8 @@ const MAX_INFLUENCE_DEG = 60;
 const MAX_INFLUENCE_D2 = MAX_INFLUENCE_DEG * MAX_INFLUENCE_DEG;
 
 // Pre-computed conversion: grid pixel -> geographic coordinates
-const DEG_PER_PX_LON = 360 / W;   // 1 pixel = 0.176 degrees longitude
-const DEG_PER_PX_LAT = 180 / H;   // 1 pixel = 0.176 degrees latitude
+const DEG_PER_PX_LON = 360 / W; // 1 pixel = 0.176 degrees longitude
+const DEG_PER_PX_LAT = 180 / H; // 1 pixel = 0.176 degrees latitude
 
 function buildIDWGrid(
   points: IDWPoint[],
@@ -134,13 +218,13 @@ function buildIDWGrid(
 
   for (let gy = 0; gy < IDW_GH; gy++) {
     // Convert grid-cell y -> latitude (north=+90 at gy=0, south=-90 at gy max)
-    const cellLat = 90 - (gy * IDW_STEP) * DEG_PER_PX_LAT;
+    const cellLat = 90 - gy * IDW_STEP * DEG_PER_PX_LAT;
     // cos(lat) correction factor for longitude distances at this latitude
-    const cosLat = Math.cos(cellLat * Math.PI / 180);
+    const cosLat = Math.cos((cellLat * Math.PI) / 180);
 
     for (let gx = 0; gx < IDW_GW; gx++) {
       // Convert grid-cell x -> longitude (-180 at gx=0, +180 at gx max)
-      const cellLon = (gx * IDW_STEP) * DEG_PER_PX_LON - 180;
+      const cellLon = gx * IDW_STEP * DEG_PER_PX_LON - 180;
 
       const bestD = new Float32Array(KMAX).fill(Infinity);
       const bestV = new Float32Array(KMAX);
@@ -156,7 +240,7 @@ function buildIDWGrid(
 
         // Apply cos(lat) correction: 1 degree of longitude at 60N = 0.5 degrees effective.
         // Use average of cell and point latitudes for the correction factor.
-        const ptCosLat = Math.cos(points[i].lat * Math.PI / 180);
+        const ptCosLat = Math.cos((points[i].lat * Math.PI) / 180);
         const avgCosLat = (cosLat + ptCosLat) * 0.5;
         const dlonCorrected = dlon * avgCosLat;
 
@@ -211,7 +295,7 @@ function buildIDWGrid(
         continue;
       }
 
-      // Max influence check -- if nearest point is > 30 degrees away, mark as no-data
+      // Max influence check -- if nearest point is > 60 degrees away, mark as no-data
       if (bestD[0] > MAX_INFLUENCE_D2) {
         grid[gy * IDW_GW + gx] = NaN;
         continue;
@@ -239,6 +323,12 @@ function buildIDWGrid(
  * Convert an IDW value grid into full-resolution RGBA using bilinear
  * interpolation between grid cells -- avoids the blocky nearest-neighbour
  * artefacts that would otherwise show at IDW_STEP=8.
+ *
+ * NaN corners are excluded from the blend by renormalising the bilinear
+ * weights over the valid corners only. A pixel is left transparent ONLY
+ * when all four surrounding cells are NaN (true no-data). Previously a
+ * single NaN corner made the pixel transparent, which dropped whole bands
+ * of valid data at data boundaries and produced hard edges.
  */
 function renderGrid(
   grid: Float32Array,
@@ -265,18 +355,35 @@ function renderGrid(
       const v01 = grid[gy1 * IDW_GW + gx0];
       const v11 = grid[gy1 * IDW_GW + gx1];
 
-      // If ANY corner is NaN (no data), make this pixel transparent.
-      // This prevents color bleeding from data regions into no-data areas.
-      if (isNaN(v00) || isNaN(v10) || isNaN(v01) || isNaN(v11)) {
-        // Leave pixel at [0,0,0,0] -- fully transparent
-        continue;
+      const w00 = (1 - tx) * (1 - ty);
+      const w10 = tx * (1 - ty);
+      const w01 = (1 - tx) * ty;
+      const w11 = tx * ty;
+
+      // Renormalised bilinear over valid (non-NaN) corners only
+      let sumW = 0;
+      let sumWV = 0;
+      if (!isNaN(v00)) {
+        sumW += w00;
+        sumWV += w00 * v00;
+      }
+      if (!isNaN(v10)) {
+        sumW += w10;
+        sumWV += w10 * v10;
+      }
+      if (!isNaN(v01)) {
+        sumW += w01;
+        sumWV += w01 * v01;
+      }
+      if (!isNaN(v11)) {
+        sumW += w11;
+        sumWV += w11 * v11;
       }
 
-      const val =
-        v00 * (1 - tx) * (1 - ty) +
-        v10 * tx * (1 - ty) +
-        v01 * (1 - tx) * ty +
-        v11 * tx * ty;
+      // All four corners NaN -> genuine no-data -> transparent pixel
+      if (sumW <= 0) continue;
+
+      const val = sumWV / sumW;
 
       const [r, g, b] = colorFn(val);
       const i = (py * W + px) * 4;
@@ -337,7 +444,7 @@ function blurSeamless(
  * Grid layout (from server):
  *   - Row 0 = lat +90, Row H-1 = lat -90
  *   - Col 0 = lon -180, Col W-1 = lon +179
- *   - null values = no data -> transparent pixels
+ *   - null values = no data -> transparent pixels (only when ALL corners null)
  */
 function renderFromGrid(
   grid: EnvGrid,
@@ -347,27 +454,31 @@ function renderFromGrid(
   const imgData = new ImageData(W, H);
   const buf = imgData.data;
 
-  const gw = grid.width;   // 360
-  const gh = grid.height;  // 181
+  const gw = grid.width; // 360
+  const gh = grid.height; // 181
   const vals = grid.values;
 
   for (let py = 0; py < H; py++) {
-    // Pixel y -> latitude: py=0 -> lat=90, py=H-1 -> lat=-90
-    const lat = 90 - (py / H) * 180;
-    // Latitude -> fractional grid row: lat=90 -> row=0, lat=-90 -> row=180
-    const frow = (90 - lat) / (180 / (gh - 1));
+    // Pixel-CENTRE y -> latitude: py=0 -> +89.91 (north), py=H-1 -> -89.91 (south).
+    // Sampling at pixel centres keeps the mapping symmetric for BOTH hemispheres;
+    // the previous edge-based mapping anchored the north pole exactly but left the
+    // southern rows offset, so the two hemispheres did not sample symmetrically.
+    const lat = 90 - ((py + 0.5) / H) * 180;
+    // Latitude -> fractional grid row: lat=+90 -> row=0, lat=-90 -> row=gh-1.
+    // Clamped to the valid range so no southern latitude band is ever skipped.
+    const frow = Math.min(Math.max(((90 - lat) * (gh - 1)) / 180, 0), gh - 1);
     const row0 = Math.min(Math.floor(frow), gh - 2);
     const row1 = row0 + 1;
     const trow = frow - row0;
 
     for (let px = 0; px < W; px++) {
-      // Pixel x -> longitude: px=0 -> lon=-180, px=W-1 -> lon=+180
-      const lon = (px / W) * 360 - 180;
+      // Pixel-CENTRE x -> longitude: px=0 -> -179.91, px=W-1 -> +179.91
+      const lon = ((px + 0.5) / W) * 360 - 180;
       // Longitude -> fractional grid col: lon=-180 -> col=0, lon=+179 -> col=359
       const fcol = (lon - grid.lonMin) / ((grid.lonMax - grid.lonMin + 1) / gw);
       const col0raw = Math.max(Math.floor(fcol), 0);
-      const col0 = col0raw % gw;           // wrap at 360
-      const col1 = (col0 + 1) % gw;        // wrap col+1 back to 0 at antimeridian
+      const col0 = col0raw % gw; // wrap at 360
+      const col1 = (col0 + 1) % gw; // wrap col+1 back to 0 at antimeridian
       const tcol = fcol - col0raw;
 
       // Read four corners
@@ -376,17 +487,40 @@ function renderFromGrid(
       const v01 = vals[row1 * gw + col0];
       const v11 = vals[row1 * gw + col1];
 
-      // If any corner is null (no data), leave pixel transparent
-      if (v00 === null || v10 === null || v01 === null || v11 === null) {
-        continue;
+      // Bilinear weights
+      const w00 = (1 - tcol) * (1 - trow);
+      const w10 = tcol * (1 - trow);
+      const w01 = (1 - tcol) * trow;
+      const w11 = tcol * trow;
+
+      // Renormalised bilinear: blend over the VALID corners only.
+      // The old code skipped the pixel when ANY corner was null, which
+      // silently dropped entire bands of valid data adjacent to null cells
+      // (e.g. southern-hemisphere cells next to a missing row) and produced
+      // hard edges at every data boundary.
+      let sumW = 0;
+      let sumWV = 0;
+      if (v00 !== null && v00 !== undefined) {
+        sumW += w00;
+        sumWV += w00 * v00;
+      }
+      if (v10 !== null && v10 !== undefined) {
+        sumW += w10;
+        sumWV += w10 * v10;
+      }
+      if (v01 !== null && v01 !== undefined) {
+        sumW += w01;
+        sumWV += w01 * v01;
+      }
+      if (v11 !== null && v11 !== undefined) {
+        sumW += w11;
+        sumWV += w11 * v11;
       }
 
-      // Bilinear interpolation
-      const val =
-        v00 * (1 - tcol) * (1 - trow) +
-        v10 * tcol * (1 - trow) +
-        v01 * (1 - tcol) * trow +
-        v11 * tcol * trow;
+      // All four corners null -> genuine no-data (e.g. land on sea-temp) -> transparent
+      if (sumW <= 0) continue;
+
+      const val = sumWV / sumW;
 
       const [r, g, b] = colorFn(val);
       const i = (py * W + px) * 4;
@@ -407,8 +541,9 @@ function renderFromGrid(
 // --- Heatmap pipelines -------------------------------------------------------
 
 /**
- * Standard heatmap pipeline (temp, AQI, sea-temp).
- * K=8, p=3, anisotropy=OFF.
+ * Standard heatmap pipeline (used by ALL layers: wind, temp, AQI, sea-temp).
+ * K=8, p=3, isotropic IDW -> bilinear renderGrid -> seam-safe blur.
+ * This is the exact smoothing pipeline validated on the sea-temp layer.
  */
 function makeHeatmap(
   rawPoints: { lat: number; lon: number; value: number }[],
@@ -435,41 +570,11 @@ function makeHeatmap(
   return blurSeamless(canvas, blurPx);
 }
 
-/**
- * Wind-specific heatmap pipeline with anisotropic IDW.
- * K=8, p=3, anisotropy=ON -- influence stretches downwind.
- */
-function makeWindHeatmap(
-  rawPoints: { lat: number; lon: number; value: number; direction: number; speed: number }[],
-  colorFn: (v: number) => [number, number, number],
-  blurPx: number,
-): HTMLCanvasElement {
-  if (!rawPoints.length) return document.createElement("canvas");
-
-  // IDWPoints carry lat/lon + wind direction/speed for anisotropy
-  const points: IDWPoint[] = rawPoints.map((p) => ({
-    lat: p.lat,
-    lon: p.lon,
-    value: p.value,
-    direction: p.direction,
-    speed: p.speed,
-  }));
-
-  const grid = buildIDWGrid(points, 8, 3, true);
-
-  const canvas = document.createElement("canvas");
-  canvas.width = W;
-  canvas.height = H;
-  const ctx = canvas.getContext("2d")!;
-  ctx.putImageData(renderGrid(grid, colorFn), 0, 0);
-
-  return blurSeamless(canvas, blurPx);
-}
-
-// --- Colour scales (all absolute, not dataset-relative) ----------------------
+// --- Colour scales (legacy even-spaced exports, kept for compatibility) ------
 //
-// Each scale uses physically meaningful fixed breakpoints so the colour at
-// every pixel matches what you'd see on Windy / NOAA / Copernicus.
+// NOTE: rendering now uses the value-anchored WIND_SCALE / TEMP_SCALE /
+// AQI_SCALE / SEA_SCALE above (see colorForValue). These arrays are kept so
+// existing imports (legend gradients etc.) keep working.
 
 // Wind: 0 -> 38 m/s   (Beaufort-based)
 export const WIND_STOPS: [number, number, number][] = [
@@ -528,9 +633,12 @@ export const SEA_RANGE = 34; // 32 - (-2)
 // --- Public exports ----------------------------------------------------------
 
 export function createWindHeatmap(data: WindPoint[]): HTMLCanvasElement {
-  return makeWindHeatmap(
-    data.map((p) => ({ lat: p.lat, lon: p.lon, value: p.speed, direction: p.direction, speed: p.speed })),
-    (v) => gradientColor(Math.max(0, v) / WIND_MAX, WIND_STOPS),
+  // Reuses the EXACT same smoothing pipeline as the sea-temp layer
+  // (makeHeatmap -> isotropic IDW -> bilinear renderGrid -> seam-safe blur).
+  // The previous wind-only anisotropic pipeline produced hard cell edges.
+  return makeHeatmap(
+    data.map((p) => ({ lat: p.lat, lon: p.lon, value: p.speed })),
+    (v) => colorForValue(v, WIND_SCALE),
     14,
   );
 }
@@ -540,7 +648,7 @@ export function createTempAnomalyHeatmap(
 ): HTMLCanvasElement {
   return makeHeatmap(
     data.map((p) => ({ lat: p.lat, lon: p.lon, value: p.anomalyC })),
-    (v) => gradientColor(Math.max(0, v - TEMP_MIN) / TEMP_RANGE, TEMP_STOPS),
+    (v) => colorForValue(v, TEMP_SCALE),
     18,
   );
 }
@@ -548,7 +656,7 @@ export function createTempAnomalyHeatmap(
 export function createAQIHeatmap(data: AQIPoint[]): HTMLCanvasElement {
   return makeHeatmap(
     data.map((p) => ({ lat: p.lat, lon: p.lon, value: p.aqi })),
-    (v) => gradientColor(Math.max(0, v) / AQI_MAX, AQI_STOPS),
+    (v) => colorForValue(v, AQI_SCALE),
     16,
   );
 }
@@ -556,7 +664,7 @@ export function createAQIHeatmap(data: AQIPoint[]): HTMLCanvasElement {
 export function createSeaTempHeatmap(data: SeaTempPoint[]): HTMLCanvasElement {
   return makeHeatmap(
     data.map((p) => ({ lat: p.lat, lon: p.lon, value: p.tempC })),
-    (v) => gradientColor(Math.max(0, v - SEA_MIN) / SEA_RANGE, SEA_STOPS),
+    (v) => colorForValue(v, SEA_SCALE),
     18,
   );
 }
@@ -647,6 +755,7 @@ export function findNearestSeaTempPoint(
  * Create a heatmap texture for the given layer.
  * PREFERS server-side pre-interpolated grids (zero client IDW).
  * Falls back to client-side IDW only when no grid is available.
+ * Both paths share the same bilinear smoothing and value-anchored colour scales.
  */
 export function createHeatmapTexture(
   layerType: string,
@@ -660,7 +769,7 @@ export function createHeatmapTexture(
       if (layerData.windGrid) {
         return renderFromGrid(
           layerData.windGrid,
-          (v) => gradientColor(Math.max(0, v) / WIND_MAX, WIND_STOPS),
+          (v) => colorForValue(v, WIND_SCALE),
           14,
         );
       }
@@ -670,7 +779,7 @@ export function createHeatmapTexture(
       if (layerData.tempGrid) {
         return renderFromGrid(
           layerData.tempGrid,
-          (v) => gradientColor(Math.max(0, v - TEMP_MIN) / TEMP_RANGE, TEMP_STOPS),
+          (v) => colorForValue(v, TEMP_SCALE),
           18,
         );
       }
@@ -682,7 +791,7 @@ export function createHeatmapTexture(
       if (layerData.aqiGrid) {
         return renderFromGrid(
           layerData.aqiGrid,
-          (v) => gradientColor(Math.max(0, v) / AQI_MAX, AQI_STOPS),
+          (v) => colorForValue(v, AQI_SCALE),
           16,
         );
       }
@@ -692,7 +801,7 @@ export function createHeatmapTexture(
       if (layerData.seaTempGrid) {
         return renderFromGrid(
           layerData.seaTempGrid,
-          (v) => gradientColor(Math.max(0, v - SEA_MIN) / SEA_RANGE, SEA_STOPS),
+          (v) => colorForValue(v, SEA_SCALE),
           18,
         );
       }
