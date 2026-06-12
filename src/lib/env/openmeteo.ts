@@ -84,11 +84,8 @@ export async function getTempAnomaliesForZone(
   const points: TempAnomalyPoint[] = [];
   const batchSize = 100;
 
-  // 5° resolution — matches sea temp and AQI grid density.
-  // At 2.5° each zone has 2,701 points (27 batches × 1s delay = 27s) which
-  // times out before reaching Arctic rows. At 5° it's 703 points (7 batches)
-  // completing in ~8s and covering the full globe including the poles.
-  const coords = generateZoneGrid(zone, 5);
+  // 2.5° resolution — matches wind grid so IDW interpolation has equal density
+  const coords = generateZoneGrid(zone, 2.5);
 
   console.log(
     `[OpenMeteo] Fetching temperature for zone: ${zone.name} (${coords.length} points)`,

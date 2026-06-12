@@ -71,7 +71,7 @@ export async function getTempAnomaliesForZoneWeatherAPI(zone: GlobeZone): Promis
   }
 
   const points: TempAnomalyPoint[] = []
-  const coords = generateZoneGrid(zone, 5) // 5° resolution matches primary source
+  const coords = generateZoneGrid(zone, 15) // Very coarse grid
   
   console.log(`[WeatherAPI] Fetching temperature for zone: ${zone.name} (${coords.length} points)`)
 
