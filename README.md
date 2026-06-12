@@ -39,7 +39,7 @@ World Impact Monitor is a real-time 3D and 2D geospatial visualization platform 
 
 ## Recommended Deployment Setup
 
-Given the specific architecture of this project, **Vercel** is the most highly recommended frontend/backend deployment platform, natively paired with **Supabase** for the database layer. This ensures seamless integration and optimal performance.
+Given the specific architecture of this project, **Vercel** is the most highly recommended frontend/backend deployment platform, natively paired with **Supabase** for the database layer. This ensures seamless integration and optimal performance for real-time data synchronization.
 
 ### Why Vercel + Supabase?
 1. **Cron Jobs are Native**: The project relies on periodic background tasks (`/api/cron/...` and `vercel.json`) to continuously poll APIs, fetch RSS feeds, perform AI summarization, and clean up expired data. Vercel automatically parses `vercel.json` and manages these schedules for free.
