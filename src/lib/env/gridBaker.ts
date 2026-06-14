@@ -43,7 +43,11 @@ export function bakeGrid(
   points: GridPoint[],
   K = 6,
   power = 2,
-  maxDegrees = 60,  // increased from 25 → always fills the full globe
+  maxDegrees = 8,  // influence radius (great-circle degrees). Small on purpose:
+                   // cells farther than this from ANY real data stay null
+                   // (rendered transparent) instead of being filled with
+                   // far-away values. A 60° radius used to smear e.g. freezing
+                   // Antarctic readings across the entire empty southern ocean.
 ): EnvGrid {
   const values: (number | null)[] = new Array(GW * GH).fill(null)
   if (points.length === 0) return { values, width: GW, height: GH, latMin: -90, latMax: 90, lonMin: -180, lonMax: 179 }

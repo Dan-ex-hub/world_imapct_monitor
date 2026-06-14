@@ -25,8 +25,11 @@ interface SparsePoint {
  * The resulting grid is attached to the API response so the browser client
  * can render it with zero client-side interpolation (just GPU bilinear sampling).
  */
-export function interpolateToGrid(points: SparsePoint[]): EnvGrid {
-  return bakeGrid(points);
+export function interpolateToGrid(
+  points: SparsePoint[],
+  maxDegrees?: number,
+): EnvGrid {
+  return bakeGrid(points, 6, 2, maxDegrees);
 }
 
 /**

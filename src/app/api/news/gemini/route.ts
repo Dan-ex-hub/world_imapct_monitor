@@ -25,6 +25,43 @@ let lastAttemptMs = 0
 let lastSuccessMs = 0
 let failureStreak = 0
 
+/**
+ * Resolve an event's real publish time within the last 24 hours.
+ *
+ * Prefers the model-supplied `hoursAgo` (0-24). When missing/invalid we derive
+ * a deterministic time from a hash of the headline — this scatters events
+ * across the day INDEPENDENTLY of their impact tier, so the timeline no longer
+ * shows tier "bands" (all Low together, all Critical together).
+ */
+function hashStr(s: string): number {
+  let h = 2166136261;
+  for (let i = 0; i < s.length; i++) {
+    h ^= s.charCodeAt(i);
+    h = Math.imul(h, 16777619);
+  }
+  return h >>> 0;
+}
+
+function publishedAtIso(
+  hoursAgoRaw: unknown,
+  seedKey: string,
+  nowMs: number,
+): string {
+  let h: number;
+  if (
+    typeof hoursAgoRaw === 'number' &&
+    isFinite(hoursAgoRaw) &&
+    hoursAgoRaw >= 0 &&
+    hoursAgoRaw <= 24
+  ) {
+    h = hoursAgoRaw;
+  } else {
+    // 0.3h .. 23.7h, scattered by content hash (tier-independent).
+    h = 0.3 + (hashStr(seedKey) % 1000) / 1000 * 23.4;
+  }
+  return new Date(nowMs - h * 3_600_000).toISOString();
+}
+
 const RETRY_GAP_MS   = 2 * 60 * 1000
 const REFRESH_GAP_MS = 4 * 60 * 60 * 1000
 const TARGET_EVENTS  = 20
@@ -77,13 +114,15 @@ export async function GET(request: NextRequest) {
 
   const prompt = `You are a real-time geopolitical and financial markets intelligence analyst. Today is ${now.toUTCString()}.
 
-Generate exactly 20 current global news events from the last 48 hours that significantly impact financial markets and geopolitical stability.
+Generate current global news events from the LAST 24 HOURS ONLY (today) that significantly impact financial markets and geopolitical stability.
 
-EXACTLY 5 events per impact tier — no more, no less:
-• Critical (5): Active armed conflicts, financial system shocks, mass-casualty events
-• High (5): Central bank decisions, major geopolitical escalations, large natural disasters
-• Medium (5): Sanctions, significant political crises, major economic data releases
-• Low (5): Diplomatic meetings, minor market moves, routine policy announcements
+TARGET: up to 5 events per impact tier (20 total) — 5 each is ideal:
+• Critical (≤5): Active armed conflicts, financial system shocks, mass-casualty events
+• High (≤5): Central bank decisions, major geopolitical escalations, large natural disasters
+• Medium (≤5): Sanctions, significant political crises, major economic data releases
+• Low (≤5): Diplomatic meetings, minor market moves, routine policy announcements
+
+QUALITY OVER QUANTITY: Only include REAL events that genuinely happened in the last 24 hours. If a tier has fewer than 5 genuine recent events, return fewer — even zero. NEVER invent filler or recycle old (>24h) news to hit a count.
 
 For EACH event, produce this EXACT JSON object with ALL fields populated:
 {
@@ -95,6 +134,7 @@ For EACH event, produce this EXACT JSON object with ALL fields populated:
   "category": "Geopolitical",
   "summary": "2-3 sentences: what happened, why it matters for markets, and what traders should watch. Be specific with numbers/percentages where possible. Max 300 chars.",
   "sentiment": "Negative market sentiment",
+  "hoursAgo": 6,
   "forexImpacts": [
     { "pair": "EUR/USD", "direction": -1, "magnitude": "Large", "movePercent": "-0.8%", "reasoning": "Risk-off flight from euro assets" },
     { "pair": "USD/JPY", "direction": -1, "magnitude": "Medium", "movePercent": "-0.5%", "reasoning": "Yen safe-haven demand" }
@@ -108,8 +148,9 @@ CRITICAL RULES — violations will make the data useless:
 4. Geographic spread: events must span at least 5 different continents/regions
 5. No two events at the same location
 6. Use REAL ongoing situations: Russia-Ukraine war, Israel-Gaza conflict, India-Pakistan tensions, Fed/ECB/BOJ policy, China-Taiwan, Trump tariffs, OPEC cuts, commodity prices, EM currency crises
+7. hoursAgo: integer 0-24 — how many hours ago THIS specific event actually happened (must be ≤24, i.e. today). SPREAD values realistically across 0-24; do NOT give every event the same value.
 
-Return ONLY a raw JSON array of exactly 20 objects. No markdown fences, no explanation, no preamble.`
+Return ONLY a raw JSON array of up to 20 objects. No markdown fences, no explanation, no preamble.`
 
   lastAttemptMs = nowMs
   let responseText = ''
@@ -158,13 +199,13 @@ Return ONLY a raw JSON array of exactly 20 objects. No markdown fences, no expla
     failureStreak++
     console.warn(`[News] All AI providers failed (streak: ${failureStreak}). Inserting seed events.`)
     await supabase.from('events').delete().eq('created_by', 'ai-auto')
-    const seedRows = SEED_EVENTS.map(e => ({
+    const seedRows = SEED_EVENTS.map((e) => ({
       headline: e.headline, country: e.country, lat: e.lat, lon: e.lon,
       impact_level: e.impactLevel, category: e.category, summary: e.summary,
       sentiment: e.sentiment, forex_impacts: e.forexImpacts,
       confidence_score: e.impactLevel === 'Critical' ? 90 : e.impactLevel === 'High' ? 80 : 70,
       is_market_moving: e.impactLevel === 'Critical' || e.impactLevel === 'High',
-      published_at: now.toISOString(),
+      published_at: publishedAtIso(undefined, e.headline, nowMs),
       expires_at:   new Date(nowMs + 48 * 3_600_000).toISOString(),
       source_url: null, created_by: 'ai-auto' as const,
     }))
@@ -191,6 +232,8 @@ Return ONLY a raw JSON array of exactly 20 objects. No markdown fences, no expla
     if (!buckets[t] || buckets[t].length >= 5) continue
     if (!e.headline || !e.country || typeof e.lat !== 'number' || typeof e.lon !== 'number') continue
     if (Math.abs(e.lat) < 0.01 && Math.abs(e.lon) < 0.01) continue
+    // Today-only: drop anything the model marks older than 24h.
+    if (typeof e.hoursAgo === 'number' && e.hoursAgo > 24) continue
     buckets[t].push(e)
   }
   const validated = TIERS.flatMap(t => buckets[t])
@@ -202,7 +245,7 @@ Return ONLY a raw JSON array of exactly 20 objects. No markdown fences, no expla
   }
 
   await supabase.from('events').delete().eq('created_by', 'ai-auto')
-  const rows = validated.map(e => ({
+  const rows = validated.map((e) => ({
     headline: String(e.headline).slice(0, 100), country: String(e.country).slice(0, 100),
     lat: Number(e.lat), lon: Number(e.lon), impact_level: e.impactLevel,
     category: sanitizeCategory(e.category || 'Geopolitical'), summary: String(e.summary || '').slice(0, 500),
@@ -210,7 +253,8 @@ Return ONLY a raw JSON array of exactly 20 objects. No markdown fences, no expla
     forex_impacts: Array.isArray(e.forexImpacts) ? e.forexImpacts : [],
     confidence_score: e.impactLevel === 'Critical' ? 90 : e.impactLevel === 'High' ? 80 : 70,
     is_market_moving: e.impactLevel === 'Critical' || e.impactLevel === 'High',
-    published_at: now.toISOString(), expires_at: new Date(nowMs + 48 * 3_600_000).toISOString(),
+    published_at: publishedAtIso(e.hoursAgo, String(e.headline), nowMs),
+    expires_at: new Date(nowMs + 48 * 3_600_000).toISOString(),
     source_url: null, created_by: 'ai-auto' as const,
   }))
 

@@ -6,6 +6,7 @@ import { CategoryBadge } from "./CategoryBadge";
 import { formatDistanceToNow } from "date-fns";
 import type { HoveredEnvPoint } from "@/store/useGlobeStore";
 import { gradientColor, AQI_STOPS, AQI_MAX } from "@/components/globe/heatmap.utils";
+import { MapPin } from "lucide-react";
 
 // ── Wind direction label ─────────────────────────────────────────────────────
 function windDir(deg: number): string {
@@ -37,8 +38,8 @@ function EnvTooltip({
     >
       <div className="min-w-[180px] rounded-lg border border-border-default bg-bg-card/95 p-3 shadow-2xl backdrop-blur-sm">
         {/* Coordinates */}
-        <div className="mb-2 text-xs font-mono text-text-muted">
-          📍 {latStr}, {lonStr}
+        <div className="mb-2 flex items-center gap-1 font-mono text-xs text-text-muted">
+          <MapPin className="h-3 w-3" /> {latStr}, {lonStr}
         </div>
 
         {point.type === "wind" && (
@@ -205,8 +206,8 @@ export function TooltipOverlay() {
         </p>
 
         {/* Country */}
-        <div className="flex items-center gap-2 text-xs text-text-muted">
-          <span className="font-medium">📍</span>
+        <div className="flex items-center gap-1.5 text-xs text-text-muted">
+          <MapPin className="h-3 w-3" />
           <span>{event.country}</span>
         </div>
 

@@ -161,3 +161,21 @@ export interface Filters {
 }
 
 export type ScreenPosition = { x: number; y: number };
+
+/**
+ * A point on an environmental heatmap that the cursor is currently over.
+ * Lives here (rather than in the store) because it's a domain type consumed
+ * across the globe renderer, tooltip, and store.
+ */
+export type HoveredEnvPoint =
+  | { type: "wind"; lat: number; lon: number; speed: number; direction: number }
+  | { type: "temperature"; lat: number; lon: number; tempC: number }
+  | {
+      type: "aqi";
+      lat: number;
+      lon: number;
+      aqi: number;
+      pm25: number;
+      category: string;
+    }
+  | { type: "sea_temp"; lat: number; lon: number; tempC: number };

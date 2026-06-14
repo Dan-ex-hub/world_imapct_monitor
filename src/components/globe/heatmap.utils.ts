@@ -290,40 +290,239 @@ function renderGrid(
   return imgData;
 }
 
-// --- Seam-safe blur ----------------------------------------------------------
+// --- Seam-safe, alpha-aware blur ---------------------------------------------
 
 /**
- * Tile the canvas 3-wide before blurring so the Gaussian kernel has real
- * neighbour data at the lon=+/-180 seam. Only the centre tile is returned.
+ * Separable box blur on a single channel using a sliding-window running sum.
+ *
+ *   wrap = true   -> horizontal pass, indices wrap modulo `len`
+ *                    (longitude is periodic, so lon +180 neighbours lon -180)
+ *   wrap = false  -> vertical pass, indices clamp to [0, len-1]
+ *                    (latitude is NOT periodic — clamping the poles avoids
+ *                     bleeding the canvas edge against off-canvas black)
+ *
+ * Operates in place on `src`, one "line" at a time.
+ */
+function boxBlur1D(
+  src: Float32Array,
+  lines: number, // number of independent lines (rows for H pass, cols for V pass)
+  len: number, // length of each line
+  stride: number, // step between consecutive samples in a line
+  lineStride: number, // step between consecutive lines
+  radius: number,
+  wrap: boolean,
+): void {
+  const win = radius * 2 + 1;
+  const tmp = new Float32Array(len);
+
+  for (let l = 0; l < lines; l++) {
+    const base = l * lineStride;
+
+    // Prime the running sum for the first output sample.
+    let sum = 0;
+    for (let k = -radius; k <= radius; k++) {
+      let idx = k;
+      if (wrap) idx = ((idx % len) + len) % len;
+      else idx = idx < 0 ? 0 : idx >= len ? len - 1 : idx;
+      sum += src[base + idx * stride];
+    }
+    tmp[0] = sum / win;
+
+    for (let i = 1; i < len; i++) {
+      // Index leaving the window (i - radius - 1) and entering (i + radius).
+      let outIdx = i - radius - 1;
+      let inIdx = i + radius;
+      if (wrap) {
+        outIdx = ((outIdx % len) + len) % len;
+        inIdx = ((inIdx % len) + len) % len;
+      } else {
+        outIdx = outIdx < 0 ? 0 : outIdx >= len ? len - 1 : outIdx;
+        inIdx = inIdx < 0 ? 0 : inIdx >= len ? len - 1 : inIdx;
+      }
+      sum += src[base + inIdx * stride] - src[base + outIdx * stride];
+      tmp[i] = sum / win;
+    }
+
+    for (let i = 0; i < len; i++) src[base + i * stride] = tmp[i];
+  }
+}
+
+/**
+ * Blur an equirectangular RGBA canvas with PREMULTIPLIED alpha so that
+ * transparent (no-data) pixels never bleed black into coloured neighbours.
+ *
+ * This is the key fix for the "dark band" artefact: the previous CSS-filter
+ * blur averaged colour against transparent-black pixels (RGB 0,0,0) at the
+ * pole rows and at every data/no-data boundary, producing dark fringes. By
+ * premultiplying RGB by alpha before blurring and un-premultiplying after,
+ * transparent regions contribute zero colour weight — edges fade cleanly to
+ * transparent instead of darkening.
+ *
+ * Three box-blur passes approximate a Gaussian (sigma ≈ radius). Horizontal
+ * passes wrap at the antimeridian; vertical passes clamp at the poles.
  */
 function blurSeamless(
   src: HTMLCanvasElement,
   blurPx: number,
 ): HTMLCanvasElement {
-  // Build 3-wide tiled canvas
-  const tiled = document.createElement("canvas");
-  tiled.width = W * 3;
-  tiled.height = H;
-  const tc = tiled.getContext("2d")!;
-  tc.drawImage(src, 0, 0); // left tile
-  tc.drawImage(src, W, 0); // centre tile
-  tc.drawImage(src, W * 2, 0); // right tile
+  const ctx = src.getContext("2d")!;
+  const img = ctx.getImageData(0, 0, W, H);
+  const data = img.data;
+  const n = W * H;
 
-  // Blur
-  const blurred = document.createElement("canvas");
-  blurred.width = W * 3;
-  blurred.height = H;
-  const bc = blurred.getContext("2d")!;
-  bc.filter = `blur(${blurPx}px)`;
-  bc.drawImage(tiled, 0, 0);
-  bc.filter = "none";
+  // Premultiplied channels as floats.
+  const r = new Float32Array(n);
+  const g = new Float32Array(n);
+  const b = new Float32Array(n);
+  const a = new Float32Array(n);
 
-  // Crop centre tile
+  for (let i = 0; i < n; i++) {
+    const al = data[i * 4 + 3] / 255;
+    r[i] = data[i * 4] * al;
+    g[i] = data[i * 4 + 1] * al;
+    b[i] = data[i * 4 + 2] * al;
+    a[i] = data[i * 4 + 3];
+  }
+
+  const radius = Math.max(1, Math.round(blurPx));
+  const passes = 3;
+  for (let p = 0; p < passes; p++) {
+    // Horizontal: H rows of length W, stride 1, lineStride W. Wrap longitude.
+    boxBlur1D(r, H, W, 1, W, radius, true);
+    boxBlur1D(g, H, W, 1, W, radius, true);
+    boxBlur1D(b, H, W, 1, W, radius, true);
+    boxBlur1D(a, H, W, 1, W, radius, true);
+    // Vertical: W cols of length H, stride W, lineStride 1. Clamp poles.
+    boxBlur1D(r, W, H, W, 1, radius, false);
+    boxBlur1D(g, W, H, W, 1, radius, false);
+    boxBlur1D(b, W, H, W, 1, radius, false);
+    boxBlur1D(a, W, H, W, 1, radius, false);
+  }
+
+  // Un-premultiply and write back.
+  for (let i = 0; i < n; i++) {
+    const al = a[i];
+    if (al > 0.5) {
+      const inv = 255 / al;
+      data[i * 4] = Math.min(255, r[i] * inv);
+      data[i * 4 + 1] = Math.min(255, g[i] * inv);
+      data[i * 4 + 2] = Math.min(255, b[i] * inv);
+      data[i * 4 + 3] = Math.min(255, al);
+    } else {
+      data[i * 4] = 0;
+      data[i * 4 + 1] = 0;
+      data[i * 4 + 2] = 0;
+      data[i * 4 + 3] = 0;
+    }
+  }
+
   const out = document.createElement("canvas");
   out.width = W;
   out.height = H;
-  out.getContext("2d")!.drawImage(blurred, W, 0, W, H, 0, 0, W, H);
+  out.getContext("2d")!.putImageData(img, 0, 0);
   return out;
+}
+
+// --- Land/sea mask (sharpens the sea-temp layer to coastlines) ---------------
+
+/**
+ * The sea-temp source data is ocean-only, but IDW interpolation bleeds those
+ * values up to ~10° inland. To clip the overlay sharply at the coast we load
+ * three-globe's equirectangular water mask once and zero the alpha of any land
+ * pixel AFTER the blur (so the coastline stays crisp).
+ *
+ * Polarity (which colour = water) is auto-detected on load by comparing a known
+ * ocean pixel against a known land pixel, so it works regardless of the image's
+ * convention.
+ */
+const WATER_MASK_URL =
+  "https://unpkg.com/three-globe/example/img/earth-water.png";
+
+let waterMask: Uint8ClampedArray | null = null; // W*H*4, aligned to texture grid
+let waterIsBright = true;
+let maskLoading = false;
+const maskListeners = new Set<() => void>();
+
+/** px/py for a given lat/lon in the W×H equirectangular grid. */
+function lonLatToPx(lon: number, lat: number): number {
+  const px = Math.min(W - 1, Math.max(0, Math.round(((lon + 180) / 360) * W)));
+  const py = Math.min(H - 1, Math.max(0, Math.round(((90 - lat) / 180) * H)));
+  return (py * W + px) * 4;
+}
+
+/** Kick off loading the water mask (idempotent, browser-only). */
+export function ensureSeaMask(): void {
+  if (typeof window === "undefined" || waterMask || maskLoading) return;
+  maskLoading = true;
+  const img = new Image();
+  img.crossOrigin = "anonymous";
+  img.onload = () => {
+    try {
+      const c = document.createElement("canvas");
+      c.width = W;
+      c.height = H;
+      const ctx = c.getContext("2d")!;
+      ctx.drawImage(img, 0, 0, W, H);
+      const data = ctx.getImageData(0, 0, W, H).data;
+      // Auto-detect polarity: Pacific (ocean) vs Sahara (land).
+      const ocean = data[lonLatToPx(-140, 0)];
+      const land = data[lonLatToPx(13, 23)];
+      waterIsBright = ocean >= land;
+      waterMask = data;
+    } catch {
+      waterMask = null;
+    } finally {
+      maskLoading = false;
+      maskListeners.forEach((cb) => cb());
+    }
+  };
+  img.onerror = () => {
+    maskLoading = false;
+  };
+  img.src = WATER_MASK_URL;
+}
+
+/** Subscribe to be notified once the mask is ready (returns an unsubscribe). */
+export function onSeaMaskReady(cb: () => void): () => void {
+  maskListeners.add(cb);
+  return () => maskListeners.delete(cb);
+}
+
+/** Zero/grey-out land on an equirectangular W×H canvas (sea-temp only). */
+function applyLandMask(canvas: HTMLCanvasElement): void {
+  if (!waterMask) return;
+  const ctx = canvas.getContext("2d")!;
+  const img = ctx.getImageData(0, 0, W, H);
+  const buf = img.data;
+  const mask = waterMask;
+  for (let i = 0; i < buf.length; i += 4) {
+    const v = mask[i]; // red channel of the mask
+    const isWater = waterIsBright ? v >= 128 : v < 128;
+    if (!isWater) {
+      // Paint land a flat muted slate so SST clearly reads as ocean-only,
+      // instead of leaving it transparent (which showed the dark earth blob).
+      buf[i] = LAND_RGBA[0];
+      buf[i + 1] = LAND_RGBA[1];
+      buf[i + 2] = LAND_RGBA[2];
+      buf[i + 3] = LAND_RGBA[3];
+    }
+  }
+  ctx.putImageData(img, 0, 0);
+}
+
+/** Muted slate used to fill land on the sea-temp layer. */
+const LAND_RGBA: readonly [number, number, number, number] = [74, 85, 104, 255];
+
+/**
+ * True if the given lat/lon is land per the water mask. Returns false while the
+ * mask is still loading (so we don't wrongly null-out data before it's ready).
+ * Used to report "no data" when hovering land on the sea-temp layer.
+ */
+export function isLandAt(lat: number, lon: number): boolean {
+  if (!waterMask) return false;
+  const v = waterMask[lonLatToPx(lon, lat)];
+  const isWater = waterIsBright ? v >= 128 : v < 128;
+  return !isWater;
 }
 
 // --- Grid-based renderer (server pre-interpolated) ---------------------------
@@ -343,6 +542,7 @@ function renderFromGrid(
   grid: EnvGrid,
   colorFn: (v: number) => [number, number, number],
   blurPx: number,
+  maskLand = false,
 ): HTMLCanvasElement {
   const imgData = new ImageData(W, H);
   const buf = imgData.data;
@@ -401,7 +601,10 @@ function renderFromGrid(
   canvas.width = W;
   canvas.height = H;
   canvas.getContext("2d")!.putImageData(imgData, 0, 0);
-  return blurSeamless(canvas, blurPx);
+  const blurred = blurSeamless(canvas, blurPx);
+  // Clip to coastlines AFTER the blur so the sea edge stays sharp.
+  if (maskLand) applyLandMask(blurred);
+  return blurred;
 }
 
 // --- Heatmap pipelines -------------------------------------------------------
@@ -689,11 +892,13 @@ export function createHeatmapTexture(
       return layerData.aqi?.length ? createAQIHeatmap(layerData.aqi) : null;
 
     case "sea_temp":
+      ensureSeaMask();
       if (layerData.seaTempGrid) {
         return renderFromGrid(
           layerData.seaTempGrid,
           (v) => gradientColor(Math.max(0, v - SEA_MIN) / SEA_RANGE, SEA_STOPS),
           18,
+          true, // clip to coastlines — SST is ocean-only
         );
       }
       return layerData.seaTemp?.length

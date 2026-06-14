@@ -12,13 +12,13 @@ export function useRealtimeEvents() {
   useEffect(() => {
     const supabase = createClient();
 
-    // Fetch events from the last 72h (3 days)
+    // Fetch events from the last 26h (today + small margin)
     const fetchInitial = async () => {
-      const seventyTwoHoursAgo = new Date(Date.now() - 72 * 60 * 60 * 1000).toISOString();
+      const since = new Date(Date.now() - 26 * 60 * 60 * 1000).toISOString();
       const { data, error } = await supabase
         .from("events")
         .select("*")
-        .gte("published_at", seventyTwoHoursAgo)
+        .gte("published_at", since)
         .order("published_at", { ascending: false })
         .limit(500);
 

@@ -1,132 +1,78 @@
 import { NextResponse } from 'next/server'
 import { after } from 'next/server'
 import { createAdminClient } from '@/lib/supabase/server'
-import { getSeaTempForZone } from '@/lib/env/seatemp'
-import { GLOBE_ZONES } from '@/lib/env/zones'
+import { fetchGlobalSeaTemp } from '@/lib/env/seatemp'
 import { interpolateToGrid, gridToJSON } from '@/lib/env/gridInterpolator'
 import type { EnvLayerData, SeaTempPoint } from '@/store/types'
 
+const KEY = 'sea_temp'
+const CACHE_MS = 172_800_000 // 48h — SST changes slowly
+
+/** Guard against launching two background refreshes at once. */
+let refreshing = false
+
 /**
  * GET /api/env/sea-temp
- * Always-complete strategy:
- * 1. Read all cached zones from Supabase
- * 2. If any zones are missing, fetch them NOW (in-request, parallel) before responding
- * 3. Respond with a fully-populated grid — client always gets 100% coverage
- * 4. Schedule background refresh of stale zones AFTER response is sent
+ *
+ * Open-Meteo bills each coordinate as one API call, so we NEVER fetch on the
+ * request path. Serve whatever global SST is cached and kick off one throttled
+ * background refresh when it's stale/missing.
  */
 export async function GET() {
   try {
     const supabase = createAdminClient()
     const now = new Date()
-    const sixHoursAgo = new Date(now.getTime() - 21_600_000)
 
-    // ── Step 1: Read ALL cached zones immediately ──────────────────────────
-    const { data: allCachedZones } = await supabase
-      .from('env_data_cache').select('*').like('layer_type', 'sea_zone_%')
+    const { data: rows } = await supabase
+      .from('env_data_cache')
+      .select('layer_type, data, fetched_at, expires_at')
+      .eq('layer_type', KEY)
 
-    // Find which zones are missing from cache
-    const cachedIds = new Set((allCachedZones ?? []).map((z: any) => z.layer_type))
-    const missingZones = GLOBE_ZONES.filter(z => !cachedIds.has(`sea_zone_${z.id}`))
+    interface Row { data: { points?: SeaTempPoint[] } | null; expires_at: string }
+    const row = (rows?.[0] as Row | undefined)
+    const points: SeaTempPoint[] = row?.data?.points ?? []
+    const stale = !row?.expires_at || new Date(row.expires_at).getTime() <= now.getTime()
 
-    // ── Step 2: Fetch ALL missing zones NOW, in parallel, before responding ──
-    const freshZones: { layer_type: string; data: any; fetched_at?: string }[] = []
-
-    if (missingZones.length > 0) {
-      console.log(`[SeaTemp] Fetching ${missingZones.length} missing zones synchronously...`)
-
-      await Promise.allSettled(
-        missingZones.map(async (zone) => {
-          const key = `sea_zone_${zone.id}`
-          try {
-            const points = await getSeaTempForZone(zone)
-            if (points.length > 0) {
-              await supabase.from('env_data_cache').upsert({
-                layer_type: key,
-                data: { points, zone: zone.id },
-                fetched_at: now.toISOString(),
-                expires_at: new Date(now.getTime() + 172_800_000).toISOString(), // 48h for sea temp (slow changing)
-              })
-              freshZones.push({ layer_type: key, data: { points }, fetched_at: now.toISOString() })
-              console.log(`[SeaTemp] Fetched ${points.length} pts for ${zone.name}`)
-            }
-          } catch (err) {
-            console.error(`[SeaTemp] Failed zone ${zone.name}:`, err)
+    if (stale && !refreshing) {
+      refreshing = true
+      console.log('[SeaTemp] Cache stale/missing → starting background refresh')
+      after(async () => {
+        try {
+          const { points: fresh, complete } = await fetchGlobalSeaTemp()
+          if (!complete || fresh.length === 0) {
+            console.warn('[SeaTemp] Background pass incomplete; not overwriting cache')
+            return
           }
-        })
-      )
+          const bg = createAdminClient()
+          await bg.from('env_data_cache').upsert({
+            layer_type: KEY,
+            data: { points: fresh },
+            fetched_at: new Date().toISOString(),
+            expires_at: new Date(Date.now() + CACHE_MS).toISOString(),
+          })
+          console.log(`[SeaTemp] Background refresh cached: ${fresh.length} pts`)
+        } catch (err) {
+          console.error('[SeaTemp] Background refresh error:', err)
+        } finally {
+          refreshing = false
+        }
+      })
     }
 
-    // ── Step 3: Merge all zones into a single point array ─────────────────
-    const allSeaPoints: SeaTempPoint[] = []
-    ;(allCachedZones ?? []).forEach((z: any) => {
-      const d = z.data as { points: SeaTempPoint[] }
-      if (d?.points) allSeaPoints.push(...d.points)
-    })
-    freshZones.forEach(z => {
-      if (z.data?.points) allSeaPoints.push(...z.data.points)
-    })
-
-    const zonesLoaded = (allCachedZones?.length ?? 0) + freshZones.length
-    console.log(`[SeaTemp] Returning ${allSeaPoints.length} pts (${zonesLoaded}/${GLOBE_ZONES.length} zones)`)
-
-    // ── Step 4: Schedule background refresh of STALE zones after response ──
-    after(async () => {
-      try {
-        const bgSupabase = createAdminClient()
-        const allZones = [...(allCachedZones ?? []), ...freshZones]
-        const staleZones = GLOBE_ZONES.filter(z => {
-          const cached = allZones.find((c: any) => c.layer_type === `sea_zone_${z.id}`)
-          return cached && new Date((cached as any).fetched_at) < sixHoursAgo
-        })
-
-        if (staleZones.length === 0) return
-        console.log(`[SeaTemp] BG: Refreshing ${staleZones.length} stale zones`)
-
-        await Promise.allSettled(
-          staleZones.map(async (zone) => {
-            try {
-              const points = await getSeaTempForZone(zone)
-              if (points.length > 0) {
-                await bgSupabase.from('env_data_cache').upsert({
-                  layer_type: `sea_zone_${zone.id}`,
-                  data: { points, zone: zone.id },
-                  fetched_at: now.toISOString(),
-                  expires_at: new Date(now.getTime() + 172_800_000).toISOString(),
-                })
-              }
-            } catch (err) {
-              console.error(`[SeaTemp] BG: Failed ${zone.name}:`, err)
-            }
-          })
-        )
-      } catch (err) {
-        console.error('[SeaTemp] BG refresh error:', err)
-      }
-    })
-
-    // ── Step 5: Build dense grid and respond ──────────────────────────────
-    const seaTempGrid = allSeaPoints.length > 0
-      ? gridToJSON(interpolateToGrid(allSeaPoints.map(p => ({ lat: p.lat, lon: p.lon, value: p.tempC }))))
+    const seaTempGrid = points.length > 0
+      ? gridToJSON(interpolateToGrid(points.map((p) => ({ lat: p.lat, lon: p.lon, value: p.tempC })), 10))
       : undefined
 
     const seaData: EnvLayerData = {
       type: 'sea_temp',
       updatedAt: now.toISOString(),
-      seaTemp: allSeaPoints,
+      seaTemp: points,
       seaTempGrid,
     }
 
     return NextResponse.json(
-      {
-        ...seaData,
-        meta: {
-          coverage: `${Math.round(zonesLoaded / GLOBE_ZONES.length * 100)}%`,
-          zonesLoaded,
-          totalZones: GLOBE_ZONES.length,
-          isPartial: false, // always complete now
-        }
-      },
-      { headers: { 'Cache-Control': 'no-store' } }
+      { ...seaData, meta: { points: points.length, stale, refreshing } },
+      { headers: { 'Cache-Control': 'no-store' } },
     )
   } catch (error) {
     console.error('[SeaTemp] Error:', error)

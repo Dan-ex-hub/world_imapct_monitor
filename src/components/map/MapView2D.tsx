@@ -5,12 +5,17 @@ import type { GlobeEvent, EnvLayerData } from "@/store/types";
 import type { HoveredEnvPoint } from "@/store/useGlobeStore";
 import { useGlobeStore } from "@/store/useGlobeStore";
 import {
-  WIND_STOPS, WIND_MAX,
-  TEMP_STOPS, TEMP_MIN, TEMP_RANGE,
-  AQI_STOPS, AQI_MAX,
-  SEA_STOPS, SEA_MIN, SEA_RANGE,
-  gradientColor
+  createHeatmapTexture,
+  ensureSeaMask,
+  onSeaMaskReady,
+  isLandAt,
 } from "@/components/globe/heatmap.utils";
+import {
+  WindField,
+  createParticles,
+  stepParticles,
+  type Particle,
+} from "@/components/globe/windField";
 
 const IMPACT_COLORS: Record<string, string> = {
   Critical: "#ff2d55", High: "#ff9f0a", Medium: "#ffd60a", Low: "#34c759",
@@ -23,22 +28,7 @@ interface Props {
   onEventClick?: (event: GlobeEvent) => void;
 }
 
-type RGB = [number, number, number];
-
 function lerp(a: number, b: number, t: number) { return a + (b - a) * t; }
-
-// Map a raw scalar value to the correct RGB via the same normalisation as 3D
-
-// Map a raw scalar value to the correct RGB via the same normalisation as 3D
-function layerColor(layer: string, val: number): RGB {
-  switch (layer) {
-    case "wind":                return gradientColor(Math.max(0, val) / WIND_MAX, WIND_STOPS);
-    case "temperature_anomaly": return gradientColor(Math.max(0, val - TEMP_MIN) / TEMP_RANGE, TEMP_STOPS);
-    case "aqi":                 return gradientColor(Math.max(0, val) / AQI_MAX, AQI_STOPS);
-    case "sea_temp":            return gradientColor(Math.max(0, val - SEA_MIN) / SEA_RANGE, SEA_STOPS);
-    default:                    return [128, 128, 128];
-  }
-}
 
 // ── Grid stores raw scalar values (NOT colors) for smooth interpolation ───
 type ValGrid = { vals: (number | null)[]; GW: number; GH: number; step: number; layer: string };
@@ -157,12 +147,6 @@ function sampleScalar(g: ValGrid, lat: number, lon: number): number | null {
   return lerp(lerp(s00, s10, tx), lerp(s01, s11, tx), ty);
 }
 
-function sampleGrid(g: ValGrid, lat: number, lon: number): RGB | null {
-  const val = sampleScalar(g, lat, lon);
-  if (val === null) return null;
-  return layerColor(g.layer, val);
-}
-
 // ── Build a HoveredEnvPoint from the interpolated grid ───────────────────
 function buildHoverPoint(
   layer: string,
@@ -201,6 +185,7 @@ function buildHoverPoint(
     };
   }
   if (layer === "sea_temp") {
+    if (isLandAt(lat, lon)) return null; // no SST over land
     return { type: "sea_temp", lat, lon, tempC: val };
   }
   return null;
@@ -213,14 +198,23 @@ export default function MapView2D({ events, activeEnvLayer, envLayerData, onEven
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const markersLayerRef = useRef<any>(null);
   const envCleanupRef   = useRef<(() => void) | null>(null);
+  const windCleanupRef  = useRef<(() => void) | null>(null);
   const initRef         = useRef(false);
   // Stores the current grid so the mousemove handler can sample it
   const gridRef         = useRef<ValGrid | null>(null);
 
   // Trigger state so the heatmap effect re-runs when the map becomes ready
   const [mapReady, setMapReady] = useState(false);
+  // Bumped when the sea-temp land mask finishes loading → rebuilds the texture
+  const [seaMaskVersion, setSeaMaskVersion] = useState(0);
 
   const setHoveredEnvPoint = useGlobeStore((s) => s.setHoveredEnvPoint);
+
+  // Preload the coastline mask once; rebuild the overlay when it's ready.
+  useEffect(() => {
+    ensureSeaMask();
+    return onSeaMaskReady(() => setSeaMaskVersion((v) => v + 1));
+  }, []);
 
   // ── Init Leaflet map (guarded against double-init from StrictMode / HMR) ─
   useEffect(() => {
@@ -263,6 +257,7 @@ export default function MapView2D({ events, activeEnvLayer, envLayerData, onEven
     });
     return () => {
       envCleanupRef.current?.();
+      windCleanupRef.current?.();
       if (mapRef.current) { mapRef.current.remove(); mapRef.current = null; }
       initRef.current = false;
       setMapReady(false);
@@ -316,8 +311,19 @@ export default function MapView2D({ events, activeEnvLayer, envLayerData, onEven
       if (!["wind","temperature_anomaly","aqi","sea_temp"].includes(activeEnvLayer) || !envLayerData) return;
 
       const grid = buildValGrid(activeEnvLayer, envLayerData);
-      if (!grid) return;
-      gridRef.current = grid;
+      gridRef.current = grid; // used by the hover tooltip (scalar values)
+
+      // Visual: reuse the SAME polished equirectangular texture as the 3D globe
+      // (premultiplied blur + sea-temp coastline mask + identical colour scales),
+      // then sample it per screen-pixel through Leaflet's projection so it lines
+      // up correctly with the Web-Mercator base map at every zoom.
+      const texCanvas = createHeatmapTexture(activeEnvLayer, envLayerData);
+      if (!texCanvas) return;
+      const TW = texCanvas.width;
+      const TH = texCanvas.height;
+      const texData = texCanvas
+        .getContext("2d")!
+        .getImageData(0, 0, TW, TH).data;
 
       const overlayPane = map.getPanes().overlayPane as HTMLElement;
       const canvas = document.createElement("canvas");
@@ -363,13 +369,19 @@ export default function MapView2D({ events, activeEnvLayer, envLayerData, onEven
           for (let x = 0; x < W; x++) {
             const rawLon = west + lonStep * x;
             const lon = ((rawLon + 180) % 360 + 360) % 360 - 180;
-            const cell = sampleGrid(grid, lat, lon);
-            if (cell) {
+            // Equirectangular texel for this lat/lon (texture is lat/lon-linear).
+            let tpx = ((lon + 180) / 360 * TW) | 0;
+            let tpy = ((90 - lat) / 180 * TH) | 0;
+            if (tpx < 0) tpx = 0; else if (tpx >= TW) tpx = TW - 1;
+            if (tpy < 0) tpy = 0; else if (tpy >= TH) tpy = TH - 1;
+            const ti = (tpy * TW + tpx) * 4;
+            const a = texData[ti + 3];
+            if (a > 0) {
               const k = rowOff + x * 4;
-              pxData[k]     = cell[0];
-              pxData[k + 1] = cell[1];
-              pxData[k + 2] = cell[2];
-              pxData[k + 3] = 148;
+              pxData[k]     = texData[ti];
+              pxData[k + 1] = texData[ti + 1];
+              pxData[k + 2] = texData[ti + 2];
+              pxData[k + 3] = (a * 0.72) | 0; // slightly translucent over the map
             }
           }
         }
@@ -397,6 +409,99 @@ export default function MapView2D({ events, activeEnvLayer, envLayerData, onEven
         canvas.parentNode?.removeChild(canvas);
       };
     });
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [activeEnvLayer, envLayerData, mapReady, seaMaskVersion]);
+
+  // ── Animated wind streamlines (Windy-style) ───────────────────────────────
+  useEffect(() => {
+    const map = mapRef.current;
+    if (!map || !mapReady) return;
+    let cancelled = false;
+
+    import("leaflet").then(() => {
+      if (cancelled) return;
+      windCleanupRef.current?.();
+      windCleanupRef.current = null;
+      if (activeEnvLayer !== "wind" || !envLayerData?.wind?.length) return;
+
+      const field = new WindField(
+        envLayerData.wind.map((p) => ({
+          lat: p.lat, lon: p.lon, speed: p.speed, direction: p.direction,
+        })),
+      );
+      const particles: Particle[] = createParticles(900);
+      const maxSpeed = field.maxSpeed || 1;
+
+      const overlayPane = map.getPanes().overlayPane as HTMLElement;
+      const canvas = document.createElement("canvas");
+      canvas.style.cssText = "position:absolute;top:0;left:0;pointer-events:none;z-index:420;";
+      overlayPane.appendChild(canvas);
+      const ctx = canvas.getContext("2d")!;
+      ctx.lineCap = "round";
+      ctx.lineJoin = "round";
+
+      let raf = 0;
+      let last = 0;
+      const FRAME_MS = 1000 / 30;
+      const draw = (t: number) => {
+        raf = requestAnimationFrame(draw);
+        if (t - last < FRAME_MS) return;
+        last = t;
+
+        const fullW = map.getSize().x;
+        const fullH = map.getSize().y;
+        if (canvas.width !== fullW) canvas.width = fullW;
+        if (canvas.height !== fullH) canvas.height = fullH;
+        const origin = map.containerPointToLayerPoint([0, 0]);
+        canvas.style.left = `${origin.x}px`;
+        canvas.style.top = `${origin.y}px`;
+
+        ctx.clearRect(0, 0, fullW, fullH);
+        stepParticles(particles, field, 0.05);
+
+        for (const p of particles) {
+          const h = p.hist;
+          if (h.length < 4) continue;
+          const speedT = Math.min(1, p.speed / maxSpeed);
+          ctx.lineWidth = 0.6 + speedT * 1.4;
+          ctx.strokeStyle = `rgba(255,255,255,${0.25 + 0.5 * speedT})`;
+          ctx.beginPath();
+          let started = false;
+          let prevLon = 0;
+          for (let k = 0; k + 1 < h.length; k += 2) {
+            const lat = h[k];
+            const lon = h[k + 1];
+            if (started && Math.abs(lon - prevLon) > 180) {
+              ctx.stroke();
+              ctx.beginPath();
+              started = false;
+            }
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            const pt = map.latLngToContainerPoint([lat, lon] as any);
+            if (!started) {
+              ctx.moveTo(pt.x, pt.y);
+              started = true;
+            } else {
+              ctx.lineTo(pt.x, pt.y);
+            }
+            prevLon = lon;
+          }
+          ctx.stroke();
+        }
+      };
+      raf = requestAnimationFrame(draw);
+
+      windCleanupRef.current = () => {
+        cancelAnimationFrame(raf);
+        canvas.parentNode?.removeChild(canvas);
+      };
+    });
+
+    return () => {
+      cancelled = true;
+      windCleanupRef.current?.();
+      windCleanupRef.current = null;
+    };
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [activeEnvLayer, envLayerData, mapReady]);
 
